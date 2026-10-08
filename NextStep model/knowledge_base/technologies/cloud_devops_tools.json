@@ -1,0 +1,41 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "tech_devops_tools_catalog",
+  "category": "technologies",
+  "title": "Cloud & DevOps Tools Reference",
+  "source": "NextStep Technology Stacks Guide v1.0",
+  "technologies": [
+    {
+      "name": "Docker",
+      "type": "Container Runtime & Packaging",
+      "purpose": "Creating lightweight, standalone, executable packages of software that include everything needed to run it.",
+      "careers": ["cloud devops engineer", "fullstack developer", "machine learning engineer"],
+      "skills": ["Docker and Containerization"],
+      "difficulty": "beginner_to_intermediate"
+    },
+    {
+      "name": "Kubernetes",
+      "type": "Container Orchestrator",
+      "purpose": "Automating container deployment, scaling, healing, and rolling updates across clusters of compute nodes.",
+      "careers": ["cloud devops engineer"],
+      "skills": ["Kubernetes"],
+      "difficulty": "advanced"
+    },
+    {
+      "name": "Terraform",
+      "type": "Infrastructure as Code (IaC)",
+      "purpose": "Declarative syntax (HCL) to safely provision and manage cloud infrastructure across AWS, Azure, and Google Cloud.",
+      "careers": ["cloud devops engineer"],
+      "skills": ["Infrastructure as Code"],
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "GitHub Actions",
+      "type": "CI/CD Automation Engine",
+      "purpose": "Defining workflow YAML pipelines triggered by git commits, pull requests, and releases to build, test, and deploy software.",
+      "careers": ["cloud devops engineer", "fullstack developer"],
+      "skills": ["CI/CD Pipelines", "Git"],
+      "difficulty": "beginner_to_intermediate"
+    }
+  ]
+}

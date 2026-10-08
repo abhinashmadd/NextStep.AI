@@ -1,0 +1,62 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "career_cloud_devops_engineer",
+  "category": "careers",
+  "title": "Cloud DevOps Engineer",
+  "alternative_titles": ["DevOps Engineer", "Cloud Infrastructure Engineer", "Platform Engineer", "Site Reliability Engineer (SRE)"],
+  "industry": "Cloud Computing / Software Engineering",
+  "overview": "A Cloud DevOps Engineer bridges the gap between software development and infrastructure operations. They automate software release pipelines, configure infrastructure as code (IaC), ensure cloud scalability and security, and monitor high-availability production environments across cloud providers like AWS, Azure, and Google Cloud.",
+  "target_career": "cloud devops engineer",
+  "difficulty": "intermediate",
+  "education_requirements": [
+    "Bachelor's degree in Computer Science, Software Engineering, IT, or equivalent hands-on experience"
+  ],
+  "experience_levels": {
+    "entry_level": {
+      "title": "Junior DevOps Engineer / Cloud Associate",
+      "experience_years": "0-2 years",
+      "focus": "Writing CI/CD automation scripts, Docker containerization, basic cloud resource provisioning."
+    },
+    "mid_level": {
+      "title": "DevOps Engineer / Platform Engineer",
+      "experience_years": "2-5 years",
+      "focus": "Kubernetes cluster administration, Terraform infrastructure as code, cloud monitoring, observability."
+    },
+    "senior_level": {
+      "title": "Senior Cloud Architect / Principal SRE",
+      "experience_years": "5+ years",
+      "focus": "Multi-cloud architecture, zero-downtime release strategies, disaster recovery, cloud cost optimization."
+    }
+  },
+  "required_technical_skills": [
+    "Linux Systems Administration and Bash Scripting",
+    "Containerization with Docker",
+    "Container Orchestration with Kubernetes",
+    "Continuous Integration / Continuous Delivery (CI/CD) with GitHub Actions or GitLab CI",
+    "Infrastructure as Code (IaC) with Terraform",
+    "Cloud Platforms (AWS, Azure, or Google Cloud Platform)",
+    "Scripting and Automation with Python or Go",
+    "Monitoring & Observability (Prometheus, Grafana, Datadog)"
+  ],
+  "required_soft_skills": [
+    "Root Cause Analysis and Troubleshooting",
+    "Cross-functional Collaboration with Development Teams",
+    "Agile and DevOps Culture Mindset",
+    "Documentation and Operational Runbooks"
+  ],
+  "recommended_certifications": [
+    "AWS Certified Solutions Architect – Associate",
+    "Certified Kubernetes Administrator (CKA)",
+    "HashiCorp Certified: Terraform Associate",
+    "Docker Certified Associate"
+  ],
+  "career_roadmap": [
+    "Step 1: Master Linux command line, networking fundamentals, and Git version control.",
+    "Step 2: Learn Docker to containerize fullstack applications.",
+    "Step 3: Setup CI/CD automation pipelines using GitHub Actions to build and test code.",
+    "Step 4: Learn a major cloud provider (AWS or GCP) and provision resources using Terraform.",
+    "Step 5: Master Kubernetes fundamentals and deploy microservices with Helm.",
+    "Step 6: Earn AWS Solutions Architect Associate or CKA certification and publish infrastructure repos."
+  ],
+  "source": "NextStep Career Knowledge Base - Cloud Engineering Domain v1.0"
+}

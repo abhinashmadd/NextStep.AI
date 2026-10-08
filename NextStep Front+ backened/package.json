@@ -1,0 +1,14 @@
+{
+  "name": "nextstep-career-guidance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A student career-readiness platform that turns evidence into one clear next action.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node test-backend.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

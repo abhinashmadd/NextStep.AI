@@ -1,0 +1,50 @@
+.consent-dialog{width:min(560px,calc(100% - 32px))}
+.consent-copy{display:grid;gap:7px;border:1px solid var(--line);border-radius:6px;background:#fafbf8;padding:14px 16px}
+.consent-copy strong{font-size:10px;color:var(--green-dark)}
+.consent-copy p{font-size:10px;line-height:1.55;color:#707770;margin:0 0 7px}
+.consent-copy p:last-child{margin-bottom:0}
+.consent-check{display:flex!important;grid-template-columns:auto 1fr!important;align-items:start;gap:9px!important;line-height:1.5;font-weight:500!important;color:#606760!important}
+.consent-check input{width:auto!important;margin-top:1px;accent-color:var(--green)}
+.assessment-panel,.change-panel{margin-bottom:17px}
+.assessment-summary{display:flex;flex-wrap:wrap;gap:9px;padding-top:14px}
+.assessment-summary>p{font-size:10px;color:#858b85;margin:0;line-height:1.6}
+.assessment-chip{padding:8px 10px;border:1px solid #e9ebe5;background:#fafbf8;border-radius:5px;font-size:9px;color:#4c554d}
+.assessment-chip span{display:block;color:#8b908a;margin-top:4px}
+.assessment-fields{display:grid;gap:8px;max-height:55vh;overflow:auto;padding:2px 1px}
+.assessment-role{font-size:10px;color:#777e77;line-height:1.6;margin:0 0 4px}
+.assessment-entry{display:grid;grid-template-columns:minmax(120px,1fr) minmax(130px,.75fr) minmax(130px,.75fr);align-items:center;gap:10px;padding:9px 10px;border:1px solid #eff0ec;border-radius:5px}
+.assessment-entry label{font-size:10px;font-weight:600;line-height:1.45}
+.assessment-entry label span{display:block;font-size:8px;color:#919790;font-weight:400;margin-top:3px}
+.assessment-entry select{width:100%;border:1px solid #e5e8e2;border-radius:4px;background:#fff;padding:8px 7px;color:#495149;font-size:9px}
+.skill-evidence{display:block;font-size:8px;line-height:1.45;font-weight:400;color:#959a94;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:3px}
+.confidence-caption{display:block;font-size:7px;color:#9b9f99}
+.skill-row{grid-template-columns:minmax(155px,1.1fr) 1.5fr 48px}
+.skill-score{font-size:10px;color:#606a60}
+.skill-row.gap .skill-fill{background:#d4b679}
+.expected-evidence{display:grid;gap:5px;margin:8px 0 12px;padding-left:14px;color:#697069;font-size:9px;line-height:1.5}
+.effort-label{font-size:8px;color:#878d86;margin:3px 0 12px}
+.effort-label strong{color:#4d574e;font-size:9px}
+.evidence-controls{display:flex;align-items:center;gap:6px}
+.delete-evidence{width:24px;height:24px;border:1px solid #eceee8;background:#fff;color:#8d736c;border-radius:4px;font-size:15px;line-height:1}
+.delete-evidence:hover{background:var(--red-soft);color:var(--red)}
+.evidence-url{display:inline-block;margin-top:5px}
+.change-list{display:grid;margin-top:12px}
+.change-item{display:grid;grid-template-columns:100px 1fr;gap:12px;padding:12px 0;border-top:1px solid #f0f1ec}
+.change-date{font-size:9px;color:#90958f}
+.change-content{display:grid;gap:7px}
+.change-content>div{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.change-content strong{font-size:10px}
+.change-content>div span{font-size:9px;color:var(--green-dark);background:var(--green-soft);padding:4px 6px;border-radius:3px}
+.change-content small{font-size:8px;color:#90958f}
+.change-content p{font-size:9px;color:#777e77;margin:0}
+.privacy-dialog{width:min(520px,calc(100% - 32px))}
+.privacy-details{display:grid;border:1px solid var(--line);border-radius:5px}
+.privacy-details>div{display:flex;justify-content:space-between;gap:14px;padding:10px 12px;border-top:1px solid #eff0ec}
+.privacy-details>div:first-child{border-top:0}
+.privacy-details strong{font-size:9px}
+.privacy-details span{font-size:9px;color:#7c827c;text-align:right}
+.privacy-actions{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;margin-top:16px}
+.button-danger{background:#fff;border-color:#ead9d5;color:#a64e43}
+.button-danger:hover{background:var(--red-soft)}
+.privacy-warning{font-size:9px;line-height:1.55;color:#888e88;margin:13px 0 0}
+@media(max-width:760px){.assessment-entry{grid-template-columns:1fr 1fr;gap:8px}.assessment-entry label{grid-column:1/-1}.assessment-entry select{font-size:9px}.skill-row{grid-template-columns:minmax(115px,1.1fr) 1fr 44px;gap:8px}.skill-evidence{max-width:165px}.change-item{grid-template-columns:72px 1fr}.privacy-details>div{align-items:flex-start}.privacy-details span{max-width:58%}}

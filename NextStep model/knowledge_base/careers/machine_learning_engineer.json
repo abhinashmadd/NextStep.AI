@@ -1,0 +1,60 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "career_machine_learning_engineer",
+  "category": "careers",
+  "title": "Machine Learning Engineer",
+  "alternative_titles": ["ML Engineer", "AI Engineer", "MLOps Engineer"],
+  "industry": "Artificial Intelligence / Software Engineering",
+  "overview": "A Machine Learning Engineer designs, trains, deploys, and monitors scalable machine learning models in production. They bridge the gap between theoretical data science and production software engineering, turning algorithms into reliable software services.",
+  "target_career": "machine learning engineer",
+  "difficulty": "advanced",
+  "education_requirements": [
+    "Bachelor's or Master's degree in Computer Science, Data Science, Mathematics, Statistics, or equivalent"
+  ],
+  "experience_levels": {
+    "entry_level": {
+      "title": "Junior ML Engineer / Applied AI Developer",
+      "experience_years": "0-2 years",
+      "focus": "Data preprocessing, feature engineering, training baseline models, REST API deployment."
+    },
+    "mid_level": {
+      "title": "Machine Learning Engineer",
+      "experience_years": "2-5 years",
+      "focus": "Model fine-tuning, vector search and RAG architecture, MLOps pipelines, distributed training."
+    },
+    "senior_level": {
+      "title": "Staff ML Engineer / AI Systems Architect",
+      "experience_years": "5+ years",
+      "focus": "Large Language Model infrastructure, distributed inference optimization, low-latency AI serving."
+    }
+  },
+  "required_technical_skills": [
+    "Python Programming (NumPy, Pandas, SciPy)",
+    "Machine Learning Frameworks (PyTorch, TensorFlow, Scikit-Learn)",
+    "Deep Learning and Neural Network Architectures (Transformers, CNNs)",
+    "Model Deployment & REST APIs (FastAPI, Docker, Triton Inference Server)",
+    "Vector Databases & RAG Architecture (ChromaDB, FAISS, Milvus)",
+    "MLOps Tools (MLflow, Weights & Biases, DVC, Kubeflow)",
+    "Data Engineering & SQL querying"
+  ],
+  "required_soft_skills": [
+    "Experimental and Scientific Rigor",
+    "Effective Communication of Technical Tradeoffs",
+    "Continuous Adaptation to Modern AI Breakthroughs"
+  ],
+  "recommended_certifications": [
+    "TensorFlow Developer Certificate",
+    "AWS Certified Machine Learning – Specialty",
+    "DeepLearning.AI Deep Learning Specialization",
+    "Databricks Certified Machine Learning Associate"
+  ],
+  "career_roadmap": [
+    "Step 1: Solidify Python programming, linear algebra, multivariable calculus, and probability.",
+    "Step 2: Master classical machine learning with Scikit-Learn and data wrangling with Pandas.",
+    "Step 3: Dive deep into Deep Learning using PyTorch, focusing on neural network training and Transformers.",
+    "Step 4: Learn model serving by building FastAPI endpoints and containerizing with Docker.",
+    "Step 5: Build production RAG and LLM applications using vector databases and evaluation metrics.",
+    "Step 6: Deploy end-to-end projects with CI/CD and monitoring tools like MLflow."
+  ],
+  "source": "NextStep Career Knowledge Base - AI/ML Domain v1.0"
+}

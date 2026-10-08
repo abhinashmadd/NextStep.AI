@@ -1,0 +1,62 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "projects_cybersecurity_catalog",
+  "category": "projects",
+  "title": "Portfolio Projects for Aspiring Cybersecurity Analysts",
+  "source": "NextStep Hands-on Project Library v1.0",
+  "projects": [
+    {
+      "title": "Home Virtual SOC Lab with Splunk & Sysmon",
+      "target_career": "cybersecurity analyst",
+      "difficulty": "intermediate",
+      "estimated_hours": 25,
+      "summary": "Build a multi-machine virtual lab using VirtualBox or VMware containing an Ubuntu Linux attack box, a Windows 10 target machine instrumented with Microsoft Sysmon, and an Ubuntu Splunk server.",
+      "skills_developed": ["SIEM Tools and Log Analysis", "Linux Command Line", "Windows Event IDs", "Splunk SPL Queries"],
+      "step_by_step": [
+        "1. Install VirtualBox and spin up an Ubuntu Server VM running Splunk Free.",
+        "2. Configure a Windows VM with SwiftOnSecurity Sysmon config and install the Splunk Universal Forwarder.",
+        "3. Emulate benign user traffic and malicious PowerShell attacks.",
+        "4. Write Splunk SPL queries to detect encoded PowerShell commands, process injection, and brute force login attempts.",
+        "5. Build a custom SOC dashboard tracking MITRE ATT&CK techniques observed."
+      ],
+      "portfolio_deliverables": [
+        "GitHub repository with lab topology diagram, Splunk queries, detection rules, and incident write-up report."
+      ]
+    },
+    {
+      "title": "Automated Python Network Sniffer & Packet Parser",
+      "target_career": "cybersecurity analyst",
+      "difficulty": "beginner_to_intermediate",
+      "estimated_hours": 15,
+      "summary": "Write a Python tool using Scapy or raw sockets that captures network traffic on a network interface, extracts packet headers (IP, TCP, UDP, DNS), flags abnormal flags (e.g. SYN flood patterns), and logs suspicious activity to CSV/JSON.",
+      "skills_developed": ["Python", "Computer Networking", "Network Packet Analysis"],
+      "step_by_step": [
+        "1. Use Python's scapy library to sniff incoming packets on a local network adapter.",
+        "2. Parse IP source/destination addresses and identify active protocols.",
+        "3. Implement rate-limiting detection to catch rapid SYN packets directed at closed ports.",
+        "4. Export captured anomalies into a structured JSON log format with timestamps."
+      ],
+      "portfolio_deliverables": [
+        "Clean Python script with modular functions, unit tests with synthetic PCAP files, and README with usage screenshots."
+      ]
+    },
+    {
+      "title": "Vulnerability Assessment & Remediation Report",
+      "target_career": "cybersecurity analyst",
+      "difficulty": "intermediate",
+      "estimated_hours": 18,
+      "summary": "Conduct a vulnerability assessment on intentionally vulnerable lab targets (e.g., Metasploitable 2 or OWASP Juice Shop) using Nmap and OpenVAS/Nessus Essentials. Author a professional remediation report with CVSS scoring.",
+      "skills_developed": ["Vulnerability Assessment", "Incident Communication & Technical Reporting", "CVSS Scoring"],
+      "step_by_step": [
+        "1. Deploy vulnerable VM in an isolated host-only virtual network.",
+        "2. Run comprehensive Nmap service discovery and vulnerability scripts (NSE).",
+        "3. Launch an OpenVAS/Nessus vulnerability scan and categorize critical, high, and medium CVEs.",
+        "4. Formulate executive summary and technical patching steps.",
+        "5. Retest and verify remediation."
+      ],
+      "portfolio_deliverables": [
+        "Professional PDF vulnerability assessment report modeled after commercial pentest deliverable standards."
+      ]
+    }
+  ]
+}

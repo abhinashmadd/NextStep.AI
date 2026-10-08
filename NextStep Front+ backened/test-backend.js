@@ -1,0 +1,281 @@
+const http = require("node:http");
+const { spawn } = require("node:child_process");
+const path = require("node:path");
+const fs = require("node:fs/promises");
+
+const TEST_PORT = 3999;
+const BASE_URL = `http://127.0.0.1:${TEST_PORT}`;
+
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function request(path, options = {}) {
+  const url = `${BASE_URL}${path}`;
+  const response = await fetch(url, options);
+  const contentType = response.headers.get("content-type") || "";
+  let body;
+  if (contentType.includes("application/json")) {
+    body = await response.json();
+  } else {
+    body = await response.text();
+  }
+  return { status: response.status, headers: response.headers, body };
+}
+
+async function runTests() {
+  console.log("Starting backend test suite on port", TEST_PORT);
+
+  // Clean data folder for test
+  const dataDir = path.join(__dirname, "data");
+  try {
+    await fs.rm(dataDir, { recursive: true, force: true });
+  } catch {}
+
+  const serverProc = spawn("node", ["server.js"], {
+    cwd: __dirname,
+    env: { ...process.env, PORT: String(TEST_PORT), HOST: "127.0.0.1" },
+    stdio: "inherit",
+  });
+
+  // Wait for server to start
+  let started = false;
+  for (let i = 0; i < 30; i++) {
+    await sleep(200);
+    try {
+      const res = await request("/api/careers");
+      if (res.status === 200) {
+        started = true;
+        break;
+      }
+    } catch {}
+  }
+
+  if (!started) {
+    serverProc.kill();
+    throw new Error("Server failed to start within timeout");
+  }
+
+  const passed = [];
+  const failed = [];
+
+  function assert(condition, message) {
+    if (condition) {
+      console.log(`  ✓ ${message}`);
+      passed.push(message);
+    } else {
+      console.error(`  ✗ FAIL: ${message}`);
+      failed.push(message);
+    }
+  }
+
+  try {
+    // 1. CORS Preflight
+    console.log("\n[1] Testing CORS Preflight & Headers");
+    const preflight = await request("/api/profile", {
+      method: "OPTIONS",
+      headers: {
+        "Origin": "http://127.0.0.1:5500",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "Content-Type",
+      },
+    });
+    assert(preflight.status === 204, "OPTIONS returns 204 No Content");
+    assert(preflight.headers.get("access-control-allow-origin") === "*", "OPTIONS has Access-Control-Allow-Origin: *");
+    assert(preflight.headers.get("access-control-allow-methods")?.includes("POST"), "OPTIONS allows POST");
+
+    // 2. Favicon
+    console.log("\n[2] Testing Favicon");
+    const favicon = await request("/favicon.ico");
+    assert(favicon.status === 200, "Favicon returns 200 OK");
+    assert(favicon.headers.get("content-type")?.includes("image/svg+xml"), "Favicon returns SVG content type");
+
+    // 3. Static assets
+    console.log("\n[3] Testing Static File Serving");
+    const index = await request("/");
+    assert(index.status === 200, "Root returns 200 OK");
+    assert(index.headers.get("access-control-allow-origin") === "*", "Static files have CORS header");
+    assert(typeof index.body === "string" && index.body.includes("NextStep"), "Root serves HTML");
+
+    // 4. Careers API
+    console.log("\n[4] Testing Careers Endpoint");
+    const careers = await request("/api/careers");
+    assert(careers.status === 200, "Careers endpoint returns 200 OK");
+    assert(Array.isArray(careers.body.careers) && careers.body.careers.length === 4, "Returns 4 career frameworks");
+
+    // 5. Privacy Consent
+    console.log("\n[5] Testing Privacy Consent");
+    const consent = await request("/api/privacy/consent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accepted: true }),
+    });
+    assert(consent.status === 200, "Privacy consent accepted");
+    assert(consent.body.privacy.consent.accepted === true, "State has consent recorded");
+
+    // 6. Profile Creation
+    console.log("\n[6] Testing Profile Creation");
+    const profile = await request("/api/profile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "Test Student",
+        course: "Computer Science",
+        discipline: "Software Engineering",
+        year: "3rd year",
+        careerId: "software-developer",
+        availableHours: 10,
+      }),
+    });
+    assert(profile.status === 200, "Profile created successfully");
+    assert(profile.body.profile.name === "Test Student", "Profile student name matches");
+    assert(profile.body.recommendedAction !== null, "Profile creation returns recommended action immediately with 0 evidence");
+    assert(profile.body.skillReport !== null, "Profile creation returns baseline skillReport immediately");
+    assert(typeof profile.body.recommendedAction?.skill === "string", "Recommended action targets a concrete skill");
+
+    // 7. Evidence with file (testing CRLF Windows line endings and without explicit content)
+    console.log("\n[7] Testing Evidence Submission with Code Upload");
+    const codeSnippet = "const express = require('express');\r\nconst app = express();\r\n// api endpoint\r\napp.get('/api', (req, res) => res.json({ status: 'ok' }));\r\n";
+    const base64Code = Buffer.from(codeSnippet).toString("base64");
+    const evidenceRes = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "REST API Service",
+        type: "Project",
+        description: "Built a REST API service using JavaScript, unit test, and postgres database.",
+        link: "https://github.com/student/api-service",
+        fileName: "server.js",
+        fileData: base64Code,
+        // purposefully omitting body.content to test server auto-extraction!
+      }),
+    });
+    assert(evidenceRes.status === 200, "Evidence submitted successfully with auto-extracted text");
+    assert(evidenceRes.body.evidence.length === 1, "Evidence list has 1 item");
+    const createdEvidence = evidenceRes.body.evidence[0];
+    assert(createdEvidence.detectedKeywords.includes("api"), "Keywords detected from code & description");
+
+    // 8. File Download
+    console.log("\n[8] Testing Evidence File Download");
+    const download = await request(`/api/evidence/${createdEvidence.id}/file`);
+    assert(download.status === 200, "File download returns 200 OK");
+    assert(download.body.includes("express"), "Downloaded content matches original uploaded file");
+    assert(download.headers.get("access-control-allow-origin") === "*", "File download has CORS headers");
+
+    // 9. Analysis and Recommendations
+    console.log("\n[9] Testing Skill Analysis & Next Action");
+    assert(evidenceRes.body.skillReport !== null, "Skill report was generated");
+    assert(evidenceRes.body.recommendedAction !== null, "Next Best Action was prioritized");
+    console.log(`    Recommended action: "${evidenceRes.body.recommendedAction.title}"`);
+
+    // 10. Complete Action
+    console.log("\n[10] Testing Complete Action");
+    const complete = await request("/api/complete-action", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ reflection: "Learned how to set up GitHub Actions and write unit tests." }),
+    });
+    assert(complete.status === 200, "Action marked as completed");
+    assert(complete.body.recommendedAction.completed === true, "Recommended action marked completed in state");
+
+    // 11. Self Assessment
+    console.log("\n[11] Testing Self-Assessment");
+    const assessment = await request("/api/assessment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        skills: [
+          { skill: "Programming fundamentals", level: 2, confidence: "high" },
+        ],
+      }),
+    });
+    assert(assessment.status === 200, "Self assessment saved");
+    assert(assessment.body.assessment.length === 1, "Self assessment recorded in state");
+
+    // 12. Data Export
+    console.log("\n[12] Testing Data Export");
+    const exportRes = await request("/api/privacy/export");
+    assert(exportRes.status === 200, "Data export returns 200 OK");
+    assert(exportRes.body.profile.name === "Test Student", "Exported JSON contains student profile");
+
+    // 13. Evidence Deletion
+    console.log("\n[13] Testing Evidence Deletion");
+    const delEvidence = await request(`/api/evidence/${createdEvidence.id}`, { method: "DELETE" });
+    assert(delEvidence.status === 200, "Evidence deleted");
+    assert(delEvidence.body.evidence.length === 0, "Evidence removed from state");
+
+    // 14. NextStep Student Authentication Suite
+    console.log("\n[14] Testing NextStep Student Authentication Suite");
+    // Register
+    const regRes = await request("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "Arjun Student",
+        badgeId: "ST-2026-001",
+        email: "arjun.student@university.edu",
+        mobile: "+91 98765 43210",
+        role: "Software Developer",
+        password: "SecretPassword123!",
+      }),
+    });
+    assert(regRes.status === 201, "Auth Register returns 201 Created");
+    assert(regRes.body.user.email === "arjun.student@university.edu", "User email registered");
+    assert(regRes.body.user.badgeId === "ST-2026-001", "User badgeId recorded");
+
+    // Me
+    const meRes = await request("/api/auth/me");
+    assert(meRes.status === 200 && meRes.body.user.name === "Arjun Student", "GET /api/auth/me returns active session");
+
+    // Logout
+    const logoutRes = await request("/api/auth/logout", { method: "POST" });
+    assert(logoutRes.status === 200, "POST /api/auth/logout succeeds");
+    const meAfterLogout = await request("/api/auth/me");
+    assert(meAfterLogout.body.user === null, "Session cleared after logout");
+
+    // Invalid Login
+    const badLogin = await request("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "arjun.student@university.edu", password: "wrongpassword" }),
+    });
+    assert(badLogin.status === 401, "Invalid password returns 401 Unauthorized");
+
+    // Valid Login
+    const goodLogin = await request("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: "arjun.student@university.edu", password: "SecretPassword123!" }),
+    });
+    assert(goodLogin.status === 200, "Valid login returns 200 OK");
+    assert(goodLogin.body.user.name === "Arjun Student", "Logged in user matches");
+
+    // Guest Auth
+    const guestRes = await request("/api/auth/guest", { method: "POST" });
+    assert(guestRes.status === 200 && guestRes.body.user.name === "Guest Student", "Guest access granted");
+
+    // 15. Account Deletion (Withdraw Consent)
+    console.log("\n[15] Testing Account Deletion (Withdraw Consent)");
+    const delAccount = await request("/api/privacy/account", { method: "DELETE" });
+    assert(delAccount.status === 200 && delAccount.body.deleted === true, "Account deleted");
+
+    const finalState = await request("/api/state");
+    assert(finalState.status === 200 && finalState.body.profile === null, "State reset to empty after deletion");
+
+  } finally {
+    serverProc.kill();
+  }
+
+  console.log("\n=================================");
+  console.log(`TEST SUMMARY: ${passed.length} passed, ${failed.length} failed`);
+  console.log("=================================\n");
+
+  if (failed.length > 0) {
+    process.exit(1);
+  }
+}
+
+runTests().catch((err) => {
+  console.error("Test run error:", err);
+  process.exit(1);
+});

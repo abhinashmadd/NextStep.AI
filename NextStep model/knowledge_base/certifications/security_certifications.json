@@ -1,0 +1,57 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "certs_cybersecurity_catalog",
+  "category": "certifications",
+  "title": "Cybersecurity Certifications Guide",
+  "source": "NextStep Certification Roadmap Guide v1.0",
+  "certifications": [
+    {
+      "name": "CompTIA Security+",
+      "code": "SY0-701",
+      "target_career": "cybersecurity analyst",
+      "level": "entry_level",
+      "prerequisites": ["Basic networking knowledge (Network+ recommended but not required)"],
+      "domains_covered": [
+        "General Security Concepts",
+        "Threats, Vulnerabilities, and Mitigations",
+        "Security Architecture",
+        "Security Operations",
+        "Security Program Management and Oversight"
+      ],
+      "industry_recognition": "Gold standard baseline certification globally recognized and compliant with DoD 8140/8570 directive.",
+      "estimated_study_time": "2-3 months (10-15 hours/week)",
+      "recommended_for": "Students and career switchers aiming for Junior SOC Analyst and Information Security Officer roles."
+    },
+    {
+      "name": "CompTIA CySA+ (Cybersecurity Analyst)",
+      "code": "CS0-003",
+      "target_career": "cybersecurity analyst",
+      "level": "intermediate",
+      "prerequisites": ["CompTIA Security+ or minimum 2-3 years of hands-on security experience"],
+      "domains_covered": [
+        "Security Operations & Vulnerability Management",
+        "Incident Response Management",
+        "Reporting and Communication"
+      ],
+      "industry_recognition": "Validates behavioral analytics and hands-on defense monitoring for Tier 2 SOC analysts.",
+      "estimated_study_time": "3-4 months",
+      "recommended_for": "Practitioners seeking progression from Tier 1 triage to incident response."
+    },
+    {
+      "name": "Certified Ethical Hacker (CEH)",
+      "code": "CEH v13",
+      "target_career": "penetration tester / security analyst",
+      "level": "intermediate",
+      "prerequisites": ["2 years of work experience or attended official EC-Council training"],
+      "domains_covered": [
+        "Reconnaissance Techniques",
+        "System Hacking",
+        "Malware Threats",
+        "Social Engineering"
+      ],
+      "industry_recognition": "High HR keyword recognition in corporate recruiting.",
+      "estimated_study_time": "3 months",
+      "recommended_for": "Students interested in offensive security and understanding adversary techniques."
+    }
+  ]
+}
