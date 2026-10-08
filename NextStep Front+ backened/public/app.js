@@ -69,8 +69,11 @@ function renderProfile() {
 
   $("#sidebar-name").textContent = displayName;
   $("#sidebar-avatar").textContent = initial;
-  $("#top-avatar").textContent = initial;
-  $("#top-avatar").title = user ? `${user.name} (${user.badgeId}) · NextStep Student Session Active` : "Student profile & NextStep security";
+  const topAvatar = $("#top-avatar");
+  if (topAvatar) {
+    topAvatar.textContent = initial;
+    topAvatar.title = user ? `${user.name} (${user.badgeId}) · NextStep Student Session Active` : "Student profile & NextStep security";
+  }
   const sublabel = document.querySelector("#sidebar-account-btn span");
   if (sublabel) sublabel.textContent = badgeLabel;
 
