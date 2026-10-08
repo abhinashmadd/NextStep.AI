@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-# Install system utilities, build tools, curl, and Node.js 20
+# Install system dependencies & Node.js 20
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
@@ -10,27 +10,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Install Python requirements
-COPY "NextStep model/requirements.txt" ./model_requirements.txt
-RUN pip install --no-cache-dir -r model_requirements.txt
+# Copy all repository source code
+COPY . .
 
-# Install Node.js requirements
-COPY "NextStep Front+ backened/package*.json" ./app_node/
-WORKDIR /app/app_node
+# Install Python AI dependencies
+RUN pip install --no-cache-dir -r "NextStep model/requirements.txt"
+
+# Install Node.js dependencies
+WORKDIR "/app/NextStep Front+ backened"
 RUN npm install --omit=dev
 
 WORKDIR /app
 
-# Copy full repository
-COPY . .
-
-# Environment configuration
+# Environment variables
 ENV HOST=0.0.0.0
 ENV PORT=10000
 ENV AI_BASE_URL=http://127.0.0.1:8000/api/ai
 ENV PYTHONUNBUFFERED=1
 
-# Ensure entrypoint execution permission
+# Ensure executable permissions on startup script
 RUN chmod +x /app/start.sh
 
 EXPOSE 10000
