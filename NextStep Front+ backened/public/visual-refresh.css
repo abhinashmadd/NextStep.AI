@@ -788,176 +788,106 @@ body {
   transform: translateY(0);
 }
 
-/* ========================================================
-   NextStep Polished Welcome Screen Overlay
-   ======================================================== */
+/* Polished Welcome Screen Overlay (Image 1) */
 .welcome-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999999;
+  z-index: 99999;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 16px;
-  background: rgba(15, 23, 42, 0.62);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  opacity: 1;
-  visibility: visible;
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              -webkit-backdrop-filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 24px;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
 .welcome-overlay.welcome-dismissed {
   opacity: 0;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
   visibility: hidden;
   pointer-events: none;
 }
 
 .welcome-card {
-  width: min(480px, 100%);
   background: #ffffff;
-  border-radius: 28px;
-  padding: 44px 36px 38px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border-radius: 24px;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06);
+  padding: 44px 38px;
+  max-width: 480px;
+  width: 100%;
   text-align: center;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.35),
-              0 0 0 1px rgba(255, 255, 255, 0.6),
-              0 8px 20px -6px rgba(0, 0, 0, 0.15);
-  transform: scale(1) translateY(0);
-  opacity: 1;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: welcomePopIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: welcomePop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.welcome-overlay.welcome-dismissed .welcome-card {
-  transform: scale(0.94) translateY(14px);
-  opacity: 0;
-}
-
-@keyframes welcomePopIn {
-  from {
-    opacity: 0;
-    transform: scale(0.92) translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+@keyframes welcomePop {
+  0% { transform: scale(0.9) translateY(16px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .welcome-logo-container {
-  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
+  margin-bottom: 22px;
 }
 
 .welcome-logo-img {
+  max-width: 290px;
   width: 100%;
-  max-width: 360px;
   height: auto;
-  aspect-ratio: 1024 / 338;
   object-fit: contain;
-  display: block;
-  user-select: none;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.05));
 }
 
 .welcome-subtitle-text {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 14px;
+  font-size: 15px;
+  color: #475569;
+  margin: 0 0 30px 0;
   font-weight: 500;
-  color: #64748b;
-  margin: 0 0 28px;
-  letter-spacing: -0.01em;
   line-height: 1.5;
 }
 
 .welcome-get-started-btn {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  background: linear-gradient(135deg, #092244 0%, #0d3463 100%);
+  background: #0f172a;
   color: #ffffff;
   border: none;
-  border-radius: 9999px;
-  padding: 15px 36px;
+  border-radius: 14px;
+  padding: 15px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  box-shadow: 0 10px 24px -6px rgba(9, 34, 68, 0.45),
-              0 2px 6px rgba(9, 34, 68, 0.2);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
-              background 0.22s ease;
-  position: relative;
-  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
+  width: 100%;
 }
 
 .welcome-get-started-btn:hover {
+  background: #1e293b;
   transform: translateY(-2px);
-  box-shadow: 0 16px 32px -6px rgba(9, 34, 68, 0.55),
-              0 0 0 2px rgba(16, 185, 129, 0.35);
-  background: linear-gradient(135deg, #071a33 0%, #0b2d55 100%);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
 }
 
 .welcome-get-started-btn:active {
   transform: translateY(0);
-  box-shadow: 0 6px 16px -4px rgba(9, 34, 68, 0.4);
 }
 
-.welcome-get-started-btn:focus-visible {
-  outline: 3px solid #10b981;
-  outline-offset: 3px;
+/* Sidebar & Header Brand Logo (Image 2 Look) */
+.brand-logo-img {
+  height: 38px;
+  width: auto;
+  max-width: 165px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s ease;
 }
 
-.welcome-btn-arrow {
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.welcome-get-started-btn:hover .welcome-btn-arrow {
-  transform: translateX(4px);
-}
-
-/* Reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  .welcome-overlay,
-  .welcome-card,
-  .welcome-get-started-btn,
-  .welcome-btn-arrow {
-    animation: none !important;
-    transition: none !important;
-    transform: none !important;
-  }
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
-  .welcome-card {
-    padding: 32px 20px 28px;
-    border-radius: 22px;
-  }
-  .welcome-logo-img {
-    max-width: 280px;
-  }
-  .welcome-subtitle-text {
-    font-size: 13px;
-    margin-bottom: 22px;
-  }
-  .welcome-get-started-btn {
-    width: 100%;
-    padding: 14px 24px;
-    font-size: 15px;
-  }
+.brand:hover .brand-logo-img {
+  transform: scale(1.03);
 }

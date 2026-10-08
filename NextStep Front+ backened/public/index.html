@@ -21,15 +21,27 @@
 </head>
 
 <body>
+  <!-- Welcome Screen Overlay (Image 1) -->
+  <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true" aria-label="Welcome to NextStep">
+    <div class="welcome-card" id="welcome-card">
+      <div class="welcome-logo-container">
+        <img src="./nextstep-logo.png" alt="NextStep Logo" class="welcome-logo-img" width="1024" height="338" draggable="false">
+      </div>
+      <p class="welcome-subtitle-text">Your Career. Your Skills. Your NextStep.</p>
+      <button type="button" class="welcome-get-started-btn" id="welcome-dismiss-btn" autofocus aria-label="Get started with NextStep">
+        <span class="welcome-btn-text">Get started</span>
+        <svg class="welcome-btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </aside>
+
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" aria-label="NextStep home">
-        <span class="brand-mark"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M7 16h15m-6-7 7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-              stroke-linejoin="round" />
-            <circle cx="16" cy="16" r="14.5" stroke="currentColor" />
-          </svg></span>
-        <span>nextstep<span class="brand-period">.</span></span>
+      <a class="brand" href="#" aria-label="NextStep home" style="display: flex; align-items: center; padding: 14px 12px 10px;">
+        <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
       </a>
       <div class="workspace-label">YOUR WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
@@ -447,6 +459,48 @@
           observer.observe(el);
         });
       });
+
+      // NextStep Welcome Screen Overlay Controller
+      (() => {
+        const overlay = document.getElementById('welcome-overlay');
+        const dismissBtn = document.getElementById('welcome-dismiss-btn');
+        if (!overlay || !dismissBtn) return;
+
+        let dismissed = false;
+        function dismissWelcome() {
+          if (dismissed) return;
+          dismissed = true;
+          overlay.classList.add('welcome-dismissed');
+
+          const cleanUp = () => {
+            overlay.removeEventListener('transitionend', cleanUp);
+            if (overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          };
+          overlay.addEventListener('transitionend', cleanUp);
+          setTimeout(cleanUp, 500);
+        }
+
+        dismissBtn.addEventListener('click', dismissWelcome);
+
+        // Keyboard Support: Enter, Space, Escape
+        const onKeyDown = (e) => {
+          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+            if (!dismissed && document.body.contains(overlay)) {
+              e.preventDefault();
+              dismissWelcome();
+              document.removeEventListener('keydown', onKeyDown);
+            }
+          }
+        };
+        document.addEventListener('keydown', onKeyDown);
+
+        // Focus button for instant accessibility
+        requestAnimationFrame(() => {
+          dismissBtn.focus();
+        });
+      })();
     </script>
 </body>
 
