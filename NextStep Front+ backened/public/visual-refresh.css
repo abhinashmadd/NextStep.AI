@@ -878,16 +878,26 @@ body {
   transform: translateY(0);
 }
 
-/* Sidebar & Header Brand Logo (Image 2 Look) */
+/* Sidebar & Header Brand Logo (Left to Right Full Logo) */
+.brand {
+  display: flex !important;
+  align-items: center;
+  width: 100%;
+  padding: 10px 4px 6px !important;
+  text-decoration: none;
+}
+
 .brand-logo-img {
-  height: 38px;
+  height: auto;
   width: auto;
-  max-width: 165px;
+  max-width: 195px;
+  max-height: 46px;
   object-fit: contain;
+  object-position: left center;
   display: block;
   transition: transform 0.2s ease;
 }
 
 .brand:hover .brand-logo-img {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
