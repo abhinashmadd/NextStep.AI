@@ -21,9 +21,16 @@ done
 cd "/app/NextStep Front+ backened"
 echo "Starting NextStep Web Server on port ${PORT:-10000}..."
 
-trap "kill -TERM $PYTHON_PID 2>/dev/null" SIGINT SIGTERM EXIT
+cleanup() {
+  echo "Stopping NextStep services..."
+  kill -TERM "$PYTHON_PID" "$NODE_PID" 2>/dev/null
+  wait "$PYTHON_PID" "$NODE_PID" 2>/dev/null
+  exit 0
+}
+
+trap cleanup SIGINT SIGTERM EXIT
 
 node server.js &
 NODE_PID=$!
 
-wait -n $NODE_PID $PYTHON_PID
+wait -n "$NODE_PID" "$PYTHON_PID"

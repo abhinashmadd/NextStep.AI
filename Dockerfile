@@ -1,9 +1,10 @@
 FROM python:3.11-slim
 
-# Install system dependencies & Node.js 20
+# Install system dependencies, dos2unix & Node.js 20
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     build-essential \
+    dos2unix \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
@@ -12,6 +13,9 @@ WORKDIR /app
 
 # Copy all repository source code
 COPY . .
+
+# Sanitize script line endings & permissions unconditionally
+RUN dos2unix /app/start.sh && chmod 755 /app/start.sh
 
 # Install Python AI dependencies
 RUN pip install --no-cache-dir -r "NextStep model/requirements.txt"
@@ -27,9 +31,6 @@ ENV HOST=0.0.0.0
 ENV PORT=10000
 ENV AI_BASE_URL=http://127.0.0.1:8000/api/ai
 ENV PYTHONUNBUFFERED=1
-
-# Ensure executable permissions on startup script
-RUN chmod +x /app/start.sh
 
 EXPOSE 10000
 
