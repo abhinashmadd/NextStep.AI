@@ -21,20 +21,21 @@
 </head>
 
 <body>
-  <!-- Welcome Screen Overlay (Image 1) -->
+  <!-- Cinematic Splash Landing Overlay (Picture Look) -->
   <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true" aria-label="Welcome to NextStep">
-    <div class="welcome-card" id="welcome-card">
-      <div class="welcome-logo-container">
-        <img src="./nextstep-logo.png" alt="NextStep Logo" class="welcome-logo-img" width="1024" height="338" draggable="false">
+    <div class="welcome-modal-content">
+      <div class="welcome-glow-backdrop"></div>
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
+      <p class="welcome-hero-tagline">Your Career. Your Skills. Your NextStep.</p>
+      <div class="welcome-hero-actions">
+        <button type="button" class="welcome-enter-btn" id="welcome-dismiss-btn" autofocus aria-label="Get started with NextStep">
+          <span>Get Started</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
       </div>
-      <p class="welcome-subtitle-text">Your Career. Your Skills. Your NextStep.</p>
-      <button type="button" class="welcome-get-started-btn" id="welcome-dismiss-btn" autofocus aria-label="Get started with NextStep">
-        <span class="welcome-btn-text">Get started</span>
-        <svg class="welcome-btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </button>
     </div>
   </aside>
 

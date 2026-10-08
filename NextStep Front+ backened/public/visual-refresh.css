@@ -788,19 +788,19 @@ body {
   transform: translateY(0);
 }
 
-/* Polished Welcome Screen Overlay (Image 1) */
+/* Cinematic Splash Landing Overlay (Picture Look) */
 .welcome-overlay {
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(10, 15, 26, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  transition: opacity 0.45s ease, visibility 0.45s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .welcome-overlay.welcome-dismissed {
@@ -809,73 +809,95 @@ body {
   pointer-events: none;
 }
 
-.welcome-card {
-  background: #ffffff;
-  border-radius: 24px;
-  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.06);
-  padding: 44px 38px;
-  max-width: 480px;
-  width: 100%;
+.welcome-modal-content {
+  position: relative;
+  max-width: 650px;
+  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  animation: welcomePop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: logoFloatIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes welcomePop {
-  0% { transform: scale(0.9) translateY(16px); opacity: 0; }
+@keyframes logoFloatIn {
+  0% { transform: scale(0.88) translateY(20px); opacity: 0; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-.welcome-logo-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 22px;
+.welcome-glow-backdrop {
+  position: absolute;
+  top: 36%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130%;
+  height: 130%;
+  max-width: 580px;
+  background: radial-gradient(circle, rgba(0, 199, 129, 0.22) 0%, rgba(20, 45, 90, 0.18) 45%, transparent 70%);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.welcome-logo-img {
-  max-width: 290px;
-  width: 100%;
+.welcome-hero-logo {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  width: 82vw;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.05));
+  filter: drop-shadow(0 14px 40px rgba(0, 199, 129, 0.28)) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.8));
+  animation: logoPulse 4s ease-in-out infinite alternate;
 }
 
-.welcome-subtitle-text {
+@keyframes logoPulse {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.welcome-hero-tagline {
+  position: relative;
+  z-index: 1;
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 15px;
-  color: #475569;
-  margin: 0 0 30px 0;
+  font-size: 19px;
+  color: #f1f5f9;
+  margin: 28px 0 32px 0;
   font-weight: 500;
-  line-height: 1.5;
+  letter-spacing: -0.2px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 }
 
-.welcome-get-started-btn {
-  background: #0f172a;
-  color: #ffffff;
+.welcome-hero-actions {
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-enter-btn {
+  background: linear-gradient(135deg, #00c781, #00a86b);
+  color: #081326;
   border: none;
-  border-radius: 14px;
-  padding: 15px 32px;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius: 999px;
+  padding: 16px 44px;
+  font-size: 16px;
+  font-weight: 700;
   font-family: inherit;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.25);
-  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 199, 129, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 
-.welcome-get-started-btn:hover {
-  background: #1e293b;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.35);
+.welcome-enter-btn:hover {
+  background: linear-gradient(135deg, #10db94, #00b975);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 38px rgba(0, 199, 129, 0.55);
 }
 
-.welcome-get-started-btn:active {
-  transform: translateY(0);
+.welcome-enter-btn:active {
+  transform: translateY(0) scale(0.99);
 }
 
 /* Sidebar & Header Brand Logo (Left to Right Full Logo) */
