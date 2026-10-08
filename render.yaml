@@ -5,6 +5,7 @@ services:
     plan: free
     region: oregon
     dockerfilePath: ./Dockerfile
+    dockerCommand: python /app/run_all.py
     envVars:
       - key: PORT
         value: 10000

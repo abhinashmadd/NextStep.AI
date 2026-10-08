@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM --platform=linux/amd64 python:3.11-slim
 
 # Install system dependencies, dos2unix & Node.js 20
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -11,11 +11,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# Copy all repository source code
+# Copy repository source code
 COPY . .
 
-# Sanitize script line endings & permissions unconditionally
-RUN dos2unix /app/start.sh && chmod 755 /app/start.sh
+# Sanitize script line endings & set execution permissions
+RUN dos2unix /app/start.sh 2>/dev/null || true
+RUN chmod 755 /app/start.sh
 
 # Install Python AI dependencies
 RUN pip install --no-cache-dir -r "NextStep model/requirements.txt"
@@ -34,4 +35,4 @@ ENV PYTHONUNBUFFERED=1
 
 EXPOSE 10000
 
-CMD ["/bin/bash", "/app/start.sh"]
+CMD ["python", "/app/run_all.py"]
