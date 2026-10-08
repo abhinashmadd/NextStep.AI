@@ -16,7 +16,7 @@ COPY . .
 
 # Sanitize script line endings & set execution permissions
 RUN dos2unix /app/start.sh 2>/dev/null || true
-RUN chmod 755 /app/start.sh
+RUN chmod 755 /app/start.sh /app/run_all.py
 
 # Install Python AI dependencies
 RUN pip install --no-cache-dir -r "NextStep model/requirements.txt"
