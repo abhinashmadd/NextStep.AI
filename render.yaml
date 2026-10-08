@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: nextstep-platform
+    name: nextstep-ai-career
     runtime: docker
     plan: free
     region: oregon
