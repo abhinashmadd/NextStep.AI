@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: nextstep-platform
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: HOST
+        value: 0.0.0.0
+      - key: AI_BASE_URL
+        value: http://127.0.0.1:8000/api/ai
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: NVIDIA_BASE_URL
+        value: https://integrate.api.nvidia.com/v1
+      - key: NVIDIA_MODEL
+        value: z-ai/glm-5.3

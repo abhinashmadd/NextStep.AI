@@ -1,6 +1,6 @@
 const http = require("node:http");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-const AI_BASE_URL = "http://127.0.0.1:8000/api/ai";
+const AI_BASE_URL = process.env.AI_BASE_URL || "http://127.0.0.1:8000/api/ai";
 
 async function triggerAIAnalysis(state) {
   // Build payload for Python AI service
