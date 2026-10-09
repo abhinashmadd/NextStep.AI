@@ -1,11 +1,56 @@
-const API_BASE = (window.location.protocol === "file:" || (window.location.port && window.location.port !== "3000"))
-  ? "http://127.0.0.1:3000"
-  : "";
+const API_BASE = (() => {
+  if (window.location.protocol === "file:") return "http://127.0.0.1:3000";
+  if (window.location.port === "3000" || window.location.port === "10000" || window.location.port === "") return "";
+  const host = window.location.hostname || "127.0.0.1";
+  return `http://${host}:3000`;
+})();
 const stateUrl = `${API_BASE}/api/state`;
 const symbols = {
-  Project: "▣", Coursework: "▤", Assignment: "▧", Internship: "◷",
-  "GitHub repository": "⌘", Certificate: "✳", Report: "▤", Portfolio: "◫", Other: "＋",
+  Project: "▣",
+  "GitHub repository": "⌘",
+  "Open Source Contribution": "⌥",
+  "Technical Report": "▤",
+  "System Architecture / Design": "◈",
+  "Code Sample": "⌨",
+  Coursework: "▤",
+  "Academic Transcript": "📑",
+  "Capstone Project": "◪",
+  Assignment: "▧",
+  "Research Paper": "📄",
+  "Thesis / Dissertation": "📜",
+  Internship: "◷",
+  "Employment Experience": "💼",
+  "Freelance Project": "⚡",
+  Apprenticeship: "🛠",
+  Certificate: "✳",
+  "Online Course Completion": "🎓",
+  "Bootcamp Completion": "🚀",
+  "Workshop / Training": "💡",
+  Award: "🏆",
+  "Competition / Hackathon": "🥇",
+  Scholarship: "🎖",
+  "Honor Society": "✦",
+  "Leadership Role": "★",
+  "Extracurricular Activity": "⚽",
+  Volunteering: "🤝",
+  "Student Organization": "👥",
+  "Conference Presentation": "🎤",
+  Publication: "📰",
+  "Poster Session": "📊",
+  "Tech Talk / Demo": "💻",
+  Portfolio: "🌐",
+  "Recommendation Letter": "✉",
+  "Client Testimonial": "💬",
+  Report: "▤",
+  Other: "＋",
 };
+
+function formatFileSize(bytes) {
+  if (!bytes) return "0 B";
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
 let currentState = null;
 let toastTimeout = null;
 let careerCatalog = [];
@@ -39,11 +84,16 @@ function showToast(message, isError = false) {
 
 async function api(path, body) {
   const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${API_BASE}${path}`;
+  const token = localStorage.getItem("nextstep_token");
+  const headers = { "Content-Type": "application/json" };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
   let response;
   try {
     response = await fetch(url, {
       method: body === undefined ? "GET" : "POST",
-      headers: body === undefined ? {} : { "Content-Type": "application/json" },
+      headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch {
@@ -80,6 +130,22 @@ function renderProfile() {
   const heroRole = $("#hero-role-name");
   if (heroRole) {
     heroRole.textContent = profile ? profile.targetRole : "Software Developer";
+  }
+
+  const authBtn = $("#auth-nav-btn") || document.querySelector(".topbar-right a");
+  if (authBtn) {
+    if (user) {
+      authBtn.textContent = `Sign Out (${user.name.split(/\s+/)[0]})`;
+      authBtn.href = "#";
+      authBtn.onclick = (e) => {
+        e.preventDefault();
+        window.NextStepAuth?.open("account");
+      };
+    } else {
+      authBtn.textContent = "Login / Register";
+      authBtn.href = "auth.html";
+      authBtn.onclick = null;
+    }
   }
 
   if (!profile) {
@@ -130,15 +196,30 @@ function renderEvidence() {
     container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece →</button></div>`;
     return;
   }
-  container.innerHTML = evidence.slice(0, 4).map((item) => `
-    <article class="evidence-item">
-      <div class="evidence-icon">${escapeHtml(symbols[item.type] || symbols.Other)}</div>
-      <div><div class="evidence-title">${escapeHtml(item.title)}</div><div class="evidence-meta">${escapeHtml(item.type)} · Added ${relativeDate(item.createdAt)}</div>${item.description ? `<div class="evidence-description">${escapeHtml(item.description.slice(0, 240))}${item.description.length > 240 ? "…" : ""}</div>` : ""}${item.link ? `<a class="resource-link evidence-url" href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">Open linked work ↗</a>` : ""}</div>
-      ${item.fileName ? item.fileStored
-        ? `<span class="evidence-controls"><a class="file-chip" href="${API_BASE}/api/evidence/${encodeURIComponent(item.id)}/file" title="Download ${escapeHtml(item.fileName)}">${escapeHtml(item.fileName)} ↓</a><button class="delete-evidence" type="button" data-delete-evidence="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}">×</button></span>`
-        : `<span class="evidence-controls"><span class="file-chip" title="${escapeHtml(item.fileName)}">${escapeHtml(item.fileName)}</span><button class="delete-evidence" type="button" data-delete-evidence="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}">×</button></span>`
-        : `<button class="delete-evidence" type="button" data-delete-evidence="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}">×</button>`}</article>`).join("");
-  if (evidence.length > 4) container.insertAdjacentHTML("beforeend", `<div class="activity-empty">And ${evidence.length - 4} more ${evidence.length - 4 === 1 ? "piece" : "pieces"} of evidence in your profile.</div>`);
+  container.innerHTML = evidence.slice(0, 6).map((item) => {
+    const isPortfolio = item.type === "Portfolio";
+    const itemSymbol = symbols[item.type] || symbols.Other;
+    return `
+      <article class="evidence-item">
+        <div class="evidence-icon">${escapeHtml(itemSymbol)}</div>
+        <div>
+          <div class="evidence-title">
+            ${escapeHtml(item.title)}
+            ${isPortfolio ? ` <span class="portfolio-link-badge">🌐 Portfolio Link</span>` : ""}
+          </div>
+          <div class="evidence-meta">${escapeHtml(item.type)} · Added ${relativeDate(item.createdAt)}</div>
+          ${item.description ? `<div class="evidence-description">${escapeHtml(item.description.slice(0, 240))}${item.description.length > 240 ? "…" : ""}</div>` : ""}
+          ${item.link ? `<a class="resource-link evidence-url" href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${isPortfolio ? "Visit Portfolio Website ↗" : "Open linked work ↗"}</a>` : ""}
+        </div>
+        <span class="evidence-controls">
+          ${item.fileName && item.fileStored
+            ? `<a class="file-chip" href="${API_BASE}/api/evidence/${encodeURIComponent(item.id)}/file" title="Download ${escapeHtml(item.fileName)}">${escapeHtml(item.fileName)}${item.fileSize ? ` (${formatFileSize(item.fileSize)})` : ""} ↓</a>`
+            : (item.fileName ? `<span class="file-chip" title="${escapeHtml(item.fileName)}">${escapeHtml(item.fileName)}</span>` : "")}
+          <button class="delete-evidence" type="button" data-delete-evidence="${escapeHtml(item.id)}" aria-label="Delete ${escapeHtml(item.title)}">×</button>
+        </span>
+      </article>`;
+  }).join("");
+  if (evidence.length > 6) container.insertAdjacentHTML("beforeend", `<div class="activity-empty">And ${evidence.length - 6} more ${evidence.length - 6 === 1 ? "piece" : "pieces"} of evidence in your profile.</div>`);
 }
 
 function renderAction() {
@@ -338,8 +419,19 @@ async function refresh() {
   }
   populateCareerOptions();
   currentState = await api(stateUrl);
+  if (localStorage.getItem("nextstep_consent") === "true") {
+    currentState.privacy = currentState.privacy || {};
+    currentState.privacy.consent = currentState.privacy.consent || { accepted: true };
+  }
   render();
-  if (!currentState.privacy?.consent?.accepted && !$("#consent-dialog").open) $("#consent-dialog").showModal();
+  const consentAccepted = Boolean(currentState.privacy?.consent?.accepted || localStorage.getItem("nextstep_consent") === "true");
+  if (!consentAccepted && !$("#consent-dialog").open) {
+    try {
+      $("#consent-dialog").showModal();
+    } catch {
+      $("#consent-dialog").setAttribute("open", "");
+    }
+  }
 }
 
 function populateCareerOptions() {
@@ -424,7 +516,9 @@ function openDialog(id) {
       }
     }
   }
-  if (id === "evidence-dialog") $("#evidence-form")?.reset();
+  if (id === "evidence-dialog") {
+    resetEvidenceForm();
+  }
   if (id === "complete-dialog") $("#complete-form")?.reset();
   if (!dialog.open) {
     try {
@@ -435,14 +529,115 @@ function openDialog(id) {
   }
 }
 
-async function submitForm(form, endpoint, payload, successMessage) {
+function resetEvidenceForm() {
+  const form = $("#evidence-form");
+  if (!form) return;
+  form.reset();
+  const fileInput = $("#evidence-file-input");
+  if (fileInput) fileInput.value = "";
+  const preview = $("#file-upload-preview");
+  if (preview) {
+    preview.style.display = "none";
+    preview.innerHTML = "";
+  }
+  const searchInput = $("#evidence-type-search");
+  if (searchInput) {
+    searchInput.value = "";
+    filterEvidenceTypes("");
+  }
+  updateEvidenceFormMode();
+}
+
+function updateEvidenceFormMode() {
+  const typeSelect = $("#evidence-type-select");
+  const fileContainer = $("#evidence-file-container");
+  const uploadNote = $("#evidence-upload-note");
+  const linkLabel = $("#evidence-link-label");
+  const linkTitle = $("#evidence-link-title");
+  const linkOptional = $("#evidence-link-optional");
+  const linkInput = $("#evidence-link-input");
+  const submitBtn = $("#evidence-submit-btn");
+  const dialogTitle = $("#evidence-dialog-title");
+  const dialogSubtitle = $("#evidence-dialog-subtitle");
+  const addAnotherBtn = $("#evidence-add-another");
+
+  if (!typeSelect) return;
+  const isPortfolio = typeSelect.value === "Portfolio";
+
+  if (isPortfolio) {
+    if (fileContainer) fileContainer.style.display = "none";
+    if (uploadNote) uploadNote.style.display = "none";
+    const fileInput = $("#evidence-file-input");
+    if (fileInput) fileInput.value = "";
+    const preview = $("#file-upload-preview");
+    if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+
+    if (linkTitle) linkTitle.textContent = "Portfolio Web Link";
+    if (linkOptional) {
+      linkOptional.textContent = "(Required: https://your-portfolio.com)";
+      linkOptional.style.color = "var(--green-dark)";
+      linkOptional.style.fontWeight = "700";
+    }
+    if (linkInput) {
+      linkInput.placeholder = "https://your-portfolio.com";
+      linkInput.required = true;
+    }
+    if (submitBtn) submitBtn.innerHTML = 'Add Portfolio Link <span>→</span>';
+    if (dialogTitle) dialogTitle.textContent = "Add a Portfolio Link";
+    if (dialogSubtitle) dialogSubtitle.textContent = "Showcase your work with a live web link. No file upload required.";
+    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another Link';
+  } else {
+    if (fileContainer) fileContainer.style.display = "block";
+    if (uploadNote) uploadNote.style.display = "block";
+    if (linkTitle) linkTitle.textContent = "GitHub or project link";
+    if (linkOptional) {
+      linkOptional.textContent = "(optional; never fetched by the server)";
+      linkOptional.style.color = "";
+      linkOptional.style.fontWeight = "";
+    }
+    if (linkInput) {
+      linkInput.placeholder = "https://github.com/you/project";
+      linkInput.required = false;
+    }
+    if (submitBtn) submitBtn.innerHTML = 'Add to my evidence <span>→</span>';
+    if (dialogTitle) dialogTitle.textContent = "Add a piece of evidence";
+    if (dialogSubtitle) dialogSubtitle.textContent = "Describe what you contributed so we can understand the skills behind it.";
+    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another';
+  }
+}
+
+function filterEvidenceTypes(query) {
+  const select = $("#evidence-type-select");
+  if (!select) return;
+  const q = (query || "").toLowerCase().trim();
+  const optgroups = select.querySelectorAll("optgroup");
+  optgroups.forEach((group) => {
+    let hasVisible = false;
+    const options = group.querySelectorAll("option");
+    options.forEach((opt) => {
+      const match = !q || opt.textContent.toLowerCase().includes(q) || group.label.toLowerCase().includes(q);
+      opt.hidden = !match;
+      opt.style.display = match ? "" : "none";
+      if (match) hasVisible = true;
+    });
+    group.hidden = !hasVisible;
+    group.style.display = hasVisible ? "" : "none";
+  });
+}
+
+async function submitForm(form, endpoint, payload, successMessage, keepDialogOpen = false) {
   const submit = form.querySelector('[type="submit"]');
-  const originalText = submit.innerHTML;
-  submit.disabled = true;
-  submit.textContent = "Saving…";
+  const originalText = submit ? submit.innerHTML : "Saving…";
+  if (submit) {
+    submit.disabled = true;
+    submit.textContent = "Saving…";
+  }
   try {
     currentState = await api(endpoint, payload);
-    form.closest("dialog").close();
+    if (!keepDialogOpen) {
+      form.closest("dialog")?.close();
+    }
+    form.reset();
     render();
     showToast(successMessage);
     return true;
@@ -450,20 +645,42 @@ async function submitForm(form, endpoint, payload, successMessage) {
     showToast(error.message, true);
     return false;
   } finally {
-    submit.disabled = false;
-    submit.innerHTML = originalText;
+    if (submit) {
+      submit.disabled = false;
+      submit.innerHTML = originalText;
+    }
   }
 }
 
 $("#consent-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  const submitBtn = event.currentTarget.querySelector('button[type="submit"]');
+  const originalText = submitBtn ? submitBtn.innerHTML : "";
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Entering NextStep…";
+  }
   try {
+    localStorage.setItem("nextstep_consent", "true");
     currentState = await api("/api/privacy/consent", { accepted: true });
-    $("#consent-dialog").close();
-    await refresh();
-    showToast("Privacy notice accepted. Your data stays on this device.");
+    if (currentState && currentState.privacy) {
+      currentState.privacy.consent = { accepted: true };
+    }
+    const dialog = $("#consent-dialog");
+    if (dialog) dialog.close();
+    render();
+    showToast("Privacy notice accepted. Welcome to NextStep!");
+    // Open profile setup so student immediately builds their profile!
+    if (!currentState?.profile) {
+      openDialog("profile-dialog");
+    }
   } catch (error) {
     showToast(error.message, true);
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }
   }
 });
 
@@ -493,19 +710,53 @@ $("#profile-form").addEventListener("submit", async (event) => {
     : "Profile saved! Your baseline skill map and Next Best Action are ready.");
 });
 
-$("#evidence-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const form = event.currentTarget;
+async function submitEvidenceForm(keepOpen = false) {
+  const form = $("#evidence-form");
+  if (!form) return false;
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return false;
+  }
   const values = new FormData(form);
-  const file = values.get("file");
+  const type = (values.get("type") || "").trim();
+  const link = (values.get("link") || "").trim();
+  const title = (values.get("title") || "").trim();
+  const isPortfolio = type === "Portfolio";
+
+  if (!title) {
+    showToast("Give your evidence a title.", true);
+    $("#evidence-title-input")?.focus();
+    return false;
+  }
+
+  // Requirement 4: Portfolio Option Must Accept Links Only
+  if (isPortfolio) {
+    if (!link) {
+      showToast("Please enter your portfolio URL (e.g. https://your-portfolio.com).", true);
+      $("#evidence-link-input")?.focus();
+      return false;
+    }
+    if (!/^https?:\/\//i.test(link)) {
+      showToast("Portfolio link must start with http:// or https:// (e.g. https://your-portfolio.com).", true);
+      $("#evidence-link-input")?.focus();
+      return false;
+    }
+  }
+
+  const fileInput = $("#evidence-file-input");
+  const file = fileInput?.files?.[0];
   let content = "";
   let fileData = "";
-  if (file?.size) {
-    if (file.size > 1024 * 1024) {
-      showToast("Files must be 1 MB or smaller in this demo.", true);
-      return;
+
+  // Requirement 2: Increase document upload limit to 10 MB
+  if (!isPortfolio && file?.size) {
+    if (file.size > 10 * 1024 * 1024) {
+      showToast(`Files must be 10 MB or smaller. Selected file is ${(file.size / (1024 * 1024)).toFixed(2)} MB.`, true);
+      return false;
     }
     try {
+      const submitBtn = $("#evidence-submit-btn");
+      if (submitBtn) submitBtn.textContent = "Processing upload…";
       const bytes = new Uint8Array(await file.arrayBuffer());
       let binary = "";
       for (let offset = 0; offset < bytes.length; offset += 0x8000) {
@@ -516,21 +767,85 @@ $("#evidence-form").addEventListener("submit", async (event) => {
         content = (await file.text()).replace(/^\uFEFF/, "").slice(0, 20000);
       }
     } catch {
-      showToast("Couldn't read that file. Try again or add its key details in the description.", true);
-      return;
+      showToast("Couldn't read that file. Try again or add its details in the description.", true);
+      return false;
     }
   }
-  const ok = await submitForm(form, "/api/evidence", {
-    title: values.get("title").trim(),
-    type: values.get("type"),
-    description: values.get("description").trim(),
-    link: values.get("link").trim(),
-    fileName: file?.size ? file.name : "",
-    fileData,
-    content,
-  }, currentState.profile
-    ? "Evidence added. Your skill map and next action are up to date."
-    : "Evidence added. Set up your profile to discover your next action.");
+
+  const payload = {
+    title,
+    type,
+    description: (values.get("description") || "").trim(),
+    link,
+    fileName: !isPortfolio && file?.size ? file.name : "",
+    fileData: isPortfolio ? "" : fileData,
+    content: isPortfolio ? "" : content,
+  };
+
+  const successMsg = isPortfolio
+    ? "Portfolio link saved successfully!"
+    : (keepOpen ? "Document uploaded! You can now add another document." : (currentState?.profile
+        ? "Evidence added. Your skill map and next action are up to date."
+        : "Evidence added. Set up your profile to discover your next action."));
+
+  // Requirement 3: Support repeated uploads without refreshing page
+  const success = await submitForm(form, "/api/evidence", payload, successMsg, keepOpen);
+  if (success) {
+    resetEvidenceForm();
+    if (keepOpen) {
+      $("#evidence-title-input")?.focus();
+    }
+  }
+  return success;
+}
+
+$("#evidence-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await submitEvidenceForm(false);
+});
+
+$("#evidence-add-another")?.addEventListener("click", async (event) => {
+  event.preventDefault();
+  await submitEvidenceForm(true);
+});
+
+$("#evidence-type-search")?.addEventListener("input", (e) => {
+  filterEvidenceTypes(e.target.value);
+});
+
+$("#evidence-type-select")?.addEventListener("change", () => {
+  updateEvidenceFormMode();
+});
+
+$("#evidence-file-input")?.addEventListener("change", (e) => {
+  const file = e.target.files?.[0];
+  const preview = $("#file-upload-preview");
+  if (!file) {
+    if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    showToast(`File "${file.name}" exceeds the 10 MB limit (${(file.size / (1024 * 1024)).toFixed(2)} MB). Maximum allowed size is 10 MB.`, true);
+    e.target.value = "";
+    if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+    return;
+  }
+  if (preview) {
+    preview.style.display = "flex";
+    preview.innerHTML = `
+      <div class="file-preview-info">
+        <span class="file-preview-icon">📎</span>
+        <span class="file-preview-name" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</span>
+        <span class="file-preview-size">(${formatFileSize(file.size)})</span>
+      </div>
+      <button type="button" class="file-preview-clear" title="Remove attached file">×</button>
+    `;
+    preview.querySelector(".file-preview-clear").onclick = () => {
+      e.target.value = "";
+      preview.style.display = "none";
+      preview.innerHTML = "";
+    };
+  }
 });
 
 $("#assessment-form").addEventListener("submit", async (event) => {
@@ -563,6 +878,14 @@ document.addEventListener("click", async (event) => {
     return;
   }
   if (target.id === "quick-start") {
+    if (!currentState?.currentUser) {
+      if (window.NextStepAuth) {
+        window.NextStepAuth.open("signin");
+        return;
+      }
+      window.location.href = "./auth.html";
+      return;
+    }
     if (currentState?.profile) {
       openDialog("evidence-dialog");
     } else {

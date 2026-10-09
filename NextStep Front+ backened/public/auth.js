@@ -1,8 +1,11 @@
 // NextStep Student Authentication & Profile Access Controller
 (function () {
-  const API_BASE = (window.location.protocol === "file:" || (window.location.port && window.location.port !== "3000"))
-    ? "http://127.0.0.1:3000"
-    : "";
+  const API_BASE = (() => {
+    if (window.location.protocol === "file:") return "http://127.0.0.1:3000";
+    if (window.location.port === "3000" || window.location.port === "10000" || window.location.port === "") return "";
+    const host = window.location.hostname || "127.0.0.1";
+    return `http://${host}:3000`;
+  })();
 
   let toastTimeout = null;
   let pendingRegistration = null;
@@ -27,11 +30,16 @@
 
   async function api(path, body) {
     const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${API_BASE}${path}`;
+    const token = localStorage.getItem("nextstep_token");
+    const headers = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
     let response;
     try {
       response = await fetch(url, {
         method: body === undefined ? "GET" : "POST",
-        headers: body === undefined ? {} : { "Content-Type": "application/json" },
+        headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
         body: body === undefined ? undefined : JSON.stringify(body),
       });
     } catch {
@@ -86,8 +94,10 @@
       const mobile = $("#auth-acc-mobile");
       if (mobile) mobile.textContent = user.mobile || "—";
     } else {
+      currentUser = null;
       try {
         localStorage.removeItem("nextstep_user");
+        localStorage.removeItem("nextstep_token");
       } catch {}
 
       const tabs = $("#auth-tabs");
@@ -97,27 +107,49 @@
   }
 
   async function checkSession() {
-    try {
-      const cached = localStorage.getItem("nextstep_user");
-      if (cached) {
-        currentUser = JSON.parse(cached);
-        updateAccountView(currentUser);
-      }
-    } catch {}
+    const token = localStorage.getItem("nextstep_token");
+    if (!token) {
+      currentUser = null;
+      try {
+        localStorage.removeItem("nextstep_user");
+      } catch {}
+      updateAccountView(null);
+      return;
+    }
 
     try {
       const result = await api("/api/auth/me");
       if (result.user) {
         updateAccountView(result.user);
       } else {
+        try {
+          localStorage.removeItem("nextstep_token");
+          localStorage.removeItem("nextstep_user");
+        } catch {}
         updateAccountView(null);
       }
     } catch {
-      // offline or server restarting; retain cached if present
+      // Server restarting or network error: retain local cache only if token exists
+      try {
+        const cached = localStorage.getItem("nextstep_user");
+        if (cached && token) {
+          currentUser = JSON.parse(cached);
+          updateAccountView(currentUser);
+        } else {
+          updateAccountView(null);
+        }
+      } catch {
+        updateAccountView(null);
+      }
     }
   }
 
-  function handleAuthSuccess(user, state, successMsg) {
+  function handleAuthSuccess(user, state, successMsg, token) {
+    if (token) {
+      try {
+        localStorage.setItem("nextstep_token", token);
+      } catch {}
+    }
     updateAccountView(user);
     showToast(successMsg);
 
@@ -200,7 +232,7 @@
           password: values.get("password"),
         });
         form.reset();
-        handleAuthSuccess(result.user, result.state, `Welcome back, ${result.user.name}!`);
+        handleAuthSuccess(result.user, result.state, `Welcome back, ${result.user.name}!`, result.token);
       } catch (err) {
         showToast(err.message, true);
       } finally {
@@ -286,7 +318,7 @@
         const form = $("#auth-register-form");
         if (form) form.reset();
         pendingRegistration = null;
-        handleAuthSuccess(result.user, result.state, `Welcome to NextStep, ${result.user.name}!`);
+        handleAuthSuccess(result.user, result.state, `Welcome to NextStep, ${result.user.name}!`, result.token);
       } catch (err) {
         showToast(err.message, true);
       } finally {
@@ -309,7 +341,7 @@
     $("#auth-guest-btn")?.addEventListener("click", async () => {
       try {
         const result = await api("/api/auth/guest", {});
-        handleAuthSuccess(result.user, result.state, "Access granted as Guest Student.");
+        handleAuthSuccess(result.user, result.state, "Access granted as Guest Student.", result.token);
       } catch (err) {
         showToast(err.message, true);
       }
@@ -335,17 +367,19 @@
     $("#auth-acc-logout")?.addEventListener("click", async () => {
       try {
         await api("/api/auth/logout", {});
-        updateAccountView(null);
-        showToast("Signed out of NextStep session.");
-        const dialog = $("#auth-dialog");
-        if (dialog && typeof dialog.close === "function") {
-          dialog.close();
-        }
-        if (window.onNextStepAuthLogout) {
-          window.onNextStepAuthLogout();
-        }
-      } catch (err) {
-        showToast(err.message, true);
+      } catch {}
+      try {
+        localStorage.removeItem("nextstep_token");
+        localStorage.removeItem("nextstep_user");
+      } catch {}
+      updateAccountView(null);
+      showToast("Signed out of NextStep session.");
+      const dialog = $("#auth-dialog");
+      if (dialog && typeof dialog.close === "function") {
+        dialog.close();
+      }
+      if (window.onNextStepAuthLogout) {
+        window.onNextStepAuthLogout();
       }
     });
   }

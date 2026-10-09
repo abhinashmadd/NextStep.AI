@@ -10,15 +10,27 @@ async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+let authToken = "";
+
 async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`;
-  const response = await fetch(url, options);
+  const headers = { ...options.headers };
+  if (authToken && !headers["authorization"] && !headers["Authorization"]) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
+  const response = await fetch(url, { ...options, headers });
   const contentType = response.headers.get("content-type") || "";
   let body;
   if (contentType.includes("application/json")) {
     body = await response.json();
   } else {
     body = await response.text();
+  }
+  if (body && typeof body === "object" && body.token) {
+    authToken = body.token;
+  }
+  if (path === "/api/auth/logout" && response.status === 200) {
+    authToken = "";
   }
   return { status: response.status, headers: response.headers, body };
 }
@@ -134,7 +146,7 @@ async function runTests() {
     assert(typeof profile.body.recommendedAction?.skill === "string", "Recommended action targets a concrete skill");
 
     // 7. Evidence with file (testing CRLF Windows line endings and without explicit content)
-    console.log("\n[7] Testing Evidence Submission with Code Upload");
+    console.log("\n[7] Testing Evidence Submission with Code Upload (< 1 MB)");
     const codeSnippet = "const express = require('express');\r\nconst app = express();\r\n// api endpoint\r\napp.get('/api', (req, res) => res.json({ status: 'ok' }));\r\n";
     const base64Code = Buffer.from(codeSnippet).toString("base64");
     const evidenceRes = await request("/api/evidence", {
@@ -147,13 +159,133 @@ async function runTests() {
         link: "https://github.com/student/api-service",
         fileName: "server.js",
         fileData: base64Code,
-        // purposefully omitting body.content to test server auto-extraction!
       }),
     });
     assert(evidenceRes.status === 200, "Evidence submitted successfully with auto-extracted text");
     assert(evidenceRes.body.evidence.length === 1, "Evidence list has 1 item");
     const createdEvidence = evidenceRes.body.evidence[0];
     assert(createdEvidence.detectedKeywords.includes("api"), "Keywords detected from code & description");
+
+    // 7b. Testing 1 MB - 10 MB file upload support (e.g. 2.5 MB file)
+    console.log("\n[7b] Testing Document Upload Between 1 MB and 10 MB (2.5 MB)");
+    const mediumFileContent = "A".repeat(2.5 * 1024 * 1024); // 2.5 MB of text
+    const base64Medium = Buffer.from(mediumFileContent).toString("base64");
+    const mediumUploadRes = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "Large Architecture Spec",
+        type: "System Architecture / Design",
+        description: "System design specifications for distributed microservices.",
+        fileName: "architecture.txt",
+        fileData: base64Medium,
+      }),
+    });
+    assert(mediumUploadRes.status === 200, "2.5 MB document uploads successfully");
+    assert(mediumUploadRes.body.evidence.length === 2, "Second upload succeeded without page reload, now 2 items");
+
+    // 7c. Testing Rejecting Files Exceeding 10 MB limit
+    console.log("\n[7c] Testing Rejection of Document Exceeding 10 MB");
+    const overLimitContent = "B".repeat(11 * 1024 * 1024); // 11 MB
+    const base64OverLimit = Buffer.from(overLimitContent).toString("base64");
+    const overLimitRes = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "Giant File Over 10 MB",
+        type: "Technical Report",
+        fileName: "huge.txt",
+        fileData: base64OverLimit,
+      }),
+    });
+    assert(overLimitRes.status === 400 || overLimitRes.status === 413, "Files > 10 MB are rejected with clear error");
+
+    // 7d. Testing Repeated Uploads: Uploading a 3rd document without overwriting
+    console.log("\n[7d] Testing Repeated Separate Uploads");
+    const doc3Snippet = "print('Machine learning data pipeline')\n";
+    const doc3Res = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "ML Training Pipeline",
+        type: "Research Paper",
+        description: "Data analysis and machine learning scripts.",
+        fileName: "train.py",
+        fileData: Buffer.from(doc3Snippet).toString("base64"),
+      }),
+    });
+    assert(doc3Res.status === 200, "Third upload succeeded independently");
+    assert(doc3Res.body.evidence.length === 3, "Evidence count is now 3 with unique IDs");
+    const ids = doc3Res.body.evidence.map((e) => e.id);
+    const uniqueIds = new Set(ids);
+    assert(uniqueIds.size === 3, "Each upload saved as separate database record with unique ID (no overwrites)");
+
+    // 7e. Testing Portfolio: Accepts Links Only
+    console.log("\n[7e] Testing Portfolio Option: Links Only");
+    // Invalid: Portfolio with file attached must be rejected
+    const portfolioWithFile = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "My Portfolio",
+        type: "Portfolio",
+        link: "https://john-doe-portfolio.dev",
+        fileName: "portfolio.pdf",
+        fileData: Buffer.from("%PDF-mock").toString("base64"),
+      }),
+    });
+    assert(portfolioWithFile.status === 400, "Portfolio with file attachment is rejected (links only)");
+
+    // Invalid: Portfolio with invalid or missing URL must be rejected
+    const portfolioBadUrl = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "My Portfolio",
+        type: "Portfolio",
+        link: "not-a-valid-url",
+      }),
+    });
+    assert(portfolioBadUrl.status === 400, "Portfolio with invalid URL is rejected");
+
+    // Valid: Portfolio with valid HTTPS URL succeeds without file
+    const portfolioGood = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "Personal Engineering Portfolio",
+        type: "Portfolio",
+        link: "https://john-doe-portfolio.dev",
+        description: "Public personal portfolio website showcasing full stack applications.",
+      }),
+    });
+    assert(portfolioGood.status === 200, "Valid portfolio URL saved successfully without any file");
+    assert(portfolioGood.body.evidence.some((e) => e.type === "Portfolio" && e.link === "https://john-doe-portfolio.dev"), "Portfolio item persisted in evidence list");
+
+    // 7f. Testing Expanded Evidence Types
+    console.log("\n[7f] Testing Expanded Evidence Categories");
+    const hackathonRes = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "National Hackathon 1st Place",
+        type: "Competition / Hackathon",
+        description: "Won 1st place building real-time collaboration tool.",
+        link: "https://devpost.com/software/hackathon-winner",
+      }),
+    });
+    assert(hackathonRes.status === 200, "Competition / Hackathon evidence type accepted");
+
+    const certRes = await request("/api/evidence", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: "AWS Certified Cloud Practitioner",
+        type: "Certificate",
+        description: "Cloud fundamentals and architecture certification.",
+      }),
+    });
+    assert(certRes.status === 200, "Certificate evidence type accepted");
 
     // 8. File Download
     console.log("\n[8] Testing Evidence File Download");
@@ -202,7 +334,7 @@ async function runTests() {
     console.log("\n[13] Testing Evidence Deletion");
     const delEvidence = await request(`/api/evidence/${createdEvidence.id}`, { method: "DELETE" });
     assert(delEvidence.status === 200, "Evidence deleted");
-    assert(delEvidence.body.evidence.length === 0, "Evidence removed from state");
+    assert(!delEvidence.body.evidence.some((e) => e.id === createdEvidence.id), "Evidence removed from state");
 
     // 14. NextStep Student Authentication Suite
     console.log("\n[14] Testing NextStep Student Authentication Suite");
@@ -241,7 +373,7 @@ async function runTests() {
     });
     assert(badLogin.status === 401, "Invalid password returns 401 Unauthorized");
 
-    // Valid Login
+    // Valid Login (Device A)
     const goodLogin = await request("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -249,6 +381,16 @@ async function runTests() {
     });
     assert(goodLogin.status === 200, "Valid login returns 200 OK");
     assert(goodLogin.body.user.name === "Arjun Student", "Logged in user matches");
+
+    // Multi-Device / Device B Simulation: A new device/visitor without auth token
+    const deviceBRes = await fetch(`${BASE_URL}/api/auth/me`);
+    const deviceBMe = await deviceBRes.json();
+    assert(deviceBMe.user === null, "Device B without token receives user: null (no cross-device leak)");
+
+    const deviceBStateRes = await fetch(`${BASE_URL}/api/state`);
+    const deviceBState = await deviceBStateRes.json();
+    assert(deviceBState.currentUser === null, "Device B state has currentUser: null");
+    assert(deviceBState.profile === null, "Device B state does NOT show Device A profile");
 
     // Guest Auth
     const guestRes = await request("/api/auth/guest", { method: "POST" });
@@ -261,6 +403,12 @@ async function runTests() {
 
     const finalState = await request("/api/state");
     assert(finalState.status === 200 && finalState.body.profile === null, "State reset to empty after deletion");
+
+    // 16. Health & Database Status
+    console.log("\n[16] Testing Health & Database Status");
+    const health = await request("/api/health");
+    assert(health.status === 200 && health.body.status === "ok", "Health endpoint returns 200 OK");
+    assert(Boolean(health.body.database), "Database status reported in health check");
 
   } finally {
     serverProc.kill();
