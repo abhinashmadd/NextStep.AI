@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f8f5">
+  <meta name="description" content="Turn your real work into your next step toward the career you want.">
+  <title>NextStep — Make your next move count</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./product.css">
+  <link rel="stylesheet" href="./visual-refresh.css">
+  <link rel="stylesheet" href="./auth-modal.css">
+  <script src="./app.js" defer></script>
+  <script src="./auth.js" defer></script>
+</head>
+
+<body>
+  <!-- Cinematic Splash Landing Overlay (Click anywhere to open dashboard) -->
+  <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true"
+    aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
+    <div class="welcome-modal-content">
+      <div class="welcome-glow-backdrop"></div>
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
+    </div>
+  </aside>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="NextStep home"
+        style="display: flex; align-items: center; padding: 14px 12px 10px;">
+        <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
+      </a>
+      <div class="workspace-label">YOUR WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a class="nav-link active" href="#overview" data-section="overview"><span class="nav-icon">◫</span>Overview</a>
+        <a class="nav-link" href="#profile" data-section="profile"><span class="nav-icon">◉</span>My profile</a>
+        <a class="nav-link" href="#evidence" data-section="evidence"><span class="nav-icon">▧</span>My evidence<span
+            class="nav-counter" id="evidence-count">0</span></a>
+        <a class="nav-link" href="#skills" data-section="skills"><span class="nav-icon">◎</span>Skill map</a>
+        <a class="nav-link" href="#assessment" data-section="assessment"><span class="nav-icon">◇</span>Self
+          assessment</a>
+        <a class="nav-link" href="#action" data-section="action"><span class="nav-icon">↗</span>Next action</a>
+        <a class="nav-link" href="#privacy" data-section="privacy"><span class="nav-icon">◈</span>Privacy center</a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip"><span class="tip-icon">✳</span><strong>Small steps, real proof.</strong>
+          <p>Your projects tell a better story than a list of claims.</p>
+        </div>
+        <div class="sidebar-account" id="sidebar-account-btn" role="button" tabindex="0"
+          title="Student profile & NextStep security">
+          <div class="avatar" id="sidebar-avatar">N</div>
+          <div class="account-copy"><strong id="sidebar-name">Your workspace</strong><span>Student account</span></div>
+          <span class="account-menu">···</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+        <nav class="topbar-links">
+          <a href="#overview">Home</a>
+          <a href="#assessment">Career Assessment</a>
+          <a href="#skills">Career Paths</a>
+          <a href="#evidence">About</a>
+        </nav>
+        <div class="topbar-right">
+          <a class="button button-dark" href="auth.html">Login / Register</a>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="welcome-row hero-banner" id="overview">
+          <div class="hero-copy">
+            <div class="eyebrow" id="today-label">YOUR CAREER JOURNEY</div>
+            <h1 id="welcome-title">Your Career. Your Skills. Your NextStep.</h1>
+            <p class="welcome-subtitle" id="welcome-subtitle">NextStep analyzes your skills, interests and career goals
+              to provide personalized career guidance.</p>
+            <div class="hero-actions">
+              <button class="button button-dark" id="quick-start" data-open="profile" data-open-profile><span>＋</span>
+                Get Started</button>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="hero-orbit hero-orbit-one"></div>
+            <div class="hero-orbit hero-orbit-two"></div>
+
+            <div class="hero-path-card">
+              <div class="hero-card-top"><span class="hero-card-mark">✳</span><span>YOUR NEXT MOVE</span><span
+                  class="hero-card-dots">···</span></div>
+              <div class="hero-path-row">
+                <span class="hero-path-number">01</span>
+                <span class="hero-path-copy"><strong>Your work</strong><small>Show what you can do</small></span>
+                <span class="hero-path-check">✓</span>
+              </div>
+              <div class="hero-path-connector"></div>
+              <div class="hero-path-row hero-path-current">
+                <span class="hero-path-number">02</span>
+                <span class="hero-path-copy"><strong>Your next step</strong><small>Make progress that
+                    counts</small></span>
+                <span class="hero-path-arrow">↗</span>
+              </div>
+            </div>
+
+            <span class="hero-float-spark">✳</span>
+            <span class="hero-float-dot"></span>
+          </div>
+        </section>
+
+        <section class="journey-card" aria-label="Your career preparation journey">
+          <div class="journey-top">
+            <div><span class="section-kicker">YOUR JOURNEY</span>
+              <h2>From where you are to where you want to be.</h2>
+            </div><span class="journey-progress-label" id="journey-progress-label">0 of 5 steps</span>
+          </div>
+          <div class="journey-track">
+            <div class="journey-step clickable-step" data-step="profile" data-open-profile role="button" tabindex="0"
+              title="Set up your profile"><span class="step-marker">01</span>
+              <div><strong>Your profile</strong><span>Tell us where you're headed</span></div>
+            </div><span class="journey-line"></span>
+            <div class="journey-step" data-step="evidence"><span class="step-marker">02</span>
+              <div><strong>Your work</strong><span>Show what you've done</span></div>
+            </div><span class="journey-line"></span>
+            <div class="journey-step" data-step="analysis"><span class="step-marker">03</span>
+              <div><strong>Skill map</strong><span>See what you can prove</span></div>
+            </div><span class="journey-line"></span>
+            <div class="journey-step" data-step="action"><span class="step-marker">04</span>
+              <div><strong>Next action</strong><span>Focus on one useful step</span></div>
+            </div><span class="journey-line"></span>
+            <div class="journey-step" data-step="loop"><span class="step-marker">05</span>
+              <div><strong>Keep growing</strong><span>Build, add proof, repeat</span></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AI Preview Demo Section -->
+        <section class="panel preview-panel" id="ai-preview" style="margin-bottom: 20px;">
+          <div class="panel-heading">
+            <div><span class="section-kicker">DEMO / CAPABILITIES</span>
+              <h2>AI Career Analysis Preview</h2>
+              <p class="panel-subtitle">Here is a sample of what NextStep generates after analyzing your profile.</p>
+            </div>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px;">
+            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
+              <h4
+                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
+                Career Match Score</h4>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div
+                  style="position: relative; width: 44px; height: 44px; border-radius: 50%; background: conic-gradient(var(--green) 85%, #edf0ea 0); display: grid; place-items: center;">
+                  <div style="position: absolute; inset: 4px; background: #fff; border-radius: 50%;"></div>
+                  <span style="position: relative; font-size: 10px; font-weight: 700; color: var(--ink);">85%</span>
+                </div>
+                <div style="font-size: 10px; color: #666; line-height: 1.5;">Strong alignment for<br><strong
+                    style="color:var(--ink)">Software Developer</strong></div>
+              </div>
+            </div>
+
+            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
+              <h4
+                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
+                Skill Graph Path</h4>
+              <div
+                style="display: flex; align-items: center; justify-content: space-between; font-size: 9px; font-weight: 600; color: #555;">
+                <span
+                  style="padding: 6px 10px; background: var(--green-soft); color: var(--green-dark); border-radius: 6px;">Your
+                  Skills</span>
+                <span style="color: #ccc;">→</span>
+                <span
+                  style="padding: 6px 10px; background: #fdf5e6; color: #b87c2b; border-radius: 6px; border: 1px dashed #e6cfa8;">Skill
+                  Gap</span>
+                <span style="color: #ccc;">→</span>
+                <span style="padding: 6px 10px; background: #f0f4fc; color: #2b5cb8; border-radius: 6px;">Target
+                  Role</span>
+              </div>
+            </div>
+
+            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
+              <h4
+                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
+                Recommended Action</h4>
+              <div style="font-size: 10px; color: #666; line-height: 1.6;">
+                <strong style="color: var(--ink); display: block; margin-bottom: 4px;">Learn System Design
+                  Basics</strong>
+                Focus on understanding microservices vs monolith architecture to bridge your backend gap.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel profile-panel" id="profile">
+            <div class="panel-heading">
+              <div><span class="section-kicker">START WITH YOU</span>
+                <h2>Your career profile</h2>
+              </div><button class="text-button" id="edit-profile">Edit profile <span>↗</span></button>
+            </div>
+            <div id="profile-content" class="profile-content"></div>
+          </section>
+          <section class="panel readiness-panel" id="skills">
+            <div class="panel-heading">
+              <div><span class="section-kicker">EVIDENCE-BASED</span>
+                <h2>Capability profile</h2>
+              </div><span class="info-badge"
+                title="A transparent keyword-based prototype estimate, not an AI review, verified assessment, or hiring score.">i</span>
+            </div>
+            <div class="readiness-content" id="readiness-content"></div>
+          </section>
+        </div>
+
+        <section class="panel evidence-panel" id="evidence">
+          <div class="panel-heading">
+            <div><span class="section-kicker">SHOW, DON'T JUST TELL</span>
+              <h2>Your evidence</h2>
+              <p class="panel-subtitle">Projects, coursework, internships, and anything else you've worked on.</p>
+            </div><button class="button button-outline" id="add-evidence"><span>＋</span> Add evidence</button>
+          </div>
+          <div class="evidence-list" id="evidence-list"></div>
+        </section>
+
+        <section class="action-section" id="action">
+          <div class="panel-heading action-heading">
+            <div><span class="section-kicker">ONE FOCUSED STEP</span>
+              <h2>Your next best action</h2>
+            </div><span class="action-spark">✳</span>
+          </div>
+          <div id="action-content"></div>
+        </section>
+
+        <section class="panel skill-panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">TARGET ROLE REQUIREMENTS</span>
+              <h2>Skill profile & evidence</h2>
+            </div><span class="evidence-tag">✳ Prototype estimates</span>
+          </div>
+          <div class="skills-list" id="skills-list"></div>
+        </section>
+
+        <section class="panel assessment-panel" id="assessment">
+          <div class="panel-heading">
+            <div><span class="section-kicker">YOUR PERSPECTIVE</span>
+              <h2>Self-assessment</h2>
+              <p class="panel-subtitle">Your confidence is useful context—not proof. Evidence stays the source of
+                demonstrated skills.</p>
+            </div><button class="button button-outline" id="edit-assessment">Rate my skills</button>
+          </div>
+          <div class="assessment-summary" id="assessment-summary"></div>
+        </section>
+
+        <section class="panel change-panel" id="progress">
+          <div class="panel-heading">
+            <div><span class="section-kicker">PROGRESS YOU CAN TRACE</span>
+              <h2>Capability change log</h2>
+              <p class="panel-subtitle">What changed after new work was analyzed.</p>
+            </div>
+          </div>
+          <div class="change-list" id="change-list"></div>
+        </section>
+
+        <section class="panel activity-panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">YOUR MOMENTUM</span>
+              <h2>Recent activity</h2>
+            </div>
+          </div>
+          <div class="activity-list" id="activity-list"></div>
+        </section>
+        <footer class="page-footer"><span>Made for the career you're working toward.</span><span>NextStep <span
+              class="brand-period">✳</span></span></footer>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="app-dialog consent-dialog" id="consent-dialog">
+    <form id="consent-form" class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">PRIVACY BEFORE PROFILE</span>
+          <h2>Your work stays yours.</h2>
+          <p>Before we collect your profile or evidence, here's exactly what this prototype does.</p>
+        </div>
+      </div>
+      <div class="consent-copy"><strong>What we collect</strong>
+        <p>Only the student profile details, self-assessment, evidence descriptions, and files you choose to add.</p>
+        <strong>How it's processed</strong>
+        <p>This prototype uses local, deterministic keyword matching. No external AI service receives your data, and it
+          is not used to train models.</p><strong>Where it's stored</strong>
+        <p>In a local JSON file and uploads folder on the computer running the app. There is no account system or
+          multi-user access control.</p><strong>Retention and deletion</strong>
+        <p>Data stays on this device until you export it or use the Privacy Center to delete it. Do not upload sensitive
+          or confidential work.</p>
+      </div>
+      <label class="consent-check"><input name="accepted" type="checkbox" required> I have read and understand how this
+        prototype processes and stores my information.</label>
+      <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
+          <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" id="profile-dialog">
+    <form id="profile-form" class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">YOUR STARTING POINT</span>
+          <h2>Build your student profile</h2>
+          <p>A bit about you helps us make your next step count.</p>
+        </div><button class="close-dialog" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="form-section-card">
+        <h3 class="form-section-title">1. Personal Info</h3>
+        <label>Full name<input name="name" placeholder="e.g. Alex Morgan" required maxlength="100"></label>
+      </div>
+
+      <div class="form-section-card">
+        <h3 class="form-section-title">2. Education</h3>
+        <div class="form-row"><label>Course or degree<input name="course" placeholder="e.g. B.Tech" required
+              maxlength="120"></label><label>Discipline or field<input name="discipline"
+              placeholder="e.g. Electronics & Communication" required maxlength="120"></label></div>
+        <div class="form-row"><label>Academic year<select name="year" required>
+              <option value="">Choose your year</option>
+              <option>1st year</option>
+              <option>2nd year</option>
+              <option>3rd year</option>
+              <option>4th year</option>
+              <option>Postgraduate</option>
+              <option>Other</option>
+            </select></label><label>Semester <span class="optional">(optional)</span><input name="semester"
+              placeholder="e.g. 4th" maxlength="40"></label></div>
+      </div>
+
+      <div class="form-section-card">
+        <h3 class="form-section-title">3. Career Goals</h3>
+        <label>Target career<select name="careerId" id="career-select" required>
+            <option value="">Choose your target career</option>
+            <option value="software-developer">Software Developer · Technology</option>
+            <option value="embedded-systems">Embedded Systems Engineer · Engineering</option>
+            <option value="financial-analyst">Financial Analyst · Business</option>
+            <option value="ux-researcher">UX Researcher · Arts & Design</option>
+          </select><span class="optional" id="career-source">Prototype frameworks support four roles and include
+            source/version notes; unsupported careers aren't inferred.</span></label>
+        <div class="form-row"><label>Available preparation hours/week <span class="optional">(optional)</span><input
+              name="availableHours" type="number" min="1" max="80" placeholder="e.g. 6"></label><label>Preferred
+            learning
+            style <span class="optional">(optional)</span><select name="learningStyle">
+              <option value="">Choose if helpful</option>
+              <option>Hands-on projects</option>
+              <option>Reading & documentation</option>
+              <option>Videos & demonstrations</option>
+              <option>Practice exercises</option>
+            </select></label></div>
+      </div>
+
+      <div class="form-section-card">
+        <h3 class="form-section-title">4. Interests & Experience</h3>
+        <label>Interests <span class="optional">(optional)</span><input name="interests"
+            placeholder="e.g. building useful tools, climate tech"></label>
+        <label>A little about you <span class="optional">(optional)</span><textarea name="bio" rows="3" maxlength="500"
+            placeholder="What are you curious about or working toward?"></textarea></label>
+      </div>
+
+      <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
+          class="button button-dark" type="submit">Analyze My Profile <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" id="evidence-dialog">
+    <form id="evidence-form" class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">YOUR WORK, YOUR PROOF</span>
+          <h2 id="evidence-dialog-title">Add a piece of evidence</h2>
+          <p id="evidence-dialog-subtitle">Describe what you contributed so we can understand the skills behind it.</p>
+        </div><button class="close-dialog" type="button" aria-label="Close">×</button>
+      </div>
+
+      <div class="evidence-type-search-box">
+        <input type="text" id="evidence-type-search"
+          placeholder="🔍 Search evidence types (e.g. project, certificate, internship)..." autocomplete="off">
+      </div>
+
+      <label>Evidence title<input name="title" id="evidence-title-input" placeholder="e.g. Personal finance dashboard"
+          required maxlength="120"></label>
+
+      <div class="form-row">
+        <label>Evidence Category & Type
+          <select name="type" id="evidence-type-select" class="evidence-select" required>
+            <option value="">Choose an evidence type</option>
+            <optgroup label="Academic & Coursework">
+              <option value="Coursework">Coursework</option>
+              <option value="Academic Transcript">Academic Transcript</option>
+              <option value="Capstone Project">Capstone Project</option>
+              <option value="Assignment">Assignment</option>
+              <option value="Research Paper">Research Paper</option>
+              <option value="Thesis / Dissertation">Thesis / Dissertation</option>
+            </optgroup>
+            <optgroup label="Projects & Technical Work">
+              <option value="Project" selected>Project</option>
+              <option value="GitHub repository">GitHub repository</option>
+              <option value="Open Source Contribution">Open Source Contribution</option>
+              <option value="Technical Report">Technical Report</option>
+              <option value="System Architecture / Design">System Architecture / Design</option>
+              <option value="Code Sample">Code Sample</option>
+            </optgroup>
+            <optgroup label="Work & Experience">
+              <option value="Internship">Internship</option>
+              <option value="Employment Experience">Employment Experience</option>
+              <option value="Freelance Project">Freelance Project</option>
+              <option value="Apprenticeship">Apprenticeship</option>
+            </optgroup>
+            <optgroup label="Certifications & Training">
+              <option value="Certificate">Certificate</option>
+              <option value="Online Course Completion">Online Course Completion</option>
+              <option value="Bootcamp Completion">Bootcamp Completion</option>
+              <option value="Workshop / Training">Workshop / Training</option>
+            </optgroup>
+            <optgroup label="Honors, Awards & Competitions">
+              <option value="Award">Award</option>
+              <option value="Competition / Hackathon">Competition / Hackathon</option>
+              <option value="Scholarship">Scholarship</option>
+              <option value="Honor Society">Honor Society</option>
+            </optgroup>
+            <optgroup label="Leadership & Extracurricular">
+              <option value="Leadership Role">Leadership Role</option>
+              <option value="Extracurricular Activity">Extracurricular Activity</option>
+              <option value="Volunteering">Volunteering</option>
+              <option value="Student Organization">Student Organization</option>
+            </optgroup>
+            <optgroup label="Presentations & Publications">
+              <option value="Conference Presentation">Conference Presentation</option>
+              <option value="Publication">Publication</option>
+              <option value="Poster Session">Poster Session</option>
+              <option value="Tech Talk / Demo">Tech Talk / Demo</option>
+            </optgroup>
+            <optgroup label="Portfolio & Recommendations">
+              <option value="Portfolio">Portfolio (Web Link Only)</option>
+              <option value="Recommendation Letter">Recommendation Letter</option>
+              <option value="Client Testimonial">Client Testimonial</option>
+              <option value="Other">Other</option>
+            </optgroup>
+          </select>
+        </label>
+
+        <div id="evidence-file-container">
+          <label id="evidence-file-label">Attach a document <span class="optional">(optional, max 10 MB per
+              document)</span>
+            <input name="file" id="evidence-file-input" type="file"
+              accept=".pdf,.txt,.md,.csv,.json,.html,.css,.js,.py,.java,.ts,.tsx,.jsx,.doc,.docx,.png,.jpg,.jpeg">
+            <div id="file-upload-preview" class="file-upload-preview" style="display: none;"></div>
+          </label>
+        </div>
+      </div>
+
+      <div id="evidence-link-container">
+        <label id="evidence-link-label">
+          <span id="evidence-link-title">GitHub or project link</span>
+          <span id="evidence-link-optional" class="optional">(optional; never fetched by the server)</span>
+          <input name="link" id="evidence-link-input" type="url" maxlength="500"
+            placeholder="https://github.com/you/project">
+        </label>
+      </div>
+
+      <label id="evidence-description-label">What did you do? <span class="optional">Share the tools, choices, and
+          outcomes you can
+          demonstrate.</span><textarea name="description" id="evidence-description-input" rows="4" maxlength="5000"
+          placeholder="I built... using... I was responsible for..."></textarea></label>
+
+      <div class="upload-note" id="evidence-upload-note">Allowed formats up to 10 MB: PDF, TXT, Markdown, CSV, JSON,
+        HTML/CSS, JavaScript, Python, Java, TypeScript, Word (.docx), or images (.png, .jpg). Files are never executed;
+        linked repositories are not fetched. Potential credentials are rejected. Text analysis is limited to the first
+        20,000 characters.</div>
+
+      <div class="dialog-actions">
+        <button type="button" class="button button-quiet cancel-dialog">Cancel</button>
+        <button type="button" class="button button-outline" id="evidence-add-another"><span>＋</span> Add
+          Another</button>
+        <button class="button button-dark" id="evidence-submit-btn" type="submit">Add to my evidence
+          <span>→</span></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog assessment-dialog" id="assessment-dialog">
+    <form id="assessment-form" class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">A SIGNAL, NOT GROUND TRUTH</span>
+          <h2>How familiar are these skills?</h2>
+          <p>Self-reported skills remain unverified until your work supports them.</p>
+        </div><button class="close-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="assessment-fields" id="assessment-fields"></div>
+      <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
+          class="button button-dark" type="submit">Save self-assessment <span>→</span></button></div>
+    </form>
+  </dialog>
+
+  <dialog class="app-dialog" id="complete-dialog">
+    <form id="complete-form" class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">PROGRESS, NOT PERFECTION</span>
+          <h2>What did you learn?</h2>
+          <p>Reflect briefly, then add the work you made as new evidence.</p>
+        </div><button class="close-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <label>Your reflection<textarea name="reflection" rows="4" minlength="3" maxlength="1000" required
+          placeholder="I learned..., I made..., Next time I would..."></textarea></label>
+      <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
+          class="button button-dark" type="submit">Mark as complete <span>✓</span></button></div>
+    </form>
+  </dialog>
+  <dialog class="app-dialog privacy-dialog" id="privacy-dialog">
+    <div class="dialog-form">
+      <div class="dialog-header">
+        <div><span class="section-kicker">YOUR DATA, YOUR CONTROL</span>
+          <h2>Privacy center</h2>
+          <p>Data is stored locally until you delete it. There is no external AI processing.</p>
+        </div><button class="close-dialog" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="privacy-details" id="privacy-details"></div>
+      <div class="privacy-actions"><a class="button button-outline" href="./api/privacy/export" download>Export my data
+          ↓</a><button class="button button-danger" id="delete-account" type="button">Withdraw consent & delete all
+          data</button></div>
+      <p class="privacy-warning">This removes your profile, assessments, evidence, uploaded files, skill analysis, and
+        recommendation history from the app's local storage. Filesystem backups or copies outside this app are not
+        affected.</p>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      // Initialize Scroll Reveal Animations
+      document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        // Add class to panels and observe
+        document.querySelectorAll('.panel, .action-section, .journey-card').forEach(el => {
+          el.classList.add('reveal-on-scroll');
+          observer.observe(el);
+        });
+      });
+
+      // NextStep Welcome Screen Overlay Controller (Click anywhere to open dashboard)
+      (() => {
+        const overlay = document.getElementById('welcome-overlay');
+        if (!overlay) return;
+
+        let dismissed = false;
+        function dismissWelcome() {
+          if (dismissed) return;
+          dismissed = true;
+          overlay.classList.add('welcome-dismissed');
+
+          const cleanUp = () => {
+            overlay.removeEventListener('transitionend', cleanUp);
+            if (overlay.parentNode) {
+              overlay.parentNode.removeChild(overlay);
+            }
+          };
+          overlay.addEventListener('transitionend', cleanUp);
+          setTimeout(cleanUp, 500);
+          document.removeEventListener('keydown', onKeyDown);
+        }
+
+        // Clicking anywhere on the screen dismisses the overlay and opens the dashboard
+        overlay.addEventListener('click', dismissWelcome);
+
+        // Keyboard Support: Press any key to open the dashboard
+        const onKeyDown = (e) => {
+          if (!dismissed && document.body.contains(overlay)) {
+            dismissWelcome();
+          }
+        };
+        document.addEventListener('keydown', onKeyDown);
+
+        // Focus overlay for instant keyboard interaction
+        requestAnimationFrame(() => {
+          overlay.focus();
+        });
+      })();
+    </script>
+</body>
+
+</html>
