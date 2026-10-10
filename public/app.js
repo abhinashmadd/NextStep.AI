@@ -1051,10 +1051,41 @@ document.addEventListener("click", async (event) => {
   }
 });
 
-$("#menu-toggle").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
+function closeSidebarDrawer() {
+  const sidebar = $("#sidebar");
+  const backdrop = $("#sidebar-backdrop");
+  if (sidebar) sidebar.classList.remove("open");
+  if (backdrop) backdrop.classList.remove("active");
+  document.body.classList.remove("sidebar-is-open");
+}
+
+function toggleSidebarDrawer() {
+  const sidebar = $("#sidebar");
+  const backdrop = $("#sidebar-backdrop");
+  if (!sidebar) return;
+  const isOpen = sidebar.classList.toggle("open");
+  if (backdrop) backdrop.classList.toggle("active", isOpen);
+  document.body.classList.toggle("sidebar-is-open", isOpen);
+}
+
+const menuBtn = $("#menu-toggle");
+if (menuBtn) menuBtn.addEventListener("click", toggleSidebarDrawer);
+
+const closeBtn = $("#sidebar-close");
+if (closeBtn) closeBtn.addEventListener("click", closeSidebarDrawer);
+
+const backdropEl = $("#sidebar-backdrop");
+if (backdropEl) backdropEl.addEventListener("click", closeSidebarDrawer);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("#sidebar")?.classList.contains("open")) {
+    closeSidebarDrawer();
+  }
+});
+
 document.querySelectorAll(".main-nav .nav-link").forEach((link) => {
   link.addEventListener("click", () => {
-    $("#sidebar").classList.remove("open");
+    closeSidebarDrawer();
     if (link.dataset.section === "privacy") {
       showPrivacyCenter();
       return;

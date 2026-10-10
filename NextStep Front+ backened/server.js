@@ -155,7 +155,9 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (pathname === "/api/auth/send-otp" && request.method === "POST") {
-      authController.sendOtp(request, response);
+      const body = await readBody(request);
+      const state = await readState();
+      await authController.sendOtp(request, response, body, state);
       return;
     }
 

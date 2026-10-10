@@ -106,7 +106,17 @@ async function readState() {
       const doc = await db.collection("app_state").findOne({ id: "current_state" });
       if (doc) {
         const { _id, ...safeState } = doc;
-        return { ...emptyState(), ...safeState };
+        const resState = { ...emptyState(), ...safeState };
+        try {
+          const mongoUsers = await db.collection("users").find({}).toArray();
+          if (Array.isArray(mongoUsers) && mongoUsers.length > 0) {
+            const userMap = new Map();
+            (resState.users || []).forEach(u => userMap.set(u.id || u.email, u));
+            mongoUsers.forEach(({ _id, ...u }) => userMap.set(u.id || u.email, u));
+            resState.users = Array.from(userMap.values());
+          }
+        } catch {}
+        return resState;
       }
       // If MongoDB is connected but not yet initialized, seed from local data file if it exists
       try {

@@ -12,6 +12,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "mongodb": "^7.7.0"
   }
 }

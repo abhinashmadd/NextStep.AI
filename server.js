@@ -55,13 +55,13 @@ async function serveStatic(request, response, pathname) {
   }
   try {
     const content = await fs.readFile(filePath);
+    // Apply security headers
+    addSecurityHeaders(response);
     response.writeHead(200, {
       "Content-Type": contentTypes[path.extname(filePath)] || "application/octet-stream",
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "no-cache",
     });
-    // Apply security headers
-    addSecurityHeaders(response);
     response.end(content);
   } catch (error) {
     if (error.code === "ENOENT" || error.code === "EISDIR") {
@@ -155,7 +155,9 @@ const server = http.createServer(async (request, response) => {
     }
 
     if (pathname === "/api/auth/send-otp" && request.method === "POST") {
-      authController.sendOtp(request, response);
+      const body = await readBody(request);
+      const state = await readState();
+      await authController.sendOtp(request, response, body, state);
       return;
     }
 

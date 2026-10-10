@@ -10,18 +10,79 @@ async function getMe(request, response, state) {
   sendJson(response, 200, { user: user || null });
 }
 
+function normalizeMobile(phone) {
+  if (!phone) return "";
+  const digits = String(phone).replace(/\D/g, "");
+  return digits.length > 10 ? digits.slice(-10) : digits;
+}
+
+function checkExistingUser(users, { email, mobile, username }) {
+  if (!Array.isArray(users) || users.length === 0) return null;
+
+  const cleanEmail = email ? String(email).trim().toLowerCase() : "";
+  const cleanMobile = mobile ? normalizeMobile(mobile) : "";
+  const cleanUsername = username ? String(username).trim().toLowerCase() : "";
+
+  const emailMatch = cleanEmail ? users.find((u) => u.email && u.email.toLowerCase() === cleanEmail) : null;
+  const mobileMatch = cleanMobile && cleanMobile.length >= 7 ? users.find((u) => u.mobile && normalizeMobile(u.mobile) === cleanMobile) : null;
+  const usernameMatch = cleanUsername ? users.find((u) => u.username && u.username.toLowerCase() === cleanUsername) : null;
+
+  if (emailMatch && mobileMatch) {
+    return "Already registered mobile no and gmail. Please sign in with your credentials.";
+  }
+  if (emailMatch) {
+    return "This Gmail / Email is already registered. Please sign in or use another email.";
+  }
+  if (mobileMatch) {
+    return "This Mobile number is already registered. Please sign in or use another mobile number.";
+  }
+  if (usernameMatch) {
+    return "This Username is already registered. Please choose a different username.";
+  }
+  return null;
+}
+
+function findUserByIdentifier(users, identifier) {
+  if (!identifier || !Array.isArray(users)) return null;
+  const cleanId = String(identifier).trim();
+  const lowerId = cleanId.toLowerCase();
+  const normalizedPhone = normalizeMobile(cleanId);
+
+  return users.find((u) => {
+    // 1. Match Gmail / Email (case-insensitive)
+    if (u.email && u.email.toLowerCase() === lowerId) return true;
+
+    // 2. Match Username (case-insensitive)
+    if (u.username && u.username.toLowerCase() === lowerId) return true;
+
+    // 3. Match Mobile number (normalized last 10 digits or exact string)
+    if (u.mobile) {
+      if (u.mobile.trim() === cleanId) return true;
+      if (normalizedPhone.length >= 7 && normalizeMobile(u.mobile) === normalizedPhone) return true;
+    }
+
+    // 4. Match Badge / Roll No. (case-insensitive)
+    if (u.badgeId && u.badgeId.toLowerCase() === lowerId) return true;
+
+    // 5. Match Full Name (case-insensitive)
+    if (u.name && u.name.toLowerCase() === lowerId) return true;
+
+    return false;
+  });
+}
+
 async function login(request, response, body, state) {
-  if (!body.email || !body.password) {
-    sendJson(response, 400, { error: "Enter both your email and password." });
+  const identifier = String(body.identifier || body.email || body.username || body.mobile || "").trim();
+  if (!identifier || !body.password) {
+    sendJson(response, 400, { error: "Enter your username, gmail or mobile number and password." });
     return;
   }
-  const email = String(body.email).trim().toLowerCase();
-  const user = (state.users || []).find((u) => u.email === email);
+  const user = findUserByIdentifier(state.users || [], identifier);
   if (!user) {
-    sendJson(response, 401, { error: "No account found with this email address." });
+    sendJson(response, 401, { error: "No account found matching this username, gmail or mobile number." });
     return;
   }
-  const passwordMatch = await bcrypt.compare(body.password, user.passwordHash);
+  const passwordMatch = await bcrypt.compare(String(body.password), user.passwordHash);
   if (!passwordMatch) {
     sendJson(response, 401, { error: "Incorrect password. Please verify your credentials." });
     return;
@@ -29,6 +90,7 @@ async function login(request, response, body, state) {
   const safeUser = {
     id: user.id,
     name: user.name,
+    username: user.username || user.email.split("@")[0],
     badgeId: user.badgeId,
     email: user.email,
     mobile: user.mobile,
@@ -37,7 +99,7 @@ async function login(request, response, body, state) {
   };
 
   const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 30*24*60*60*1000).toISOString(); // 30 days
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days
   state.sessions = state.sessions || {};
   state.sessions[token] = { userId: user.id, createdAt: new Date().toISOString(), expiresAt };
 
@@ -73,30 +135,44 @@ async function register(request, response, body, state) {
     return;
   }
   state.users = state.users || [];
-  const email = String(body.email).trim().toLowerCase();
-  if (state.users.some((u) => u.email === email)) {
-    sendJson(response, 409, { error: "An account with this email address already exists." });
+
+  const existingError = checkExistingUser(state.users, {
+    email: body.email,
+    mobile: body.mobile,
+    username: body.username,
+  });
+  if (existingError) {
+    sendJson(response, 409, { error: existingError });
     return;
   }
-  const saltRounds = 12;
-  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+  const cleanEmail = String(body.email).trim().toLowerCase();
+  const cleanMobile = String(body.mobile || "").trim();
+  const cleanName = String(body.name).trim();
+  const cleanUsername = String(body.username || cleanEmail.split("@")[0] || cleanName.toLowerCase().replace(/\s+/g, "")).trim();
   const year = new Date().getFullYear();
   const badgeId = (body.badgeId && String(body.badgeId).trim()) || `ST-${year}-${Math.floor(100 + Math.random() * 900)}`;
+
+  const saltRounds = 12;
+  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
   const newUser = {
     id: crypto.randomUUID(),
-    name: String(body.name).trim(),
+    name: cleanName,
+    username: cleanUsername,
     badgeId,
-    email,
-    mobile: String(body.mobile || "").trim(),
+    email: cleanEmail,
+    mobile: cleanMobile,
     role: String(body.role || "Software Developer").trim(),
-    salt,
     passwordHash,
     createdAt: new Date().toISOString(),
   };
   state.users.push(newUser);
+
   const safeUser = {
     id: newUser.id,
     name: newUser.name,
+    username: newUser.username,
     badgeId: newUser.badgeId,
     email: newUser.email,
     mobile: newUser.mobile,
@@ -245,7 +321,19 @@ async function logout(request, response, state) {
   );
 }
 
-function sendOtp(request, response) {
+function sendOtp(request, response, body, state) {
+  if (body) {
+    const existingError = checkExistingUser(state?.users || [], {
+      email: body.email,
+      mobile: body.mobile,
+      username: body.username,
+    });
+    if (existingError) {
+      sendJson(response, 409, { error: existingError });
+      return;
+    }
+  }
+
   sendJson(response, 200, {
     success: true,
     message: "One-Time Password (OTP) dispatched to Gmail and Mobile SMS.",

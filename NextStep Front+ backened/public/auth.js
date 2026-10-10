@@ -227,8 +227,9 @@
       submitBtn.textContent = "Authenticating…";
       try {
         const values = new FormData(form);
+        const identifier = (values.get("identifier") || values.get("email") || "").trim();
         const result = await api("/api/auth/login", {
-          email: values.get("email").trim(),
+          identifier,
           password: values.get("password"),
         });
         form.reset();
@@ -254,6 +255,7 @@
       }
       pendingRegistration = {
         name: values.get("name").trim(),
+        username: values.get("username")?.trim() || "",
         badgeId: values.get("badgeId")?.trim() || "",
         email: values.get("email").trim(),
         mobile: values.get("mobile")?.trim() || "",
@@ -263,11 +265,12 @@
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = "Dispatching OTP…";
+      submitBtn.textContent = "Checking credentials & Dispatching OTP…";
       try {
         const res = await api("/api/auth/send-otp", {
           email: pendingRegistration.email,
           mobile: pendingRegistration.mobile,
+          username: pendingRegistration.username,
         });
         const demoOtpEl = $("#auth-demo-otp");
         if (demoOtpEl) demoOtpEl.textContent = res.demoOtp || "849201";

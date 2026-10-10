@@ -47,4 +47,4 @@
 .button-danger{background:#fff;border-color:#ead9d5;color:#a64e43}
 .button-danger:hover{background:var(--red-soft)}
 .privacy-warning{font-size:9px;line-height:1.55;color:#888e88;margin:13px 0 0}
-@media(max-width:760px){.assessment-entry{grid-template-columns:1fr 1fr;gap:8px}.assessment-entry label{grid-column:1/-1}.assessment-entry select{font-size:9px}.skill-row{grid-template-columns:minmax(115px,1.1fr) 1fr 44px;gap:8px}.skill-evidence{max-width:165px}.change-item{grid-template-columns:72px 1fr}.privacy-details>div{align-items:flex-start}.privacy-details span{max-width:58%}}
+@media(max-width:768px){.assessment-entry{grid-template-columns:1fr;gap:10px;padding:12px 14px}.assessment-entry label{grid-column:1/-1}.assessment-entry select{font-size:13px;padding:9px 8px}.skill-evidence{max-width:100%;white-space:normal}.change-item{grid-template-columns:1fr;gap:6px}.privacy-details>div{align-items:flex-start;flex-direction:column;gap:6px}.privacy-details span{max-width:100%;text-align:left}}

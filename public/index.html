@@ -32,10 +32,12 @@
 
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" aria-label="NextStep home"
-        style="display: flex; align-items: center; padding: 14px 12px 10px;">
-        <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
-      </a>
+      <div class="sidebar-header-row">
+        <a class="brand" href="#" aria-label="NextStep home">
+          <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
+        </a>
+        <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close navigation menu">✕</button>
+      </div>
       <div class="workspace-label">YOUR WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link active" href="#overview" data-section="overview"><span class="nav-icon">◫</span>Overview</a>
@@ -60,18 +62,27 @@
         </div>
       </div>
     </aside>
+    <div class="sidebar-backdrop" id="sidebar-backdrop" aria-hidden="true"></div>
 
     <main class="main-content">
       <header class="topbar">
-        <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
-        <nav class="topbar-links">
+        <div class="topbar-left">
+          <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+          <a class="topbar-brand-mobile" href="#" aria-label="NextStep home">
+            <img src="./nextstep-logo-transparent.png" alt="NextStep" class="topbar-brand-img">
+          </a>
+        </div>
+        <nav class="topbar-links" aria-label="Top links">
           <a href="#overview">Home</a>
           <a href="#assessment">Career Assessment</a>
           <a href="#skills">Career Paths</a>
           <a href="#evidence">About</a>
         </nav>
         <div class="topbar-right">
-          <a class="button button-dark" href="auth.html">Login / Register</a>
+          <a class="button button-dark auth-nav-btn" href="auth.html">
+            <span class="auth-btn-full">Login / Register</span>
+            <span class="auth-btn-short">Login</span>
+          </a>
         </div>
       </header>
 
@@ -148,50 +159,34 @@
             </div>
           </div>
 
-          <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 20px;">
-            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
-              <h4
-                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
-                Career Match Score</h4>
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <div
-                  style="position: relative; width: 44px; height: 44px; border-radius: 50%; background: conic-gradient(var(--green) 85%, #edf0ea 0); display: grid; place-items: center;">
-                  <div style="position: absolute; inset: 4px; background: #fff; border-radius: 50%;"></div>
-                  <span style="position: relative; font-size: 10px; font-weight: 700; color: var(--ink);">85%</span>
+          <div class="preview-cards-grid">
+            <div class="preview-card">
+              <h4 class="preview-card-title">Career Match Score</h4>
+              <div class="preview-score-row">
+                <div class="preview-score-ring">
+                  <div class="preview-score-inner"></div>
+                  <span class="preview-score-text">85%</span>
                 </div>
-                <div style="font-size: 10px; color: #666; line-height: 1.5;">Strong alignment for<br><strong
-                    style="color:var(--ink)">Software Developer</strong></div>
+                <div class="preview-score-meta">Strong alignment for<br><strong>Software Developer</strong></div>
               </div>
             </div>
 
-            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
-              <h4
-                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
-                Skill Graph Path</h4>
-              <div
-                style="display: flex; align-items: center; justify-content: space-between; font-size: 9px; font-weight: 600; color: #555;">
-                <span
-                  style="padding: 6px 10px; background: var(--green-soft); color: var(--green-dark); border-radius: 6px;">Your
-                  Skills</span>
-                <span style="color: #ccc;">→</span>
-                <span
-                  style="padding: 6px 10px; background: #fdf5e6; color: #b87c2b; border-radius: 6px; border: 1px dashed #e6cfa8;">Skill
-                  Gap</span>
-                <span style="color: #ccc;">→</span>
-                <span style="padding: 6px 10px; background: #f0f4fc; color: #2b5cb8; border-radius: 6px;">Target
-                  Role</span>
+            <div class="preview-card">
+              <h4 class="preview-card-title">Skill Graph Path</h4>
+              <div class="preview-path-row">
+                <span class="preview-path-badge badge-green">Your Skills</span>
+                <span class="preview-path-arrow">→</span>
+                <span class="preview-path-badge badge-amber">Skill Gap</span>
+                <span class="preview-path-arrow">→</span>
+                <span class="preview-path-badge badge-blue">Target Role</span>
               </div>
             </div>
 
-            <div style="padding: 16px; border: 1px solid #e9ece6; border-radius: 12px; background: #fafbf9;">
-              <h4
-                style="margin: 0 0 12px; font-size: 12px; font-family: Manrope, sans-serif; color: var(--green-dark);">
-                Recommended Action</h4>
-              <div style="font-size: 10px; color: #666; line-height: 1.6;">
-                <strong style="color: var(--ink); display: block; margin-bottom: 4px;">Learn System Design
-                  Basics</strong>
-                Focus on understanding microservices vs monolith architecture to bridge your backend gap.
+            <div class="preview-card">
+              <h4 class="preview-card-title">Recommended Action</h4>
+              <div class="preview-action-content">
+                <strong>Learn System Design Basics</strong>
+                <p>Focus on understanding microservices vs monolith architecture to bridge your backend gap.</p>
               </div>
             </div>
           </div>
@@ -573,8 +568,10 @@
           document.removeEventListener('keydown', onKeyDown);
         }
 
-        // Clicking anywhere on the screen dismisses the overlay and opens the dashboard
+        // Clicking or tapping anywhere on the screen dismisses the overlay and opens the dashboard
         overlay.addEventListener('click', dismissWelcome);
+        overlay.addEventListener('pointerdown', dismissWelcome);
+        overlay.addEventListener('touchend', dismissWelcome, { passive: true });
 
         // Keyboard Support: Press any key to open the dashboard
         const onKeyDown = (e) => {
