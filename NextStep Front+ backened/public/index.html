@@ -21,21 +21,11 @@
 </head>
 
 <body>
-  <!-- Cinematic Splash Landing Overlay (Picture Look) -->
-  <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true" aria-label="Welcome to NextStep">
+  <!-- Cinematic Splash Landing Overlay (Click anywhere to open dashboard) -->
+  <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true" aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
       <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
-      <p class="welcome-hero-tagline">Your Career. Your Skills. Your NextStep.</p>
-      <div class="welcome-hero-actions">
-        <button type="button" class="welcome-enter-btn" id="welcome-dismiss-btn" autofocus aria-label="Get started with NextStep">
-          <span>Get Started</span>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-      </div>
     </div>
   </aside>
 
@@ -528,11 +518,10 @@
         });
       });
 
-      // NextStep Welcome Screen Overlay Controller
+      // NextStep Welcome Screen Overlay Controller (Click anywhere to open dashboard)
       (() => {
         const overlay = document.getElementById('welcome-overlay');
-        const dismissBtn = document.getElementById('welcome-dismiss-btn');
-        if (!overlay || !dismissBtn) return;
+        if (!overlay) return;
 
         let dismissed = false;
         function dismissWelcome() {
@@ -548,25 +537,23 @@
           };
           overlay.addEventListener('transitionend', cleanUp);
           setTimeout(cleanUp, 500);
+          document.removeEventListener('keydown', onKeyDown);
         }
 
-        dismissBtn.addEventListener('click', dismissWelcome);
+        // Clicking anywhere on the screen dismisses the overlay and opens the dashboard
+        overlay.addEventListener('click', dismissWelcome);
 
-        // Keyboard Support: Enter, Space, Escape
+        // Keyboard Support: Press any key to open the dashboard
         const onKeyDown = (e) => {
-          if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
-            if (!dismissed && document.body.contains(overlay)) {
-              e.preventDefault();
-              dismissWelcome();
-              document.removeEventListener('keydown', onKeyDown);
-            }
+          if (!dismissed && document.body.contains(overlay)) {
+            dismissWelcome();
           }
         };
         document.addEventListener('keydown', onKeyDown);
 
-        // Focus button for instant accessibility
+        // Focus overlay for instant keyboard interaction
         requestAnimationFrame(() => {
-          dismissBtn.focus();
+          overlay.focus();
         });
       })();
     </script>
