@@ -1,0 +1,43 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "career_backend_developer",
+  "category": "careers",
+  "title": "Backend Developer",
+  "alternative_titles": ["Server-Side Developer", "API Developer", "Backend Engineer"],
+  "industry": "Software Development",
+  "target_career": "Backend Developer",
+  "difficulty": "intermediate",
+  "overview": "A Backend Developer architects server-side logic, designs and implements RESTful APIs, manages database schemas, builds authentication systems, and develops scalable microservices. They work with frameworks like FastAPI, Django, Flask, Express.js, and Spring Boot to power modern web and mobile applications.",
+  "required_technical_skills": [
+    "Python",
+    "Backend Development (FastAPI, Django, Flask)",
+    "SQL (PostgreSQL, MySQL)",
+    "Data Structures & Algorithms",
+    "Git & Version Control",
+    "Docker & Containerization",
+    "Linux"
+  ],
+  "required_soft_skills": [
+    "Problem-solving and debugging",
+    "System design thinking",
+    "Technical documentation writing",
+    "Collaboration with frontend and DevOps teams"
+  ],
+  "recommended_certifications": [
+    "AWS Certified Developer - Associate",
+    "Azure Developer Associate (AZ-204)",
+    "MongoDB Certified Developer Associate"
+  ],
+  "career_roadmap": [
+    "1. Master Python and build REST APIs with FastAPI or Django REST Framework.",
+    "2. Learn SQL deeply: JOINs, indexing, migrations, query optimization.",
+    "3. Study data structures, algorithms, and system design fundamentals.",
+    "4. Build 3-5 portfolio projects: API servers, authentication services, CRUD apps.",
+    "5. Learn Docker, write Dockerfiles, and deploy containerized applications.",
+    "6. Contribute to open-source backend projects on GitHub.",
+    "7. Apply for Junior Backend Developer or API Developer roles."
+  ],
+  "education_requirements": ["Bachelor's in Computer Science", "Software Engineering", "Information Technology"],
+  "salary_range": "$65,000 - $130,000",
+  "job_growth": "25% (Much faster than average)"
+}

@@ -6,7 +6,26 @@ const { PORT, HOST, PUBLIC_DIR, MONGODB_DB_NAME } = require("./src/config/enviro
 const { getMongoDb, readState, writeState, sanitizeState, emptyState } = require("./src/config/database");
 const { handleCors } = require("./src/middleware/corsMiddleware");
 const { getUserFromRequest } = require("./src/middleware/authMiddleware");
+const { addSecurityHeaders } = require("./src/middleware/securityHeaders");
 const { sendJson, readBody } = require("./src/utils/apiResponse");
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 100;
+const ipRequestCounts = {};
+function rateLimiter(request, response) {
+  const ip = request.headers["x-forwarded-for"] || request.socket.remoteAddress;
+  const now = Date.now();
+  const record = ipRequestCounts[ip] || { timestamps: [] };
+  // Keep only timestamps within the window
+  record.timestamps = record.timestamps.filter(ts => now - ts < RATE_LIMIT_WINDOW_MS);
+  record.timestamps.push(now);
+  ipRequestCounts[ip] = record;
+  if (record.timestamps.length > MAX_REQUESTS_PER_WINDOW) {
+    sendJson(response, 429, { error: "Too many requests. Please try again later." });
+    return true; // request handled
+  }
+  return false;
+}
 
 // Modular Controllers
 const authController = require("./src/modules/auth/auth.controller");
@@ -36,11 +55,12 @@ async function serveStatic(request, response, pathname) {
   }
   try {
     const content = await fs.readFile(filePath);
+    // Apply security headers
+    addSecurityHeaders(response);
     response.writeHead(200, {
       "Content-Type": contentTypes[path.extname(filePath)] || "application/octet-stream",
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "no-cache",
-      "Access-Control-Allow-Origin": "*",
     });
     response.end(content);
   } catch (error) {
@@ -58,6 +78,10 @@ const server = http.createServer(async (request, response) => {
     if (handleCors(request, response)) {
       return;
     }
+    // 2. Rate limiting
+    if (rateLimiter(request, response)) {
+      return;
+    }
 
     const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
     const { pathname } = url;
@@ -68,8 +92,9 @@ const server = http.createServer(async (request, response) => {
       response.writeHead(200, {
         "Content-Type": "image/svg+xml",
         "Cache-Control": "public, max-age=86400",
-        "Access-Control-Allow-Origin": "*",
       });
+      // Apply security headers
+      addSecurityHeaders(response);
       response.end(icon);
       return;
     }
@@ -260,9 +285,11 @@ const server = http.createServer(async (request, response) => {
 
 server.listen(PORT, HOST, () => {
   const displayHost = HOST === "0.0.0.0" ? "localhost" : HOST;
-  console.log(`NextStep backend is running:`);
-  console.log(`  - Local:    http://${displayHost}:${PORT}`);
-  console.log(`  - Loopback: http://127.0.0.1:${PORT}`);
+  if (process.env.DEBUG === "true") {
+    console.log(`NextStep backend is running:`);
+    console.log(`  - Local:    http://${displayHost}:${PORT}`);
+    console.log(`  - Loopback: http://127.0.0.1:${PORT}`);
+  }
 });
 
 server.on("error", (error) => {

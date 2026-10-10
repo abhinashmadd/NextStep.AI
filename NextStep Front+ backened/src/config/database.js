@@ -36,7 +36,9 @@ async function getMongoDb() {
     });
     await mongoClient.connect();
     mongoDb = mongoClient.db(MONGODB_DB_NAME);
-    console.log(`[Database] Successfully connected to MongoDB: ${MONGODB_DB_NAME}`);
+    if (process.env.DEBUG === "true") {
+      console.log(`[Database] Successfully connected to MongoDB: ${MONGODB_DB_NAME}`);
+    }
     return mongoDb;
   } catch (err) {
     console.warn(`[Database] MongoDB connection error: ${err.message}. Using local file storage fallback.`);

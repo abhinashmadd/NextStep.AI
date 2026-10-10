@@ -8,6 +8,18 @@ const { analyze } = require("../analysis/analysis.service");
 const { addActivity, writeState, sanitizeState, deleteEvidenceFile } = require("../../config/database");
 const { getActiveWorkspace, requireConsent } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
+const { addSecurityHeaders } = require('../../middleware/securityHeaders');
+
+// Simple HTML entity escaping to prevent XSS
+function sanitizeString(str) {
+  return String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[c]);
+}
 
 async function createEvidence(request, response, body, state) {
   const { user, workspace } = getActiveWorkspace(request, state);
@@ -39,12 +51,12 @@ async function createEvidence(request, response, body, state) {
   const evidence = {
     id: crypto.randomUUID(),
     userId: user ? user.id : "guest",
-    title: body.title.trim(),
-    type: body.type.trim(),
-    description: (body.description || "").trim(),
-    link: body.link ? body.link.trim() : "",
-    analysisText: (body.content || fileText || "").trim(),
-    fileName: typeof body.fileName === "string" ? body.fileName.trim() : "",
+    title: sanitizeString(body.title),
+    type: sanitizeString(body.type),
+    description: sanitizeString(body.description || ""),
+    link: body.link ? sanitizeString(body.link) : "",
+    analysisText: sanitizeString(body.content || fileText || ""),
+    fileName: typeof body.fileName === "string" ? sanitizeString(body.fileName) : "",
     fileSize: fileSize,
     fileType: body.fileName ? path.extname(body.fileName).toLowerCase() : "",
     fileStored: Boolean(fileBuffer),
@@ -119,8 +131,9 @@ async function downloadEvidenceFile(request, response, evidenceId, state) {
       "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(item.fileName)}`,
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "private, no-store",
-      "Access-Control-Allow-Origin": "*",
     });
+    // Apply security headers to file download response
+    addSecurityHeaders(response);
     response.end(content);
   } catch (error) {
     if (error.code === "ENOENT") {

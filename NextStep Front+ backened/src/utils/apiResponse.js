@@ -1,15 +1,14 @@
-const { MAX_BODY_BYTES } = require("../config/environment");
+const { addSecurityHeaders } = require('../middleware/securityHeaders');
 
 function sendJson(response, status, data, extraHeaders = {}) {
   response.writeHead(status, {
     "Content-Type": "application/json; charset=utf-8",
     "Cache-Control": "no-store",
     "X-Content-Type-Options": "nosniff",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Session-Token",
     ...extraHeaders,
   });
+  // Apply security headers to all JSON responses
+  addSecurityHeaders(response);
   response.end(JSON.stringify(data));
 }
 

@@ -1,4 +1,5 @@
 const crypto = require("node:crypto");
+const bcrypt = require('bcrypt');
 const { emptyState, emptyUserState, sanitizeState, writeState, addActivity } = require("../../config/database");
 const { getUserFromRequest, getSessionToken } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
@@ -20,8 +21,8 @@ async function login(request, response, body, state) {
     sendJson(response, 401, { error: "No account found with this email address." });
     return;
   }
-  const testHash = crypto.createHash("sha256").update(body.password + (user.salt || "")).digest("hex");
-  if (testHash !== user.passwordHash) {
+  const passwordMatch = await bcrypt.compare(body.password, user.passwordHash);
+  if (!passwordMatch) {
     sendJson(response, 401, { error: "Incorrect password. Please verify your credentials." });
     return;
   }
@@ -36,8 +37,9 @@ async function login(request, response, body, state) {
   };
 
   const token = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + 30*24*60*60*1000).toISOString(); // 30 days
   state.sessions = state.sessions || {};
-  state.sessions[token] = { userId: user.id, createdAt: new Date().toISOString() };
+  state.sessions[token] = { userId: user.id, createdAt: new Date().toISOString(), expiresAt };
 
   state.userWorkspaces = state.userWorkspaces || {};
   const ws = state.userWorkspaces[user.id] || emptyUserState();
@@ -76,8 +78,8 @@ async function register(request, response, body, state) {
     sendJson(response, 409, { error: "An account with this email address already exists." });
     return;
   }
-  const salt = crypto.randomBytes(16).toString("hex");
-  const passwordHash = crypto.createHash("sha256").update(body.password + salt).digest("hex");
+  const saltRounds = 12;
+  const passwordHash = await bcrypt.hash(body.password, saltRounds);
   const year = new Date().getFullYear();
   const badgeId = (body.badgeId && String(body.badgeId).trim()) || `ST-${year}-${Math.floor(100 + Math.random() * 900)}`;
   const newUser = {
@@ -102,8 +104,9 @@ async function register(request, response, body, state) {
   };
 
   const token = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + 30*24*60*60*1000).toISOString(); // 30 days
   state.sessions = state.sessions || {};
-  state.sessions[token] = { userId: newUser.id, createdAt: new Date().toISOString() };
+  state.sessions[token] = { userId: newUser.id, createdAt: new Date().toISOString(), expiresAt };
 
   const roleMap = {
     "Software Developer": { careerId: "software-developer", course: "Computer Science & Engineering", discipline: "Technology" },

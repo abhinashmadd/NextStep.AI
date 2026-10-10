@@ -1,0 +1,45 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "career_devops_engineer",
+  "category": "careers",
+  "title": "DevOps Engineer",
+  "alternative_titles": ["Site Reliability Engineer", "Infrastructure Engineer", "Platform Engineer"],
+  "industry": "Cloud Computing / Infrastructure",
+  "target_career": "DevOps Engineer",
+  "difficulty": "intermediate_to_advanced",
+  "overview": "A DevOps Engineer bridges the gap between development and operations by automating software delivery pipelines, provisioning infrastructure as code, managing container orchestration with Kubernetes, and maintaining cloud platform reliability. They work with CI/CD tools, monitoring systems, and cloud providers to ensure rapid, reliable software deployment.",
+  "required_technical_skills": [
+    "Linux System Administration",
+    "Docker & Containerization",
+    "Kubernetes & Container Orchestration",
+    "CI/CD Pipelines (GitHub Actions, GitLab CI, Jenkins)",
+    "Cloud Computing (AWS, Azure, GCP)",
+    "Git & Version Control",
+    "Python / Bash Scripting"
+  ],
+  "required_soft_skills": [
+    "System-level troubleshooting",
+    "Incident response and postmortem analysis",
+    "Cross-team collaboration with developers and security",
+    "Documentation of infrastructure architecture"
+  ],
+  "recommended_certifications": [
+    "AWS Certified DevOps Engineer - Professional",
+    "Certified Kubernetes Administrator (CKA)",
+    "HashiCorp Certified: Terraform Associate",
+    "Docker Certified Associate"
+  ],
+  "career_roadmap": [
+    "1. Master Linux system administration and shell scripting.",
+    "2. Learn Docker: build images, compose services, manage multi-container apps.",
+    "3. Study Kubernetes: deployments, services, ConfigMaps, Helm charts.",
+    "4. Build CI/CD pipelines with GitHub Actions or GitLab CI.",
+    "5. Learn a cloud platform (AWS, Azure, or GCP) and deploy applications.",
+    "6. Practice infrastructure as code with Terraform or CloudFormation.",
+    "7. Build monitoring and alerting dashboards with Prometheus and Grafana.",
+    "8. Target Junior DevOps or SRE roles."
+  ],
+  "education_requirements": ["Bachelor's in Computer Science", "IT", "Systems Engineering"],
+  "salary_range": "$75,000 - $150,000",
+  "job_growth": "22% (Much faster than average)"
+}

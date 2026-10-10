@@ -1,0 +1,63 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "career_cybersecurity_analyst",
+  "category": "careers",
+  "title": "Cybersecurity Analyst",
+  "alternative_titles": ["Information Security Analyst", "SOC Analyst", "Security Operations Specialist"],
+  "industry": "Information Technology / Cybersecurity",
+  "overview": "A Cybersecurity Analyst protects an organization's computer networks, cloud infrastructure, and sensitive systems from cyber threats, unauthorized access, and vulnerabilities. They monitor real-time network traffic, triage security alerts, analyze security breaches, and implement defensive countermeasures.",
+  "target_career": "cybersecurity analyst",
+  "difficulty": "intermediate",
+  "education_requirements": [
+    "Bachelor's degree in Computer Science, Cybersecurity, Information Technology, or equivalent practical experience"
+  ],
+  "experience_levels": {
+    "entry_level": {
+      "title": "Junior SOC Analyst (Tier 1)",
+      "experience_years": "0-2 years",
+      "focus": "Monitoring SIEM logs, triage alert queues, basic packet analysis, initial incident escalation."
+    },
+    "mid_level": {
+      "title": "Security Analyst (Tier 2 / Incident Responder)",
+      "experience_years": "2-5 years",
+      "focus": "In-depth incident response, threat hunting, vulnerability management, malware triage."
+    },
+    "senior_level": {
+      "title": "Senior Security Analyst / Security Engineer (Tier 3)",
+      "experience_years": "5+ years",
+      "focus": "Security architecture review, automation (SOAR), threat intelligence modeling, forensics."
+    }
+  },
+  "required_technical_skills": [
+    "Networking Fundamentals (TCP/IP, OSI model, DNS, DHCP, subnetting)",
+    "Linux Command Line and System Administration",
+    "Python Scripting for Security Automation",
+    "SIEM Tools (Splunk, Elastic SIEM, Microsoft Sentinel)",
+    "Vulnerability Assessment & Scanning (Nessus, OpenVAS)",
+    "Network Packet Analysis (Wireshark, tcpdump)",
+    "Basic Cryptography & SSL/TLS",
+    "Security Frameworks (NIST Cybersecurity Framework, MITRE ATT&CK)"
+  ],
+  "required_soft_skills": [
+    "Analytical Problem Solving",
+    "Incident Communication & Technical Reporting",
+    "Attention to Detail",
+    "Calm Under Incident Pressure",
+    "Continuous Learning & Curiosity"
+  ],
+  "recommended_certifications": [
+    "CompTIA Security+ (Industry entry benchmark)",
+    "CompTIA CySA+ (Cybersecurity Analyst)",
+    "Certified Information Systems Security Professional (CISSP - Senior level)",
+    "Certified Ethical Hacker (CEH) or GIAC Security Essentials (GSEC)"
+  ],
+  "career_roadmap": [
+    "Step 1: Master computer networking (TCP/IP, routing, DNS) and Linux command line operations.",
+    "Step 2: Learn Python scripting to parse logs, automate tasks, and interact with REST APIs.",
+    "Step 3: Gain hands-on defensive security skills in labs (TryHackMe SOC Level 1, LetsDefend).",
+    "Step 4: Build a home SOC lab using Splunk Free or ELK stack with Sysmon log ingestion.",
+    "Step 5: Earn CompTIA Security+ certification.",
+    "Step 6: Apply for Entry-level SOC Analyst Tier 1 positions with portfolio projects."
+  ],
+  "source": "NextStep Career Knowledge Base - Cybersecurity Domain v1.0"
+}

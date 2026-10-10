@@ -22,6 +22,12 @@ function getUserFromRequest(request, state) {
     return null;
   }
   const session = state.sessions[token];
+  // Reject expired sessions
+  if (session.expiresAt && new Date(session.expiresAt) < new Date()) {
+    // Optionally clean up expired session
+    delete state.sessions[token];
+    return null;
+  }
   const user = (state.users || []).find((u) => u.id === session.userId);
   if (!user) {
     return null;
@@ -83,4 +89,16 @@ module.exports = {
   getUserFromRequest,
   getActiveWorkspace,
   requireConsent,
+  requireAdmin,
 };
+
+// Helper to ensure the current user has admin privileges
+function requireAdmin(request, state) {
+  const user = getUserFromRequest(request, state);
+  if (!user || user.role !== 'admin') {
+    const err = new Error('Admin privileges required.');
+    err.status = 403;
+    throw err;
+  }
+  return true;
+}

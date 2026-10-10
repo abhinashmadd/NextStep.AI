@@ -1,0 +1,42 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "certs_cloud_devops_catalog",
+  "category": "certifications",
+  "title": "Cloud and DevOps Certifications Guide",
+  "source": "NextStep Certification Roadmap Guide v1.0",
+  "certifications": [
+    {
+      "name": "AWS Certified Solutions Architect – Associate",
+      "code": "SAA-C03",
+      "target_career": "cloud devops engineer",
+      "level": "intermediate",
+      "prerequisites": ["Basic understanding of cloud concepts and web architecture"],
+      "domains_covered": [
+        "Design Resilient Architectures",
+        "Design High-Performing Architectures",
+        "Design Secure Applications and Architectures",
+        "Design Cost-Optimized Architectures"
+      ],
+      "industry_recognition": "Top-tier employer demand for cloud infrastructure engineering roles.",
+      "estimated_study_time": "2-3 months",
+      "recommended_for": "Students aspiring to cloud engineering, backend architecture, and DevOps."
+    },
+    {
+      "name": "Certified Kubernetes Administrator (CKA)",
+      "code": "CKA",
+      "target_career": "cloud devops engineer",
+      "level": "advanced",
+      "prerequisites": ["Docker proficiency and Linux systems mastery"],
+      "domains_covered": [
+        "Storage & Persistent Volumes",
+        "Troubleshooting Cluster Components",
+        "Workloads & Scheduling",
+        "Cluster Architecture, Installation & Configuration",
+        "Services & Networking"
+      ],
+      "industry_recognition": "Hands-on, performance-based exam highly respected across Silicon Valley and Fortune 500 engineering teams.",
+      "estimated_study_time": "2-4 months intensive lab practice",
+      "recommended_for": "Engineers targeting production container orchestration."
+    }
+  ]
+}
