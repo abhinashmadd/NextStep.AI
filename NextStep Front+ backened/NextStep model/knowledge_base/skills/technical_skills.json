@@ -1,0 +1,81 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "skills_technical_catalog",
+  "category": "skills",
+  "title": "Technical Skills Catalog",
+  "source": "NextStep Skills Catalog v1.0",
+  "skills": [
+    {
+      "name": "Python",
+      "category": "Programming Languages",
+      "difficulty": "beginner_to_advanced",
+      "description": "High-level programming language widely used in AI, backend web development, automation, and cybersecurity scripting.",
+      "careers": ["machine learning engineer", "cybersecurity analyst", "cloud devops engineer", "fullstack developer"],
+      "prerequisites": ["Basic Logic & Computational Thinking"],
+      "key_topics": ["Data Structures", "OOP", "Decorators", "AsyncIO", "Virtual Environments", "Package Management"]
+    },
+    {
+      "name": "Linux Command Line",
+      "category": "Operating Systems",
+      "difficulty": "beginner_to_intermediate",
+      "description": "Essential operating system interface for server management, cloud infrastructure, and security operations.",
+      "careers": ["cybersecurity analyst", "cloud devops engineer", "machine learning engineer"],
+      "prerequisites": ["Basic Computer Literacy"],
+      "key_topics": ["File Permissions (chmod/chown)", "Process Monitoring (ps, top, htop)", "Bash Scripting", "Systemd Services", "SSH Key Management"]
+    },
+    {
+      "name": "Computer Networking",
+      "category": "Infrastructure",
+      "difficulty": "intermediate",
+      "description": "Foundational understanding of communication protocols, packet routing, and network architecture.",
+      "careers": ["cybersecurity analyst", "cloud devops engineer"],
+      "prerequisites": ["Basic Computer Architecture"],
+      "key_topics": ["OSI 7 Layers", "TCP/IP 4 Layers", "Subnetting (CIDR)", "DNS and DHCP", "Routing Protocols", "Firewalls and NAT"]
+    },
+    {
+      "name": "SIEM Tools and Log Analysis",
+      "category": "Cybersecurity",
+      "difficulty": "intermediate",
+      "description": "Security Information and Event Management systems aggregating enterprise logs for real-time threat detection and incident response.",
+      "careers": ["cybersecurity analyst"],
+      "prerequisites": ["Computer Networking", "Linux Command Line"],
+      "key_topics": ["Splunk SPL Queries", "Sysmon Windows Event IDs", "Log Normalization", "Correlation Rules", "Alert Triage"]
+    },
+    {
+      "name": "Docker and Containerization",
+      "category": "DevOps / Infrastructure",
+      "difficulty": "intermediate",
+      "description": "Packaging software applications and their dependencies into standardized isolated containers.",
+      "careers": ["cloud devops engineer", "machine learning engineer", "fullstack developer"],
+      "prerequisites": ["Linux Command Line"],
+      "key_topics": ["Dockerfiles", "Multi-stage Builds", "Docker Compose", "Image Optimization", "Container Networking and Volumes"]
+    },
+    {
+      "name": "Kubernetes",
+      "category": "DevOps / Infrastructure",
+      "difficulty": "advanced",
+      "description": "Open-source container orchestration system for automating deployment, scaling, and management of containerized applications.",
+      "careers": ["cloud devops engineer"],
+      "prerequisites": ["Docker and Containerization", "Computer Networking"],
+      "key_topics": ["Pods and Deployments", "Services and Ingress", "ConfigMaps and Secrets", "Helm Charts", "Cluster Autoscaling"]
+    },
+    {
+      "name": "PyTorch & Deep Learning",
+      "category": "Artificial Intelligence",
+      "difficulty": "advanced",
+      "description": "Leading open-source machine learning library used for developing and training deep learning neural network models.",
+      "careers": ["machine learning engineer"],
+      "prerequisites": ["Python", "Linear Algebra", "Calculus"],
+      "key_topics": ["Tensors and Autograd", "Custom nn.Module Layers", "Loss Functions and Optimizers", "DataLoader Pipelines", "GPU Acceleration (CUDA)"]
+    },
+    {
+      "name": "Vector Databases & RAG",
+      "category": "Artificial Intelligence",
+      "difficulty": "intermediate",
+      "description": "High-dimensional embedding storage and retrieval systems enabling semantic search and knowledge-augmented language generation.",
+      "careers": ["machine learning engineer"],
+      "prerequisites": ["Python", "Basic NLP Concepts"],
+      "key_topics": ["Embedding Generation", "Cosine Similarity / HNSW Indexing", "ChromaDB / FAISS Integration", "Context Chunking Strategies", "Reranking"]
+    }
+  ]
+}

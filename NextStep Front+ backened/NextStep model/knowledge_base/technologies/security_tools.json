@@ -1,0 +1,41 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "tech_security_tools_catalog",
+  "category": "technologies",
+  "title": "Cybersecurity Tools & Technologies Reference",
+  "source": "NextStep Technology Stacks Guide v1.0",
+  "technologies": [
+    {
+      "name": "Wireshark",
+      "type": "Network Protocol Analyzer",
+      "purpose": "Deep packet inspection, troubleshooting network latency, decrypting TLS (with session keys), and detecting anomalous traffic patterns.",
+      "careers": ["cybersecurity analyst", "network engineer"],
+      "skills": ["Network Packet Analysis", "Computer Networking"],
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Splunk Enterprise / Splunk Free",
+      "type": "SIEM & Log Analytics Platform",
+      "purpose": "Aggregating millions of security logs across servers and endpoints, creating dashboards, and executing Splunk Processing Language (SPL) threat hunting queries.",
+      "careers": ["cybersecurity analyst"],
+      "skills": ["SIEM Tools and Log Analysis"],
+      "difficulty": "intermediate"
+    },
+    {
+      "name": "Nmap (Network Mapper)",
+      "type": "Network Discovery & Vulnerability Scanner",
+      "purpose": "Host discovery, port scanning, OS detection, and NSE script vulnerability probing.",
+      "careers": ["cybersecurity analyst", "penetration tester"],
+      "skills": ["Vulnerability Assessment", "Networking"],
+      "difficulty": "beginner_to_intermediate"
+    },
+    {
+      "name": "Suricata / Snort",
+      "type": "Intrusion Detection & Prevention System (IDS/IPS)",
+      "purpose": "Rule-based network threat detection and signature matching against known malicious exploits.",
+      "careers": ["cybersecurity analyst", "security engineer"],
+      "skills": ["Network Security", "Linux Command Line"],
+      "difficulty": "intermediate"
+    }
+  ]
+}

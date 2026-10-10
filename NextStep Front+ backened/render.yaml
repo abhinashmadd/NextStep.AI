@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: nextstep-frontend-backend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: npm run start
+    envVars:
+      - key: PORT
+        value: "3000"
+        sync: false
+      - key: HOST
+        value: "0.0.0.0"
+        sync: false
+      - key: AI_BASE_URL
+        value: ""
+      - key: MONGODB_URI
+        value: ""
+      - key: MONGODB_DB_NAME
+        value: "nextstep"
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true

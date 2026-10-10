@@ -1,0 +1,31 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "skill_prerequisites_map",
+  "category": "skills",
+  "title": "Skill Dependency and Prerequisite Tree",
+  "source": "NextStep Curriculum Prerequisite Graph v1.0",
+  "trees": [
+    {
+      "career": "cybersecurity analyst",
+      "foundational_node": "Basic Computer Architecture",
+      "prerequisite_steps": [
+        {"step": 1, "skill": "Computer Networking", "prerequisites": ["Basic Computer Architecture"], "why": "You cannot defend network traffic if you do not understand TCP handshakes, ports, and IP routing."},
+        {"step": 2, "skill": "Linux Command Line", "prerequisites": ["Basic Computer Architecture"], "why": "Most security tooling, servers, and log aggregators run on Linux distributions."},
+        {"step": 3, "skill": "Python Scripting", "prerequisites": ["Basic Logic"], "why": "Used for parsing security event logs, automating API calls, and writing triage scripts."},
+        {"step": 4, "skill": "Network Packet Analysis (Wireshark)", "prerequisites": ["Computer Networking"], "why": "Inspecting malicious payloads and anomalies inside raw PCAP captures."},
+        {"step": 5, "skill": "SIEM Tools and Log Analysis", "prerequisites": ["Computer Networking", "Linux Command Line"], "why": "Enterprise threat detection requires querying aggregated logs in Splunk/Elastic."}
+      ]
+    },
+    {
+      "career": "cloud devops engineer",
+      "foundational_node": "Linux & Git",
+      "prerequisite_steps": [
+        {"step": 1, "skill": "Linux Command Line", "prerequisites": ["Basic Computer Architecture"], "why": "Operating systems foundation for cloud VMs and container base images."},
+        {"step": 2, "skill": "Git Version Control", "prerequisites": ["Basic Command Line"], "why": "Source of truth for all modern CI/CD GitOps pipelines."},
+        {"step": 3, "skill": "Docker Containerization", "prerequisites": ["Linux Command Line"], "why": "Packaging portable software units before cloud deployment."},
+        {"step": 4, "skill": "CI/CD Pipelines", "prerequisites": ["Git Version Control", "Docker Containerization"], "why": "Automating test and build execution on repository push."},
+        {"step": 5, "skill": "Infrastructure as Code (Terraform)", "prerequisites": ["Cloud Provider Basics"], "why": "Declarative multi-cloud provisioning without manual click-ops."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "skills_soft_catalog",
+  "category": "skills",
+  "title": "Professional Soft Skills Catalog",
+  "source": "NextStep Skills Catalog v1.0",
+  "skills": [
+    {
+      "name": "Incident Communication and Technical Reporting",
+      "category": "Communication",
+      "difficulty": "intermediate",
+      "description": "Ability to translate complex technical anomalies, root causes, and security breaches into clear executive summaries and operational action plans.",
+      "careers": ["cybersecurity analyst", "cloud devops engineer"],
+      "practices": ["Post-mortem RCA writeups", "Executive vulnerability briefing", "Ticket documentation standards"]
+    },
+    {
+      "name": "Analytical Problem Solving",
+      "category": "Critical Thinking",
+      "difficulty": "intermediate",
+      "description": "Systematically dissecting ambiguous anomalies, isolating failure domains, and formulating hypotheses supported by quantitative log and telemetry data.",
+      "careers": ["cybersecurity analyst", "cloud devops engineer", "machine learning engineer"],
+      "practices": ["5-Whys analysis", "Fault tree analysis", "Hypothesis-driven debugging"]
+    },
+    {
+      "name": "Cross-Functional Collaboration",
+      "category": "Teamwork",
+      "difficulty": "beginner_to_advanced",
+      "description": "Partnering smoothly with developers, product managers, and security auditors to drive software reliability and risk mitigation.",
+      "careers": ["cloud devops engineer", "fullstack developer", "machine learning engineer"],
+      "practices": ["Agile ceremonies", "Asynchronous RFC documentation", "Constructive peer code review"]
+    }
+  ]
+}

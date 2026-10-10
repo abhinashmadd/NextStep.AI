@@ -1,0 +1,45 @@
+{
+  "_demo_notice": "DEMO_DATA: Curated for NextStep Career Guidance platform demonstration and testing.",
+  "id": "resources_cybersecurity_catalog",
+  "category": "learning_resources",
+  "title": "Vetted Learning Resources for Cybersecurity Students",
+  "source": "NextStep Resource Index v1.0",
+  "resources": [
+    {
+      "title": "TryHackMe - SOC Level 1 Learning Path",
+      "type": "Interactive Hands-on Labs",
+      "cost": "Free & Paid subscription tiers",
+      "url": "https://tryhackme.com/path/outline/soclevel1",
+      "target_career": "cybersecurity analyst",
+      "skills_taught": ["Cyber Defense Frameworks", "Cyber Threat Intelligence", "Network Security and Traffic Analysis", "Endpoint Security Monitoring", "SIEM (Splunk)"],
+      "recommended_stage": "Beginner to early intermediate student"
+    },
+    {
+      "title": "Professor Messer - CompTIA Security+ (SY0-701) Video Course",
+      "type": "Free Video Lecture Series",
+      "cost": "100% Free on YouTube",
+      "url": "https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/",
+      "target_career": "cybersecurity analyst",
+      "skills_taught": ["Security Concepts", "Threats & Mitigations", "Security Architecture", "Security Operations"],
+      "recommended_stage": "Preparing for entry-level Security+ certification"
+    },
+    {
+      "title": "Wireshark Sample Captures & Wireshark University",
+      "type": "Documentation & PCAP Practice",
+      "cost": "Free",
+      "url": "https://wiki.wireshark.org/SampleCaptures",
+      "target_career": "cybersecurity analyst",
+      "skills_taught": ["Packet Analysis", "TCP Handshake Troubleshooting", "DNS query inspection", "HTTP cleartext extraction"],
+      "recommended_stage": "Networking practice"
+    },
+    {
+      "title": "MITRE ATT&CK Framework Documentation",
+      "type": "Authoritative Reference",
+      "cost": "Free",
+      "url": "https://attack.mitre.org/",
+      "target_career": "cybersecurity analyst",
+      "skills_taught": ["Adversary Tactics, Techniques, and Common Knowledge (TTPs)", "Threat Hunting", "Detection Mapping"],
+      "recommended_stage": "Intermediate SOC Analyst"
+    }
+  ]
+}

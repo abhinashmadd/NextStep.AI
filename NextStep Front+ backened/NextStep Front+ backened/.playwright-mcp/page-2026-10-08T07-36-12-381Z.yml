@@ -1,0 +1,205 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - link "NextStep home" [ref=e4] [cursor=pointer]:
+        - /url: "#"
+        - generic [ref=e9]: nextstep.
+      - generic [ref=e10]: YOUR WORKSPACE
+      - navigation "Main navigation" [ref=e11]:
+        - link "◫ Overview" [ref=e12] [cursor=pointer]:
+          - /url: "#overview"
+          - generic [ref=e13]: ◫
+          - text: Overview
+        - link "◉ My profile" [ref=e14] [cursor=pointer]:
+          - /url: "#profile"
+          - generic [ref=e15]: ◉
+          - text: My profile
+        - link "▧ My evidence 0" [ref=e16] [cursor=pointer]:
+          - /url: "#evidence"
+          - generic [ref=e17]: ▧
+          - text: My evidence
+          - generic [ref=e18]: "0"
+        - link "◎ Skill map" [ref=e19] [cursor=pointer]:
+          - /url: "#skills"
+          - generic [ref=e20]: ◎
+          - text: Skill map
+        - link "◇ Self assessment" [ref=e21] [cursor=pointer]:
+          - /url: "#assessment"
+          - generic [ref=e22]: ◇
+          - text: Self assessment
+        - link "↗ Next action" [ref=e23] [cursor=pointer]:
+          - /url: "#action"
+          - generic [ref=e24]: ↗
+          - text: Next action
+        - link "◈ Privacy center" [ref=e25] [cursor=pointer]:
+          - /url: "#privacy"
+          - generic [ref=e26]: ◈
+          - text: Privacy center
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: ✳
+          - strong [ref=e30]: Small steps, real proof.
+          - paragraph [ref=e31]: Your projects tell a better story than a list of claims.
+        - generic [ref=e32]:
+          - generic [ref=e33]: "N"
+          - generic [ref=e34]:
+            - strong [ref=e35]: Your workspace
+            - generic [ref=e36]: Student account
+          - generic [ref=e37]: ···
+    - main [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - text: Workspace /
+          - strong [ref=e41]: Overview
+        - generic [ref=e42]:
+          - generic [ref=e43]: Your work stays yours
+          - generic [ref=e45]: "N"
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: THURSDAY · YOUR CAREER JOURNEY
+            - heading "Your next chapter starts here." [level=1] [ref=e50]
+            - paragraph [ref=e51]: A little progress, backed by real work, goes a long way.
+            - generic [ref=e52]:
+              - button "＋ Set up my profile" [ref=e53] [cursor=pointer]:
+                - generic [ref=e54]: ＋
+                - text: Set up my profile
+              - generic [ref=e55]:
+                - generic [aria-hidden] [ref=e56]: ✓
+                - text: Built around your real work
+          - generic [aria-hidden] [ref=e57]:
+            - generic [ref=e60]:
+              - generic [ref=e61]:
+                - generic [ref=e62]: ✳
+                - generic [ref=e63]: YOUR NEXT MOVE
+                - generic [ref=e64]: ···
+              - generic [ref=e65]:
+                - generic [ref=e66]: "01"
+                - generic [ref=e67]:
+                  - strong [ref=e68]: Your work
+                  - generic [ref=e69]: Show what you can do
+                - generic [ref=e70]: ✓
+              - generic [ref=e72]:
+                - generic [ref=e73]: "02"
+                - generic [ref=e74]:
+                  - strong [ref=e75]: Your next step
+                  - generic [ref=e76]: Make progress that counts
+                - generic [ref=e77]: ↗
+            - generic [ref=e78]: ✳
+        - region "Your career preparation journey" [ref=e80]:
+          - generic [ref=e81]:
+            - generic [ref=e82]:
+              - text: YOUR JOURNEY
+              - heading "From where you are to where you want to be." [level=2] [ref=e83]
+            - generic [ref=e84]: 0 of 5 steps
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: "01"
+              - strong [ref=e89]: Your profile
+            - generic [ref=e91]:
+              - generic [ref=e92]: "02"
+              - strong [ref=e94]: Your work
+            - generic [ref=e96]:
+              - generic [ref=e97]: "03"
+              - strong [ref=e99]: Skill map
+            - generic [ref=e101]:
+              - generic [ref=e102]: "04"
+              - strong [ref=e104]: Next action
+            - generic [ref=e106]:
+              - generic [ref=e107]: "05"
+              - strong [ref=e109]: Keep growing
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]:
+              - generic [ref=e113]:
+                - text: START WITH YOU
+                - heading "Your career profile" [level=2] [ref=e114]
+              - button "Set up ↗" [ref=e115] [cursor=pointer]
+            - generic [ref=e117]:
+              - paragraph [ref=e118]: Set a destination, and we'll make your career journey personal to you.
+              - button "Set up your profile →" [ref=e119] [cursor=pointer]
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - generic [ref=e122]:
+                - text: EVIDENCE-BASED
+                - heading "Capability profile" [level=2] [ref=e123]
+              - generic "A transparent keyword-based prototype estimate, not an AI review, verified assessment, or hiring score." [ref=e124]: i
+            - generic [ref=e126]:
+              - paragraph [ref=e127]: Add real work to get your first evidence-based readiness snapshot.
+              - button "Add your first evidence →" [ref=e128] [cursor=pointer]
+        - generic [ref=e129]:
+          - generic [ref=e130]:
+            - generic [ref=e131]:
+              - text: SHOW, DON'T JUST TELL
+              - heading "Your evidence" [level=2] [ref=e132]
+              - paragraph [ref=e133]: Projects, coursework, internships, and anything else you've worked on.
+            - button "＋ Add evidence" [ref=e134] [cursor=pointer]:
+              - generic [ref=e135]: ＋
+              - text: Add evidence
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - strong [ref=e139]: Your best work belongs here.
+              - paragraph [ref=e140]: Projects, assignments, GitHub repos, internships — start with anything you're proud of.
+            - button "Add your first piece →" [ref=e141] [cursor=pointer]
+        - generic [ref=e142]:
+          - generic [ref=e143]:
+            - generic [ref=e144]:
+              - text: ONE FOCUSED STEP
+              - heading "Your next best action" [level=2] [ref=e145]
+            - generic [ref=e146]: ✳
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - strong [ref=e150]: No giant roadmap. Just your next right move.
+              - paragraph [ref=e151]: Start with your profile and a piece of real work. We'll help you choose one practical step from there.
+            - button "Get started →" [ref=e152] [cursor=pointer]
+        - generic [ref=e153]:
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - text: TARGET ROLE REQUIREMENTS
+              - heading "Skill profile & evidence" [level=2] [ref=e156]
+            - generic [ref=e157]: ✳ Prototype estimates
+          - generic [ref=e158]: Your skill map will grow from your work, not just what you say you can do. Add evidence and analyze it to see capabilities you've demonstrated.
+        - generic [ref=e160]:
+          - generic [ref=e161]:
+            - generic [ref=e162]:
+              - text: YOUR PERSPECTIVE
+              - heading "Self-assessment" [level=2] [ref=e163]
+              - paragraph [ref=e164]: Your confidence is useful context—not proof. Evidence stays the source of demonstrated skills.
+            - button "Rate my skills" [ref=e165] [cursor=pointer]
+          - paragraph [ref=e167]: No self-assessment yet. Your skill claims remain separate from evidence-backed capabilities.
+        - generic [ref=e168]:
+          - generic [ref=e170]:
+            - text: PROGRESS YOU CAN TRACE
+            - heading "Capability change log" [level=2] [ref=e171]
+            - paragraph [ref=e172]: What changed after new work was analyzed.
+          - generic [ref=e173]: When new evidence changes a skill estimate, the previous and updated states will appear here.
+        - generic [ref=e175]:
+          - generic [ref=e177]:
+            - text: YOUR MOMENTUM
+            - heading "Recent activity" [level=2] [ref=e178]
+          - generic [ref=e179]: Your milestones will show up here as you make progress.
+        - generic [ref=e181]:
+          - generic [ref=e182]: Made for the career you're working toward.
+          - generic [ref=e183]: NextStep ✳
+  - dialog [ref=e184]:
+    - generic [ref=e185]:
+      - generic [ref=e187]:
+        - text: PRIVACY BEFORE PROFILE
+        - heading "Your work stays yours." [level=2] [ref=e188]
+        - paragraph [ref=e189]: Before we collect your profile or evidence, here's exactly what this prototype does.
+      - generic [ref=e190]:
+        - strong [ref=e191]: What we collect
+        - paragraph [ref=e192]: Only the student profile details, self-assessment, evidence descriptions, and files you choose to add.
+        - strong [ref=e193]: How it's processed
+        - paragraph [ref=e194]: This prototype uses local, deterministic keyword matching. No external AI service receives your data, and it is not used to train models.
+        - strong [ref=e195]: Where it's stored
+        - paragraph [ref=e196]: In a local JSON file and uploads folder on the computer running the app. There is no account system or multi-user access control.
+        - strong [ref=e197]: Retention and deletion
+        - paragraph [ref=e198]: Data stays on this device until you export it or use the Privacy Center to delete it. Do not upload sensitive or confidential work.
+      - generic [ref=e199]:
+        - checkbox "I have read and understand how this prototype processes and stores my information." [active] [ref=e200]
+        - text: I have read and understand how this prototype processes and stores my information.
+      - button "Continue to NextStep →" [ref=e202] [cursor=pointer]:
+        - text: Continue to NextStep
+        - generic [ref=e203]: →
+  - status

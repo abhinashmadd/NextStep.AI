@@ -28,10 +28,17 @@ async function handleProfile(request, response, body, state) {
   }
 
   const previousCareerId = workspace.profile?.careerId;
+  const sanitizeString = (str) => String(str).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[c]);
   workspace.profile = {
-    name: body.name.trim(),
-    course: body.course.trim(),
-    year: body.year.trim(),
+    name: sanitizeString(body.name),
+    course: sanitizeString(body.course),
+    year: sanitizeString(body.year),
     discipline: (body.discipline || "General Studies").trim(),
     semester: typeof body.semester === "string" ? body.semester.trim() : "",
     careerId: body.careerId,
@@ -39,10 +46,10 @@ async function handleProfile(request, response, body, state) {
     availableHours: body.availableHours ? Number(body.availableHours) : null,
     learningStyle: typeof body.learningStyle === "string" ? body.learningStyle.slice(0, 40) : "",
     skills: Array.isArray(body.skills)
-      ? body.skills.filter((skill) => typeof skill === "string").map((skill) => skill.trim().slice(0, 60)).filter(Boolean).slice(0, 20)
+      ? body.skills.filter((skill) => typeof skill === "string").map((skill) => sanitizeString(skill).slice(0, 60)).filter(Boolean).slice(0, 20)
       : [],
-    interests: typeof body.interests === "string" ? body.interests.trim().slice(0, 500) : "",
-    bio: typeof body.bio === "string" ? body.bio.trim() : "",
+    interests: typeof body.interests === "string" ? sanitizeString(body.interests).trim().slice(0, 500) : "",
+    bio: typeof body.bio === "string" ? sanitizeString(body.bio).trim() : "",
     updatedAt: new Date().toISOString(),
   };
 
