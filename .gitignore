@@ -1,2 +1,5 @@
 cloudflared.exe
 .vscode/
+node_modules/
+data/
+.env
