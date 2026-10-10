@@ -300,6 +300,113 @@
   flex: 1;
 }
 
+/* Custom Select Wrapper & Drop Arrow */
+.auth-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.auth-select-wrapper select.auth-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 36px;
+  cursor: pointer;
+  background-color: var(--auth-paper);
+}
+
+.auth-select-wrapper select.auth-input:invalid,
+.auth-select-wrapper select.auth-input option[value=""] {
+  color: #9aa099;
+}
+
+.auth-select-wrapper select.auth-input option {
+  color: var(--auth-ink);
+  background-color: var(--auth-paper);
+}
+
+.auth-select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #687068;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.auth-select-wrapper select.auth-input:focus ~ .auth-select-arrow {
+  color: var(--auth-green);
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Forgot Password link */
+.auth-forgot-link {
+  background: transparent;
+  border: none;
+  color: var(--auth-green);
+  font-size: 10.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.15s ease, text-decoration 0.15s ease;
+}
+
+.auth-forgot-link:hover {
+  color: var(--auth-green-dark);
+  text-decoration: underline;
+}
+
+/* Forgot / Reset Password View */
+.auth-reset-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.auth-reset-title {
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--auth-ink);
+  margin: 0 0 6px;
+}
+
+.auth-reset-desc {
+  font-size: 12px;
+  color: #686e69;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.auth-forgot-back-row {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.auth-link-back {
+  background: none;
+  border: none;
+  color: #616861;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s ease;
+}
+
+.auth-link-back:hover {
+  color: var(--auth-ink);
+  text-decoration: underline;
+}
+
 /* Password strength meter */
 .auth-strength-meter {
   display: flex;

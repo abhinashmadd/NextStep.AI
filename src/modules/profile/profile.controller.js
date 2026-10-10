@@ -1,6 +1,6 @@
 const { validateProfile } = require("./profile.validation");
 const { careers } = require("../careers/careers.data");
-const { analyze } = require("../analysis/analysis.service");
+const { analyze, triggerAIAnalysis } = require("../analysis/analysis.service");
 const { addActivity, writeState, sanitizeState } = require("../../config/database");
 const { getActiveWorkspace, requireConsent } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
@@ -62,6 +62,9 @@ async function handleProfile(request, response, body, state) {
 
   addActivity(workspace, `Student profile ${workspace.activity?.some((item) => item.message.includes("profile")) ? "updated" : "created"} for ${workspace.profile.targetRole}.`);
   analyze(workspace);
+  try {
+    await triggerAIAnalysis(workspace);
+  } catch {}
 
   await writeState(state);
   sendJson(response, 200, sanitizeState({ ...state, ...workspace, currentUser: user }));

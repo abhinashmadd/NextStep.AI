@@ -419,6 +419,7 @@ async function refresh() {
   }
   populateCareerOptions();
   currentState = await api(stateUrl);
+  checkAiHealth();
   if (localStorage.getItem("nextstep_consent") === "true") {
     currentState.privacy = currentState.privacy || {};
     currentState.privacy.consent = currentState.privacy.consent || { accepted: true };
@@ -1051,10 +1052,41 @@ document.addEventListener("click", async (event) => {
   }
 });
 
-$("#menu-toggle").addEventListener("click", () => $("#sidebar").classList.toggle("open"));
+function closeSidebarDrawer() {
+  const sidebar = $("#sidebar");
+  const backdrop = $("#sidebar-backdrop");
+  if (sidebar) sidebar.classList.remove("open");
+  if (backdrop) backdrop.classList.remove("active");
+  document.body.classList.remove("sidebar-is-open");
+}
+
+function toggleSidebarDrawer() {
+  const sidebar = $("#sidebar");
+  const backdrop = $("#sidebar-backdrop");
+  if (!sidebar) return;
+  const isOpen = sidebar.classList.toggle("open");
+  if (backdrop) backdrop.classList.toggle("active", isOpen);
+  document.body.classList.toggle("sidebar-is-open", isOpen);
+}
+
+const menuBtn = $("#menu-toggle");
+if (menuBtn) menuBtn.addEventListener("click", toggleSidebarDrawer);
+
+const closeBtn = $("#sidebar-close");
+if (closeBtn) closeBtn.addEventListener("click", closeSidebarDrawer);
+
+const backdropEl = $("#sidebar-backdrop");
+if (backdropEl) backdropEl.addEventListener("click", closeSidebarDrawer);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $("#sidebar")?.classList.contains("open")) {
+    closeSidebarDrawer();
+  }
+});
+
 document.querySelectorAll(".main-nav .nav-link").forEach((link) => {
   link.addEventListener("click", () => {
-    $("#sidebar").classList.remove("open");
+    closeSidebarDrawer();
     if (link.dataset.section === "privacy") {
       showPrivacyCenter();
       return;
@@ -1112,6 +1144,206 @@ $("#evidence-list").addEventListener("click", async (event) => {
     showToast(error.message, true);
   }
 });
+
+// NextStep AI Service Integration (RAG Guidance, Skill Graph & Career Matching)
+async function checkAiHealth() {
+  try {
+    const res = await api("/api/ai/health");
+    const el = $("#ai-status-indicator");
+    if (el && res && res.status === "healthy") {
+      el.textContent = `● AI Online (${res.model || "NVIDIA NIM"})`;
+      el.style.background = "#edf7ed";
+      el.style.color = "#2e7d32";
+      el.style.borderColor = "#c8e6c9";
+    }
+  } catch {
+    const el = $("#ai-status-indicator");
+    if (el) {
+      el.textContent = "○ AI Local Mode";
+      el.style.background = "#f4f6f1";
+      el.style.color = "#555b55";
+      el.style.borderColor = "#d9dfd6";
+    }
+  }
+}
+
+// 1. RAG Career Guidance Q&A Assistant
+$("#btn-ask-rag")?.addEventListener("click", async () => {
+  const input = $("#rag-query-input");
+  const query = input?.value?.trim();
+  if (!query) {
+    showToast("Please enter a career or learning question.", true);
+    return;
+  }
+  const btn = $("#btn-ask-rag");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Consulting AI RAG…";
+  const box = $("#rag-response-box");
+  const contentEl = $("#rag-answer-content");
+  const sourcesEl = $("#rag-sources-list");
+  if (box) box.style.display = "block";
+  if (contentEl) contentEl.textContent = "Searching verified knowledge base and synthesizing guidance…";
+  if (sourcesEl) sourcesEl.textContent = "";
+
+  try {
+    const profile = currentState?.profile || {};
+    const payload = {
+      query,
+      student_profile: {
+        education: profile.course || "Undergraduate Studies",
+        skills: profile.skills || [],
+        interests: profile.interests ? [profile.interests] : [],
+        target_career: profile.targetRole || "Software Developer",
+        experience_level: profile.year || "beginner"
+      }
+    };
+    const res = await api("/api/rag/query", payload);
+    if (contentEl) contentEl.textContent = res.answer || "No response received.";
+    if (sourcesEl) {
+      const sources = res.sources || [];
+      sourcesEl.innerHTML = sources.length
+        ? `<strong>Verified Knowledge Base Sources:</strong> ${sources.map(s => `<code>${escapeHtml(s)}</code>`).join(", ")}`
+        : `<strong>Verified Knowledge Base:</strong> NextStep Career Guidance Corpus`;
+    }
+    showToast("Grounded career guidance retrieved!");
+  } catch (err) {
+    if (contentEl) contentEl.textContent = `Could not retrieve guidance: ${err.message}`;
+    showToast(err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
+// Allow pressing Enter in RAG query input
+$("#rag-query-input")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    $("#btn-ask-rag")?.click();
+  }
+});
+
+// 2. Multi-Dimensional Career Matching via Scoring Engine
+$("#btn-explore-career-matches")?.addEventListener("click", async () => {
+  const btn = $("#btn-explore-career-matches");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Ranking Careers…";
+  const container = $("#ai-matches-container");
+  const grid = $("#ai-matches-grid");
+  if (container) container.style.display = "block";
+  if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:20px; color:#606760;">Analyzing skills and evaluating multi-dimensional compatibility…</div>`;
+
+  try {
+    const profile = currentState?.profile || {};
+    const skillsList = (profile.skills || []).map(s => ({ skill: s, level: 2 }));
+    const payload = {
+      skills: skillsList,
+      interests: profile.interests ? [profile.interests] : [],
+      education: profile.course || "Technology Studies",
+      target_career: profile.targetRole || "Software Developer"
+    };
+    const ranked = await api("/api/scoring/rank", payload);
+    if (!Array.isArray(ranked) || !ranked.length) {
+      if (grid) grid.innerHTML = `<p>No career matches calculated yet.</p>`;
+      return;
+    }
+    if (grid) {
+      grid.innerHTML = ranked.map(c => `
+        <div class="preview-card" style="background:#ffffff;border:1px solid #dce2d9;border-radius:10px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="font-size:14px;color:#202b25;">${escapeHtml(c.career)}</strong>
+            <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:#eef4ea;color:#2e7d32;">Rank #${c.rank}</span>
+          </div>
+          <div class="preview-score-row" style="margin-bottom:8px;">
+            <div class="preview-score-ring" style="width:48px;height:48px;">
+              <span class="preview-score-text" style="font-size:13px;">${Math.round(c.final_score)}%</span>
+            </div>
+            <div class="preview-score-meta" style="font-size:12px;">Confidence: <strong>${escapeHtml(c.confidence)}</strong></div>
+          </div>
+          ${c.missing_skills?.length ? `<div style="font-size:11px;color:#856404;margin-top:6px;">Missing skills: ${c.missing_skills.slice(0, 3).map(s => `<code>${escapeHtml(s)}</code>`).join(" ")}</div>` : `<div style="font-size:11px;color:#155724;margin-top:6px;">✓ Core prerequisites aligned</div>`}
+        </div>
+      `).join("");
+    }
+    showToast("Career compatibility rankings updated!");
+  } catch (err) {
+    showToast(err.message, true);
+    if (grid) grid.innerHTML = `<p style="color:var(--red);">Error ranking careers: ${escapeHtml(err.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
+// 3. Full AI Analysis Action Button
+$("#btn-run-ai-analysis")?.addEventListener("click", async () => {
+  const btn = $("#btn-run-ai-analysis");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Analyzing with AI…";
+  try {
+    const profile = currentState?.profile;
+    if (!profile) {
+      showToast("Please create your student profile first.", true);
+      openDialog("profile-dialog");
+      return;
+    }
+    const studentEvidence = (currentState.evidence || [])
+      .map(e => `${e.title}: ${e.type}. ${e.description || ""}`)
+      .join("\n")
+      .trim();
+    const payload = {
+      student_profile: `${profile.name}, ${profile.course}, ${profile.year}. Skills: ${(profile.skills || []).join(", ") || "None"}`,
+      target_career: profile.targetRole || "Software Developer",
+      student_evidence: studentEvidence || `Student registered for ${profile.targetRole}. Claimed skills: ${(profile.skills || []).join(", ") || "General background"}.`,
+      career_requirements: ["Software Development", "Data Structures", "System Design", "Git"]
+    };
+    const res = await api("/api/ai/analyze", payload);
+    if (res) {
+      currentState.aiResult = res;
+      if (currentState.skillReport) {
+        currentState.skillReport.readiness = res.readiness_score;
+        currentState.skillReport.aiPowered = true;
+        currentState.skillReport.strengths = res.strengths || [];
+        currentState.skillReport.weaknesses = res.weaknesses || [];
+      }
+      if (res.next_best_action) {
+        currentState.recommendedAction = {
+          id: "ai-" + Date.now(),
+          title: res.next_best_action.title,
+          skill: res.demonstrated_skills?.length ? (res.skill_gaps?.[0] || res.next_best_action.title) : (profile.targetRole || "Software Developer"),
+          type: (res.next_best_action.difficulty || "build").toLowerCase(),
+          reason: res.next_best_action.reason,
+          priorityScore: 0.95,
+          outcome: res.next_best_action.expected_outcome,
+          expectedEvidence: ["Working project, script, or practice artifact", "README or short report explaining your approach"],
+          estimatedEffortHours: 10,
+          feasibility: { weeklyHoursAvailable: profile.availableHours || 10, fitsAvailableTime: true },
+          steps: [
+            `Review the objective: ${res.next_best_action.title}`,
+            `Implement your solution or complete the technical task demonstrating the skills.`,
+            `Upload your project, code, or documentation as evidence on NextStep to verify your capability.`
+          ],
+          resources: [
+            { label: `Search tutorial & docs`, url: `https://www.google.com/search?q=${encodeURIComponent(res.next_best_action.title)}` }
+          ],
+          createdAt: new Date().toISOString(),
+          completed: false,
+          aiPowered: true,
+        };
+      }
+      render();
+      showToast(`AI Analysis Complete! Readiness: ${res.readiness_score}%. Action: ${res.next_best_action?.title}`);
+    }
+  } catch (err) {
+    showToast(err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 
 const today = new Date();
 $("#today-label").textContent = `${today.toLocaleDateString(undefined, { weekday: "long" }).toUpperCase()} · YOUR CAREER JOURNEY`;

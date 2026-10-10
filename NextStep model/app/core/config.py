@@ -15,7 +15,7 @@ class Settings:
             "NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1"
         )
         self.nvidia_model: str = os.getenv("NVIDIA_MODEL", "z-ai/glm-5.3")
-        self.request_timeout: float = float(os.getenv("NVIDIA_REQUEST_TIMEOUT", "180.0"))
+        self.request_timeout: float = float(os.getenv("NVIDIA_REQUEST_TIMEOUT", "15.0"))
 
         self.host: str = os.getenv("HOST", "0.0.0.0")
         self.port: int = int(os.getenv("PORT", "8000"))

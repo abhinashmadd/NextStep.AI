@@ -44,7 +44,8 @@ class NvidiaAIService:
             self._openai_client = OpenAI(
                 base_url=settings.nvidia_base_url,
                 api_key=settings.nvidia_api_key,
-                timeout=settings.request_timeout,
+                timeout=min(float(settings.request_timeout), 8.0),
+                max_retries=0,
             )
         return self._openai_client
 
@@ -69,6 +70,7 @@ class NvidiaAIService:
                         temperature=0.2,
                         top_p=0.7,
                         max_tokens=4096,
+                        timeout=min(float(settings.request_timeout), 8.0),
                     )
                     choice = completion.choices[0]
                     content = choice.message.content
@@ -115,7 +117,7 @@ class NvidiaAIService:
         }
 
         try:
-            with httpx.Client(timeout=settings.request_timeout) as http_client:
+            with httpx.Client(timeout=min(float(settings.request_timeout), 8.0)) as http_client:
                 response = http_client.post(endpoint, headers=headers, json=payload)
         except httpx.TimeoutException as e:
             logger.error(f"NVIDIA NIM GLM-5.3 timed out after {settings.request_timeout}s.")

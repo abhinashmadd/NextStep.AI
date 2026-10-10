@@ -1,4 +1,5 @@
 const addSecurityHeaders = (response) => {
+  if (response.headersSent) return;
   // Prevent MIME sniffing
   response.setHeader('X-Content-Type-Options', 'nosniff');
   // Clickjacking protection
@@ -9,10 +10,10 @@ const addSecurityHeaders = (response) => {
   response.setHeader('Permissions-Policy', 'interest-cohort=()');
   // Prevent caching of sensitive data
   response.setHeader('Cache-Control', 'private, no-store');
-  // Content Security Policy – only allow resources from self
+  // Content Security Policy – allow resources from self and Google fonts
   response.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self'; style-src 'self' https:; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self';"
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https: 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' https: data:; object-src 'none'; base-uri 'self';"
   );
 };
 

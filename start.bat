@@ -1,10 +1,11 @@
 @echo off
-title NextStep Backend Server
+title NextStep Platform Launcher
 echo ==============================================
-echo  Starting NextStep Career Preparation Backend
+echo  Starting NextStep Full-Stack Platform
+echo  AI Service (Port 8000) + Web Gateway (Port 3000)
 echo ==============================================
 echo.
-node server.js
+node run_all.js
 if %errorlevel% neq 0 (
   echo.
   echo Server exited with an error.

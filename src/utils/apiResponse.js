@@ -1,4 +1,5 @@
 const { addSecurityHeaders } = require('../middleware/securityHeaders');
+const { MAX_BODY_BYTES } = require('../config/environment');
 
 function sendJson(response, status, data, extraHeaders = {}) {
   response.writeHead(status, {

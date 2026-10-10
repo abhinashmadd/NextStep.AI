@@ -227,8 +227,9 @@
       submitBtn.textContent = "Authenticating…";
       try {
         const values = new FormData(form);
+        const identifier = (values.get("identifier") || values.get("email") || "").trim();
         const result = await api("/api/auth/login", {
-          email: values.get("email").trim(),
+          identifier,
           password: values.get("password"),
         });
         form.reset();
@@ -254,6 +255,7 @@
       }
       pendingRegistration = {
         name: values.get("name").trim(),
+        username: values.get("username")?.trim() || "",
         badgeId: values.get("badgeId")?.trim() || "",
         email: values.get("email").trim(),
         mobile: values.get("mobile")?.trim() || "",
@@ -263,11 +265,12 @@
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
       submitBtn.disabled = true;
-      submitBtn.textContent = "Dispatching OTP…";
+      submitBtn.textContent = "Checking credentials & Dispatching OTP…";
       try {
         const res = await api("/api/auth/send-otp", {
           email: pendingRegistration.email,
           mobile: pendingRegistration.mobile,
+          username: pendingRegistration.username,
         });
         const demoOtpEl = $("#auth-demo-otp");
         if (demoOtpEl) demoOtpEl.textContent = res.demoOtp || "849201";
@@ -337,13 +340,94 @@
       }
     });
 
-    // Guest Student Login
-    $("#auth-guest-btn")?.addEventListener("click", async () => {
-      try {
-        const result = await api("/api/auth/guest", {});
-        handleAuthSuccess(result.user, result.state, "Access granted as Guest Student.", result.token);
-      } catch (err) {
-        showToast(err.message, true);
+    // Forgot Password Button -> Open Forgot Password View
+    $("#auth-forgot-btn")?.addEventListener("click", () => {
+      const tabs = $("#auth-tabs");
+      if (tabs) tabs.style.display = "none";
+      const signinIdInput = document.querySelector("#auth-signin-form input[name='identifier']");
+      const resetIdInput = $("#auth-reset-id");
+      if (signinIdInput && resetIdInput && signinIdInput.value.trim()) {
+        resetIdInput.value = signinIdInput.value.trim();
+      }
+      const stepFields = $("#auth-reset-step-fields");
+      if (stepFields) stepFields.style.display = "none";
+      const submitBtn = $("#btn-reset-submit");
+      if (submitBtn) submitBtn.textContent = "Send Reset OTP";
+      showAuthView("forgot");
+    });
+
+    // Back to Sign In from Forgot Password
+    $("#btn-reset-cancel")?.addEventListener("click", () => {
+      const tabs = $("#auth-tabs");
+      if (tabs) tabs.style.display = "grid";
+      switchAuthTab("signin");
+    });
+
+    // Forgot / Reset Password Form Submission
+    $("#auth-forgot-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const submitBtn = $("#btn-reset-submit");
+      const resetId = $("#auth-reset-id")?.value.trim();
+      const stepFields = $("#auth-reset-step-fields");
+      const otpInput = $("#auth-reset-otp");
+      const newPassInput = $("#auth-reset-newpass");
+
+      if (!stepFields || stepFields.style.display === "none") {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Verifying Account & Sending OTP…";
+        try {
+          const res = await api("/api/auth/forgot-password", { identifier: resetId });
+          const demoOtpEl = $("#auth-reset-demo-otp");
+          if (demoOtpEl && res.demoOtp) demoOtpEl.textContent = res.demoOtp;
+          stepFields.style.display = "block";
+          if (otpInput) {
+            otpInput.required = true;
+            otpInput.focus();
+          }
+          if (newPassInput) newPassInput.required = true;
+          submitBtn.textContent = "Reset Password & Sign In";
+          showToast(res.message || "Reset OTP dispatched.");
+        } catch (err) {
+          showToast(err.message, true);
+        } finally {
+          submitBtn.disabled = false;
+        }
+      } else {
+        const otp = otpInput?.value.trim();
+        const newPassword = newPassInput?.value;
+        if (!otp) {
+          showToast("Please enter the 6-digit OTP code.", true);
+          return;
+        }
+        if (!newPassword || newPassword.length < 6) {
+          showToast("New password must be at least 6 characters long.", true);
+          return;
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Updating Password…";
+        try {
+          const res = await api("/api/auth/reset-password", {
+            identifier: resetId,
+            otp,
+            newPassword,
+          });
+          showToast(res.message || "Password updated successfully!");
+          form.reset();
+          stepFields.style.display = "none";
+          submitBtn.textContent = "Send Reset OTP";
+          const tabs = $("#auth-tabs");
+          if (tabs) tabs.style.display = "grid";
+          switchAuthTab("signin");
+          const signinIdInput = document.querySelector("#auth-signin-form input[name='identifier']");
+          if (signinIdInput) signinIdInput.value = resetId;
+          const signinPwdInput = document.querySelector("#auth-signin-form input[name='password']");
+          if (signinPwdInput) signinPwdInput.focus();
+        } catch (err) {
+          showToast(err.message, true);
+        } finally {
+          submitBtn.disabled = false;
+        }
       }
     });
 

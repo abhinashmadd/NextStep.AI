@@ -27,11 +27,6 @@
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
       <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
-      <p class="welcome-hero-tagline">Turn your real work into your next step toward the career you want.</p>
-      <div class="welcome-hero-actions">
-        <button class="welcome-enter-btn" type="button" aria-label="Enter dashboard">Explore Dashboard <span aria-hidden="true">→</span></button>
-      </div>
-      <span class="welcome-tap-hint">Click or tap anywhere to enter</span>
     </div>
   </aside>
 
@@ -573,8 +568,10 @@
           document.removeEventListener('keydown', onKeyDown);
         }
 
-        // Clicking anywhere on the screen dismisses the overlay and opens the dashboard
+        // Clicking or tapping anywhere on the screen dismisses the overlay and opens the dashboard
         overlay.addEventListener('click', dismissWelcome);
+        overlay.addEventListener('pointerdown', dismissWelcome);
+        overlay.addEventListener('touchend', dismissWelcome, { passive: true });
 
         // Keyboard Support: Press any key to open the dashboard
         const onKeyDown = (e) => {
