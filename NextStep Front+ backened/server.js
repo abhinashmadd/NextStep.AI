@@ -46,6 +46,36 @@ const contentTypes = {
   ".ico": "image/x-icon",
 };
 
+function proxyToAiService(request, response, pathname, search = "") {
+  const options = {
+    hostname: "127.0.0.1",
+    port: 8000,
+    path: pathname + (search || ""),
+    method: request.method,
+    headers: {
+      ...request.headers,
+      host: "127.0.0.1:8000",
+    },
+  };
+
+  const proxyReq = http.request(options, (proxyRes) => {
+    response.writeHead(proxyRes.statusCode, {
+      ...proxyRes.headers,
+      "Access-Control-Allow-Origin": "*",
+    });
+    proxyRes.pipe(response);
+  });
+
+  proxyReq.on("error", (err) => {
+    sendJson(response, 502, {
+      error: "Could not connect to NextStep AI Service on port 8000.",
+      detail: err.message,
+    });
+  });
+
+  request.pipe(proxyReq);
+}
+
 async function serveStatic(request, response, pathname) {
   const requested = pathname === "/" ? "/index.html" : decodeURIComponent(pathname);
   const filePath = path.resolve(PUBLIC_DIR, `.${requested}`);
@@ -61,6 +91,7 @@ async function serveStatic(request, response, pathname) {
       "Content-Type": contentTypes[path.extname(filePath)] || "application/octet-stream",
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "no-cache",
+      "Access-Control-Allow-Origin": "*",
     });
     response.end(content);
   } catch (error) {
@@ -243,6 +274,21 @@ const server = http.createServer(async (request, response) => {
     if (fileMatch && request.method === "GET") {
       const state = await readState();
       await evidenceController.downloadEvidenceFile(request, response, fileMatch[1], state);
+      return;
+    }
+
+    // 8.5 NextStep Python AI, RAG & Skill Graph Proxy
+    if (
+      pathname.startsWith("/api/ai") ||
+      pathname.startsWith("/api/rag") ||
+      pathname.startsWith("/api/skills") ||
+      pathname.startsWith("/api/recommend") ||
+      pathname.startsWith("/api/scoring") ||
+      pathname === "/api/careers/match" ||
+      pathname === "/api/learning-path" ||
+      /^\/api\/careers\/[^/]+\/skills$/.test(pathname)
+    ) {
+      proxyToAiService(request, response, pathname, url.search);
       return;
     }
 

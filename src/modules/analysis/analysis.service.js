@@ -8,19 +8,27 @@ async function triggerAIAnalysis(state) {
   if (!state.profile || !careers[state.profile.careerId]) return null;
   const career = careers[state.profile.careerId];
   const studentEvidence = (state.evidence || [])
-    .map((e) => `${e.title} ${e.type} ${e.description || ""} ${e.analysisText || ""}`)
-    .join("\n");
+    .map((e) => `${e.title}: ${e.type}. ${e.description || ""} ${e.analysisText || ""}`)
+    .join("\n")
+    .trim();
+
+  const profileDesc = `${state.profile.name}, ${state.profile.course}, ${state.profile.year}, Semester: ${state.profile.semester || "N/A"}. Declared skills: ${(state.profile.skills || []).join(", ") || "None"}. Interests: ${state.profile.interests || "None"}.`;
+  const evidenceText = studentEvidence || `Student profile registered for ${career.name}. Claimed initial skills: ${(state.profile.skills || []).join(", ") || "General background"}.`;
+  const requirementsList = career.skills.map((s) => s.name);
+
   const requestBody = {
-    student_profile: state.profile,
+    student_profile: profileDesc,
     target_career: career.name,
-    student_evidence: studentEvidence,
-    career_requirements: career,
+    student_evidence: evidenceText,
+    career_requirements: requirementsList,
   };
+
   try {
     const response = await fetch(`${AI_BASE_URL}/analyze`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
+      signal: AbortSignal.timeout(6000),
     });
     if (!response.ok) {
       const err = await response.json();
@@ -28,9 +36,43 @@ async function triggerAIAnalysis(state) {
     }
     const result = await response.json();
     state.aiResult = result;
+
+    if (result && result.next_best_action) {
+      if (state.skillReport) {
+        state.skillReport.readiness = result.readiness_score;
+        state.skillReport.aiPowered = true;
+        state.skillReport.strengths = result.strengths || [];
+        state.skillReport.weaknesses = result.weaknesses || [];
+      }
+      state.recommendedAction = {
+        id: crypto.randomUUID(),
+        title: result.next_best_action.title,
+        skill: result.demonstrated_skills?.length ? (result.skill_gaps?.[0] || result.next_best_action.title) : career.skills[0].name,
+        type: (result.next_best_action.difficulty || "build").toLowerCase(),
+        reason: result.next_best_action.reason,
+        priorityScore: 0.95,
+        careerRequirement: { role: career.name, version: career.version, importance: 0.9, requiredLevel: 2 },
+        currentCapability: { status: "gap", level: 1, confidence: 0.8, evidenceIds: [] },
+        outcome: result.next_best_action.expected_outcome,
+        expectedEvidence: ["Working project, script, or practice artifact", "README or short report explaining your approach"],
+        estimatedEffortHours: 10,
+        feasibility: { weeklyHoursAvailable: state.profile.availableHours, fitsAvailableTime: true },
+        steps: [
+          `Review the objective: ${result.next_best_action.title}`,
+          `Implement your solution or complete the technical task demonstrating the skills.`,
+          `Upload your project, code, or documentation as evidence on NextStep to verify your capability.`
+        ],
+        resources: [
+          { label: `Search tutorial & docs`, url: `https://www.google.com/search?q=${encodeURIComponent(result.next_best_action.title)}` }
+        ],
+        createdAt: new Date().toISOString(),
+        completed: false,
+        aiPowered: true,
+      };
+    }
     return result;
   } catch (err) {
-    // Gracefully ignore if AI service is not running locally
+    // Gracefully ignore if AI service is offline
     return null;
   }
 }

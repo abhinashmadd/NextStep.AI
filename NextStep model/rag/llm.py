@@ -40,12 +40,12 @@ class NvidiaLLM(BaseLLM):
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model_name: Optional[str] = None,
-        timeout: float = 120.0,
+        timeout: Optional[float] = None,
     ):
         self.api_key = api_key or settings.nvidia_api_key or os.getenv("NVIDIA_API_KEY", "")
         self.base_url = (base_url or settings.nvidia_base_url or os.getenv("NVIDIA_BASE_URL", "https://integrate.api.nvidia.com/v1")).rstrip("/")
         self.model_name = model_name or settings.nvidia_model or os.getenv("NVIDIA_MODEL", "z-ai/glm-5.3")
-        self.timeout = timeout or settings.request_timeout
+        self.timeout = timeout if timeout is not None else getattr(settings, "request_timeout", 10.0)
 
     def generate(
         self,
@@ -75,7 +75,8 @@ class NvidiaLLM(BaseLLM):
         }
 
         try:
-            with httpx.Client(timeout=self.timeout) as client:
+            call_timeout = httpx.Timeout(connect=4.0, read=8.0, write=4.0, pool=4.0)
+            with httpx.Client(timeout=call_timeout) as client:
                 response = client.post(endpoint, headers=headers, json=payload)
 
             if response.status_code == 401:

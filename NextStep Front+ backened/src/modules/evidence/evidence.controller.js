@@ -4,7 +4,7 @@ const crypto = require("node:crypto");
 const { UPLOADS_DIR, MAX_FILE_BYTES } = require("../../config/environment");
 const { validateEvidence } = require("./evidence.validation");
 const { careers, containsKeyword } = require("../careers/careers.data");
-const { analyze } = require("../analysis/analysis.service");
+const { analyze, triggerAIAnalysis } = require("../analysis/analysis.service");
 const { addActivity, writeState, sanitizeState, deleteEvidenceFile } = require("../../config/database");
 const { getActiveWorkspace, requireConsent } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
@@ -64,12 +64,32 @@ async function createEvidence(request, response, body, state) {
     updatedAt: new Date().toISOString(),
   };
 
-  const evidenceText = `${evidence.title} ${evidence.type} ${evidence.description} ${evidence.analysisText}`.toLowerCase();
-  evidence.detectedKeywords = [...new Set(Object.values(careers).flatMap((career) =>
+  const rawEvidenceText = `${evidence.title} ${evidence.type} ${evidence.description} ${evidence.analysisText}`;
+  const evidenceText = rawEvidenceText.toLowerCase();
+
+  const detectedKeywords = new Set(Object.values(careers).flatMap((career) =>
     career.skills.flatMap((skill) => skill.keywords)
       .filter((keyword) => containsKeyword(evidenceText, keyword.toLowerCase()))
       .map((keyword) => keyword.toLowerCase()),
-  ))];
+  ));
+
+  // Connect to NextStep Python AI Skill Graph extractor
+  try {
+    const extractRes = await fetch("http://127.0.0.1:8000/api/skills/extract", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: rawEvidenceText }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (extractRes.ok) {
+      const extractData = await extractRes.json();
+      (extractData.extracted_skills || []).forEach((item) => {
+        if (item.skill) detectedKeywords.add(item.skill.toLowerCase());
+      });
+    }
+  } catch {}
+
+  evidence.detectedKeywords = [...detectedKeywords];
 
   if (fileBuffer) {
     await fs.mkdir(UPLOADS_DIR, { recursive: true });
@@ -82,6 +102,9 @@ async function createEvidence(request, response, body, state) {
 
   if (workspace.profile) {
     analyze(workspace);
+    try {
+      await triggerAIAnalysis(workspace);
+    } catch {}
   }
   evidence.analysisText = "";
 
@@ -131,6 +154,7 @@ async function downloadEvidenceFile(request, response, evidenceId, state) {
       "Content-Disposition": `attachment; filename*=UTF-8''${encodeURIComponent(item.fileName)}`,
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "private, no-store",
+      "Access-Control-Allow-Origin": "*",
     });
     // Apply security headers to file download response
     addSecurityHeaders(response);

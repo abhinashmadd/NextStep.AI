@@ -2,10 +2,11 @@ function handleCors(request, response) {
   const allowed = (process.env.CORS_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean);
   const origin = request.headers.origin || '';
   const isAllowed = allowed.length === 0 || allowed.includes(origin);
+  const headerOrigin = allowed.length === 0 ? '*' : (isAllowed ? origin : 'null');
 
   if (request.method === "OPTIONS") {
     response.writeHead(204, {
-      "Access-Control-Allow-Origin": isAllowed ? origin : "null",
+      "Access-Control-Allow-Origin": headerOrigin,
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Session-Token",
       "Access-Control-Max-Age": "86400",
@@ -16,7 +17,7 @@ function handleCors(request, response) {
   }
   // For normal requests, set the header if allowed
   if (isAllowed) {
-    response.setHeader("Access-Control-Allow-Origin", origin);
+    response.setHeader("Access-Control-Allow-Origin", headerOrigin);
     response.setHeader("Vary", "Origin");
   }
   return false;

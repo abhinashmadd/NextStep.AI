@@ -4,9 +4,13 @@
   "private": true,
   "description": "A student career-readiness platform that turns evidence into one clear next action.",
   "scripts": {
-    "start": "node server.js",
+    "start": "node run_all.js",
+    "start:all": "node run_all.js",
+    "start:web": "node server.js",
+    "start:py": "python run_all.py",
     "dev": "node --watch server.js",
-    "test": "node test-backend.js"
+    "test": "node test-backend.js",
+    "test:ai": "node test_ai_full_integration.js"
   },
   "engines": {
     "node": ">=20"
