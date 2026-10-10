@@ -1,25 +1,24 @@
 services:
   - type: web
-    name: nextstep-ai-career
-    runtime: docker
+    name: nextstep-frontend-backend
+    env: node
     plan: free
     region: oregon
-    dockerfilePath: ./Dockerfile
-    dockerCommand: python /app/run_all.py
+    buildCommand: npm install
+    startCommand: npm run start
     envVars:
       - key: PORT
-        value: 10000
+        value: "3000"
+        sync: false
       - key: HOST
-        value: 0.0.0.0
+        value: "0.0.0.0"
+        sync: false
       - key: AI_BASE_URL
-        value: http://127.0.0.1:8000/api/ai
-      - key: NVIDIA_API_KEY
-        sync: false
-      - key: NVIDIA_BASE_URL
-        value: https://integrate.api.nvidia.com/v1
-      - key: NVIDIA_MODEL
-        value: z-ai/glm-5.3
+        value: ""
       - key: MONGODB_URI
-        sync: false
+        value: ""
       - key: MONGODB_DB_NAME
-        value: nextstep
+        value: "nextstep"
+        sync: false
+    healthCheckPath: /api/health
+    autoDeploy: true
