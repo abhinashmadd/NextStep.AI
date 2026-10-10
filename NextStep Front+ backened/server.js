@@ -161,6 +161,20 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === "/api/auth/forgot-password" && request.method === "POST") {
+      const body = await readBody(request);
+      const state = await readState();
+      await authController.forgotPassword(request, response, body, state);
+      return;
+    }
+
+    if (pathname === "/api/auth/reset-password" && request.method === "POST") {
+      const body = await readBody(request);
+      const state = await readState();
+      await authController.resetPassword(request, response, body, state);
+      return;
+    }
+
     // 6. Privacy Endpoints
     if (pathname === "/api/privacy" && request.method === "GET") {
       const state = await readState();

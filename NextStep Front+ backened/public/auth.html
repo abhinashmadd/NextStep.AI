@@ -118,7 +118,10 @@
               <input type="text" name="identifier" class="auth-input" placeholder="e.g. alexsharma, alex@gmail.com, or 9876543210" required autocomplete="username" autofocus>
             </label>
             <label class="auth-label">
-              <span>PASSWORD</span>
+              <span>
+                <span>PASSWORD</span>
+                <button type="button" class="auth-forgot-link" id="auth-forgot-btn">Forgot Password?</button>
+              </span>
               <div class="auth-input-wrapper">
                 <input type="password" name="password" class="auth-input" placeholder="Enter your password" required autocomplete="current-password">
                 <button type="button" class="auth-toggle-pwd" aria-label="Toggle password visibility">
@@ -127,10 +130,6 @@
               </div>
             </label>
             <button type="submit" class="auth-btn-primary" id="btn-signin-submit">Sign In to NextStep</button>
-            <div class="auth-divider"><span>or continue as</span></div>
-            <button type="button" class="auth-btn-guest" id="auth-guest-btn">
-              <span class="auth-guest-icon">👤</span> Continue as Guest Student
-            </button>
           </form>
 
           <!-- 2. Register Form -->
@@ -158,8 +157,10 @@
             </label>
             <label class="auth-label">
               <span>TARGET CAREER ROLE</span>
-              <select name="role" class="auth-input">
-                <option value="Software Engineer">Software Engineer · Tech</option>
+              <div class="auth-select-wrapper">
+                <select name="role" class="auth-input" required>
+                  <option value="" disabled selected hidden>Select your target career role...</option>
+                  <option value="Software Engineer">Software Engineer · Tech</option>
                 <option value="Data Scientist">Data Scientist · Tech</option>
                 <option value="Web Developer">Web Developer · Tech</option>
                 <option value="Mobile App Developer">Mobile App Developer · Tech</option>
@@ -209,7 +210,13 @@
                 <option value="Business Development Manager">Business Development Manager · Business</option>
                 <option value="Legal Advisor">Legal Advisor · Law</option>
                 <option value="Entrepreneur">Entrepreneur · Business</option>
-              </select>
+                </select>
+                <div class="auth-select-arrow" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </div>
             </label>
             <label class="auth-label">
               <span>PASSWORD *</span>
@@ -236,6 +243,40 @@
               </div>
             </label>
             <button type="submit" class="auth-btn-primary" id="btn-register-submit">Verify Mobile & Gmail OTP →</button>
+          </form>
+
+          <!-- 3. Forgot Password Form -->
+          <form id="auth-forgot-form" class="auth-form-view">
+            <div class="auth-reset-header">
+              <h2 class="auth-reset-title">Reset Your Password</h2>
+              <p class="auth-reset-desc">Enter your registered Username, Gmail, or Mobile number to receive an OTP and set a new password.</p>
+            </div>
+            <label class="auth-label">
+              <span>USERNAME, GMAIL OR MOBILE NUMBER</span>
+              <input type="text" name="resetIdentifier" id="auth-reset-id" class="auth-input" placeholder="e.g. alexsharma, alex@gmail.com, or 9876543210" required autocomplete="username">
+            </label>
+            <div id="auth-reset-step-fields" style="display:none;">
+              <div class="auth-demo-otp-banner" style="margin-bottom:12px;background:#f3f6f1;border:1px dashed #4f8060;border-radius:6px;padding:8px 12px;font-size:12px;color:#2e4b37;text-align:center;">
+                Reset OTP Code: <strong id="auth-reset-demo-otp" style="color:#202b25;letter-spacing:1px;font-size:14px;">849201</strong>
+              </div>
+              <label class="auth-label">
+                <span>ENTER 6-DIGIT OTP *</span>
+                <input type="text" name="resetOtp" id="auth-reset-otp" class="auth-input" placeholder="e.g. 849201" maxlength="6" inputmode="numeric">
+              </label>
+              <label class="auth-label">
+                <span>NEW PASSWORD *</span>
+                <div class="auth-input-wrapper">
+                  <input type="password" name="newPassword" id="auth-reset-newpass" class="auth-input" placeholder="Min. 6 characters" minlength="6" autocomplete="new-password">
+                  <button type="button" class="auth-toggle-pwd" aria-label="Toggle password visibility">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </label>
+            </div>
+            <button type="submit" class="auth-btn-primary" id="btn-reset-submit">Send Reset OTP</button>
+            <div class="auth-forgot-back-row">
+              <button type="button" class="auth-link-back" id="btn-reset-cancel">← Back to Sign In</button>
+            </div>
           </form>
 
           <!-- 3. OTP Verification Step -->
