@@ -788,7 +788,7 @@ body {
   transform: translateY(0);
 }
 
-/* Cinematic Splash Landing Overlay (Picture Look) */
+/* Cinematic Splash Landing Overlay (Click anywhere to open dashboard) */
 .welcome-overlay {
   position: fixed;
   inset: 0;
@@ -800,6 +800,9 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -811,14 +814,15 @@ body {
 
 .welcome-modal-content {
   position: relative;
-  max-width: 650px;
-  width: 90vw;
+  max-width: 800px;
+  width: 92vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   animation: logoFloatIn 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
 @keyframes logoFloatIn {
@@ -828,14 +832,14 @@ body {
 
 .welcome-glow-backdrop {
   position: absolute;
-  top: 36%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 130%;
-  height: 130%;
-  max-width: 580px;
-  background: radial-gradient(circle, rgba(0, 199, 129, 0.22) 0%, rgba(20, 45, 90, 0.18) 45%, transparent 70%);
-  filter: blur(48px);
+  width: 150%;
+  height: 150%;
+  max-width: 780px;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.16) 0%, rgba(0, 199, 129, 0.3) 34%, rgba(20, 50, 100, 0.24) 60%, transparent 75%);
+  filter: blur(44px);
   pointer-events: none;
   z-index: 0;
 }
@@ -843,12 +847,21 @@ body {
 .welcome-hero-logo {
   position: relative;
   z-index: 1;
-  max-width: 500px;
-  width: 82vw;
+  max-width: 680px;
+  width: 86vw;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 14px 40px rgba(0, 199, 129, 0.28)) drop-shadow(0 4px 18px rgba(0, 0, 0, 0.8));
+  cursor: pointer;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 1.5px rgba(255, 255, 255, 0.45)) drop-shadow(0 0 18px rgba(0, 199, 129, 0.35)) drop-shadow(0 18px 48px rgba(0, 0, 0, 0.85));
   animation: logoPulse 4s ease-in-out infinite alternate;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.welcome-overlay:hover .welcome-hero-logo {
+  transform: scale(1.03);
+  filter: drop-shadow(0 0 2.5px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 24px rgba(0, 199, 129, 0.5)) drop-shadow(0 22px 56px rgba(0, 0, 0, 0.95));
 }
 
 @keyframes logoPulse {

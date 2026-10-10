@@ -19,3 +19,7 @@ services:
         value: https://integrate.api.nvidia.com/v1
       - key: NVIDIA_MODEL
         value: z-ai/glm-5.3
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB_NAME
+        value: nextstep
