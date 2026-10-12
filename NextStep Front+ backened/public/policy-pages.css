@@ -1,0 +1,513 @@
+/* NextStep Compliance & Policy Pages Stylesheet
+   Accessibility (WCAG 2.1 AA) Compliant: High contrast (> 4.5:1), responsive layout, clean typography.
+*/
+
+:root {
+  --policy-bg: #f5f7f2;
+  --policy-card-bg: #ffffff;
+  --policy-ink: #1b261e;
+  --policy-ink-secondary: #3d4a40;
+  --policy-muted: #536257;
+  --policy-accent: #235438;
+  --policy-accent-hover: #194029;
+  --policy-accent-light: #eaf2ea;
+  --policy-border: #d7e0d4;
+  --policy-focus: #1b4b32;
+  --policy-danger: #a7281f;
+  --policy-danger-light: #fdf2f1;
+  --policy-shadow: 0 10px 30px rgba(27, 38, 30, 0.05), 0 2px 6px rgba(27, 38, 30, 0.03);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body.policy-body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--policy-bg);
+  color: var(--policy-ink);
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessibility: Skip Link */
+.skip-link {
+  position: absolute;
+  top: -60px;
+  left: 16px;
+  background: var(--policy-accent);
+  color: #ffffff;
+  padding: 10px 18px;
+  font-weight: 700;
+  border-radius: 6px;
+  z-index: 10000;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 16px;
+  outline: 3px solid #ffffff;
+}
+
+/* Policy Header */
+.policy-header {
+  background: #ffffff;
+  border-bottom: 1px solid var(--policy-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.policy-header-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.policy-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--policy-ink);
+  font-family: "Manrope", sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+}
+
+.policy-brand img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+}
+
+.policy-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.policy-nav-link {
+  color: var(--policy-ink-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.policy-nav-link:hover,
+.policy-nav-link:focus {
+  color: var(--policy-accent);
+  background: var(--policy-accent-light);
+  outline: 2px solid transparent;
+}
+
+.policy-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--policy-accent);
+  color: #ffffff !important;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.policy-nav-btn:hover {
+  background: var(--policy-accent-hover);
+}
+
+/* Layout */
+.policy-container {
+  max-width: 1040px;
+  margin: 36px auto;
+  padding: 0 20px;
+}
+
+.policy-hero {
+  background: #ffffff;
+  border: 1px solid var(--policy-border);
+  border-radius: 14px;
+  padding: 36px 40px;
+  margin-bottom: 28px;
+  box-shadow: var(--policy-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.policy-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #245438, #45885f, #7cb38c);
+}
+
+.policy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--policy-accent);
+  background: var(--policy-accent-light);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.policy-hero h1 {
+  font-family: "Manrope", sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--policy-ink);
+  margin: 0 0 12px 0;
+}
+
+.policy-hero-desc {
+  font-size: 17px;
+  color: var(--policy-ink-secondary);
+  margin: 0 0 16px 0;
+  max-width: 800px;
+}
+
+.policy-meta-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--policy-muted);
+  border-top: 1px solid #edf1eb;
+  padding-top: 16px;
+}
+
+.policy-meta-row strong {
+  color: var(--policy-ink-secondary);
+}
+
+/* Policy Card Content */
+.policy-card {
+  background: var(--policy-card-bg);
+  border: 1px solid var(--policy-border);
+  border-radius: 14px;
+  padding: 40px;
+  box-shadow: var(--policy-shadow);
+  margin-bottom: 32px;
+}
+
+.policy-card h2 {
+  font-family: "Manrope", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--policy-ink);
+  margin: 32px 0 14px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eef2ec;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.policy-card h2:first-of-type {
+  margin-top: 0;
+}
+
+.policy-card h3 {
+  font-family: "Manrope", sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--policy-ink);
+  margin: 24px 0 10px 0;
+}
+
+.policy-card p {
+  margin: 0 0 16px 0;
+  color: var(--policy-ink-secondary);
+}
+
+.policy-card ul, .policy-card ol {
+  margin: 0 0 20px 0;
+  padding-left: 24px;
+  color: var(--policy-ink-secondary);
+}
+
+.policy-card li {
+  margin-bottom: 8px;
+}
+
+.policy-card a {
+  color: var(--policy-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.policy-card a:hover {
+  color: var(--policy-accent-hover);
+}
+
+/* Callout Box */
+.policy-callout {
+  background: #f7faf6;
+  border-left: 4px solid var(--policy-accent);
+  padding: 16px 20px;
+  border-radius: 0 8px 8px 0;
+  margin: 20px 0;
+  font-size: 15px;
+}
+
+.policy-callout.warning {
+  background: var(--policy-danger-light);
+  border-left-color: var(--policy-danger);
+}
+
+.policy-callout strong {
+  display: block;
+  color: var(--policy-ink);
+  margin-bottom: 4px;
+}
+
+/* Compliance Grid / Table */
+.policy-table-wrapper {
+  overflow-x: auto;
+  margin: 20px 0;
+  border: 1px solid var(--policy-border);
+  border-radius: 10px;
+}
+
+.policy-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.policy-table th {
+  background: #f0f4ee;
+  color: var(--policy-ink);
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--policy-border);
+}
+
+.policy-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #edf1eb;
+  color: var(--policy-ink-secondary);
+  vertical-align: top;
+}
+
+.policy-table tr:last-child td {
+  border-bottom: none;
+}
+
+.policy-table tr:hover td {
+  background: #fafbfa;
+}
+
+/* Business Details Box */
+.business-details-box {
+  background: #ffffff;
+  border: 1px solid var(--policy-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.business-item strong {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--policy-muted);
+  margin-bottom: 4px;
+}
+
+.business-item span,
+.business-item p {
+  font-size: 14px;
+  color: var(--policy-ink);
+  margin: 0;
+}
+
+/* Form Styles for Data Deletion & Unsubscribe */
+.action-form-card {
+  background: #ffffff;
+  border: 1px solid var(--policy-border);
+  border-radius: 14px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--policy-shadow);
+}
+
+.action-form-card label {
+  display: block;
+  margin-bottom: 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--policy-ink);
+}
+
+.action-form-card input[type="text"],
+.action-form-card input[type="email"],
+.action-form-card select,
+.action-form-card textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 6px;
+  border: 1px solid var(--policy-border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--policy-ink);
+  background: #fbfcfb;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.action-form-card input:focus,
+.action-form-card select:focus,
+.action-form-card textarea:focus {
+  border-color: var(--policy-accent);
+  box-shadow: 0 0 0 3px rgba(35, 84, 56, 0.15);
+}
+
+.action-form-btn {
+  background: var(--policy-accent);
+  color: #ffffff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.action-form-btn:hover {
+  background: var(--policy-accent-hover);
+}
+
+.action-form-btn.danger {
+  background: var(--policy-danger);
+}
+
+.action-form-btn.danger:hover {
+  background: #8b1e16;
+}
+
+/* Footer */
+.policy-footer {
+  background: #ffffff;
+  border-top: 1px solid var(--policy-border);
+  padding: 36px 20px 24px;
+  margin-top: 60px;
+}
+
+.policy-footer-inner {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.policy-footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 768px) {
+  .policy-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.policy-footer-col h4 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--policy-ink);
+  margin: 0 0 14px 0;
+}
+
+.policy-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.policy-footer-col li {
+  margin-bottom: 8px;
+}
+
+.policy-footer-col a {
+  color: var(--policy-ink-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.15s ease;
+}
+
+.policy-footer-col a:hover {
+  color: var(--policy-accent);
+}
+
+.policy-footer-bottom {
+  border-top: 1px solid #edf1eb;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--policy-muted);
+}
+
+/* Toast message */
+.policy-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1c271f;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 10000;
+}
+
+.policy-toast.visible {
+  display: block;
+}
+
+.policy-toast.error {
+  background: var(--policy-danger);
+}

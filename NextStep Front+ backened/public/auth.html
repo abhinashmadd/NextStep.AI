@@ -12,7 +12,25 @@
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./visual-refresh.css">
     <link rel="stylesheet" href="./auth-modal.css">
+    <script src="./cookie-consent.js" defer></script>
     <style>
+      .auth-skip-link {
+        position: absolute;
+        top: -60px;
+        left: 16px;
+        background: #235438;
+        color: #ffffff;
+        padding: 8px 16px;
+        border-radius: 6px;
+        z-index: 99999;
+        text-decoration: none;
+        font-weight: 700;
+        transition: top 0.2s ease;
+      }
+      .auth-skip-link:focus {
+        top: 16px;
+        outline: 3px solid #143020;
+      }
       body.auth-page {
         min-height: 100vh;
         margin: 0;
@@ -80,11 +98,12 @@
     </style>
   </head>
   <body class="auth-page">
+    <a href="#auth-main-card" class="auth-skip-link">Skip to authentication card</a>
     <div class="auth-page-container">
       <!-- Top Brand Header aligned with Index page -->
       <header class="auth-page-header">
         <a href="./index.html" class="brand" title="Return to NextStep Workspace" style="display: inline-flex; align-items: center; justify-content: center;">
-          <img src="./nextstep-logo-transparent.png" alt="NextStep" style="height: 42px; width: auto; object-fit: contain;">
+          <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform" style="height: 42px; width: auto; object-fit: contain;">
         </a>
       </header>
 
@@ -242,6 +261,14 @@
                 </button>
               </div>
             </label>
+            <label class="auth-label" style="margin-top: 14px; cursor: pointer;">
+              <span style="display: flex; align-items: flex-start; gap: 8px; font-size: 12px; font-weight: 500; text-transform: none; color: #3d4a40; line-height: 1.5;">
+                <input type="checkbox" name="ageConsent" id="register-age-consent" required style="margin-top: 2px; width: 16px; height: 16px; accent-color: #2e6945; cursor: pointer;">
+                <span>
+                  I confirm that I am at least <strong>16 years of age</strong> (or have verified parental/guardian consent) and agree to the <a href="./terms-of-service.html" target="_blank" style="color: #235438; text-decoration: underline;">Terms of Service</a>, <a href="./privacy-policy.html" target="_blank" style="color: #235438; text-decoration: underline;">Privacy Policy</a>, and <a href="./refund-policy.html" target="_blank" style="color: #235438; text-decoration: underline;">Refund Policy</a>.
+                </span>
+              </span>
+            </label>
             <button type="submit" class="auth-btn-primary" id="btn-register-submit">Verify Mobile & Gmail OTP →</button>
           </form>
 
@@ -337,6 +364,22 @@
           </div>
         </div>
       </div>
+
+      <!-- Trust, Legal & Business Details Footer -->
+      <footer style="margin-top: 24px; text-align: center; font-size: 12px; color: #435247;">
+        <nav style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px;" aria-label="Legal & Privacy Links">
+          <a href="./privacy-policy.html" style="color: #2e3e33; text-decoration: underline; font-weight: 500;">Privacy Policy</a>
+          <a href="./terms-of-service.html" style="color: #2e3e33; text-decoration: underline; font-weight: 500;">Terms of Service</a>
+          <a href="./refund-policy.html" style="color: #2e3e33; text-decoration: underline; font-weight: 500;">Refund Policy</a>
+          <a href="./cookie-policy.html" style="color: #2e3e33; text-decoration: underline; font-weight: 500;">Cookie Policy</a>
+          <a href="./compliance.html" style="color: #1b4b32; font-weight: 700; text-decoration: underline;">Compliance Center 🛡️</a>
+          <a href="#" data-open-cookie-settings style="color: #2e3e33; text-decoration: underline; font-weight: 500;">Cookie Settings</a>
+        </nav>
+        <p style="margin: 0; line-height: 1.5; color: #435247;">
+          NextStep Career Technologies Inc. · CIN-U72900KA2026PTC194820<br>
+          100% Free Core Platform · Zero Hidden Fees · Zero Data Selling · <a href="mailto:support@nextstep.edu" style="color:#1b4b32;font-weight:600;">support@nextstep.edu</a>
+        </p>
+      </footer>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./auth.js"></script>

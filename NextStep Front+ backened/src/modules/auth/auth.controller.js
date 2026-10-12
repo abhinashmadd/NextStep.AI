@@ -4,10 +4,16 @@ const { emptyState, emptyUserState, sanitizeState, writeState, addActivity } = r
 const { getUserFromRequest, getSessionToken } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
 const { triggerAIAnalysis } = require("../analysis/analysis.service");
+const { mapRoleToCareer, normalizeRollOrBadge } = require("../../utils/roleMapper");
 
 async function getMe(request, response, state) {
   const user = getUserFromRequest(request, state);
-  sendJson(response, 200, { user: user || null });
+  if (!user) {
+    sendJson(response, 200, { user: null });
+    return;
+  }
+  const mapped = mapRoleToCareer(user.role);
+  sendJson(response, 200, { user, roleMapping: mapped });
 }
 
 function normalizeMobile(phone) {
@@ -47,6 +53,7 @@ function findUserByIdentifier(users, identifier) {
   const cleanId = String(identifier).trim();
   const lowerId = cleanId.toLowerCase();
   const normalizedPhone = normalizeMobile(cleanId);
+  const normalizedBadge = normalizeRollOrBadge(cleanId);
 
   return users.find((u) => {
     // 1. Match Gmail / Email (case-insensitive)
@@ -61,8 +68,15 @@ function findUserByIdentifier(users, identifier) {
       if (normalizedPhone.length >= 7 && normalizeMobile(u.mobile) === normalizedPhone) return true;
     }
 
-    // 4. Match Badge / Roll No. (case-insensitive)
-    if (u.badgeId && u.badgeId.toLowerCase() === lowerId) return true;
+    // 4. Match Badge / Roll No. (case-insensitive, hyphen-agnostic, suffix-matched)
+    if (u.badgeId) {
+      if (u.badgeId.toLowerCase() === lowerId) return true;
+      const uNormBadge = normalizeRollOrBadge(u.badgeId);
+      if (normalizedBadge && uNormBadge === normalizedBadge) return true;
+      if (normalizedBadge && normalizedBadge.length >= 3 && uNormBadge.endsWith(normalizedBadge)) return true;
+    }
+    if (u.rollNo && (u.rollNo.toLowerCase() === lowerId || normalizeRollOrBadge(u.rollNo) === normalizedBadge)) return true;
+    if (u.rollNumber && (u.rollNumber.toLowerCase() === lowerId || normalizeRollOrBadge(u.rollNumber) === normalizedBadge)) return true;
 
     // 5. Match Full Name (case-insensitive)
     if (u.name && u.name.toLowerCase() === lowerId) return true;
@@ -103,12 +117,59 @@ async function login(request, response, body, state) {
   state.sessions = state.sessions || {};
   state.sessions[token] = { userId: user.id, createdAt: new Date().toISOString(), expiresAt };
 
+  // Smooth role mapping for logged in user workspace
+  const mapped = mapRoleToCareer(user.role);
   state.userWorkspaces = state.userWorkspaces || {};
-  const ws = state.userWorkspaces[user.id] || emptyUserState();
+  let ws = state.userWorkspaces[user.id];
+  if (!ws) {
+    ws = emptyUserState();
+  }
   ws.currentUser = safeUser;
-  addActivity(ws, `Signed in as ${user.name} (${user.badgeId}).`);
+
+  if (!ws.profile) {
+    ws.profile = {
+      name: user.name,
+      course: mapped.course,
+      discipline: mapped.discipline,
+      year: "3rd Year",
+      semester: "5",
+      careerId: mapped.careerId,
+      targetRole: mapped.targetRole || user.role || "Software Developer",
+      availableHours: 10,
+      learningStyle: "Hands-on projects",
+      skills: [],
+      interests: `${mapped.targetRole || user.role} career preparation`,
+      bio: `Student ID: ${user.badgeId} · Verified student account`,
+      updatedAt: new Date().toISOString(),
+    };
+  } else {
+    if (!ws.profile.careerId) ws.profile.careerId = mapped.careerId;
+    if (!ws.profile.targetRole) ws.profile.targetRole = mapped.targetRole || user.role;
+    if (!ws.profile.name) ws.profile.name = user.name;
+    if (!ws.profile.course) ws.profile.course = mapped.course;
+    if (!ws.profile.discipline) ws.profile.discipline = mapped.discipline;
+  }
+
+  if (!ws.privacy || !ws.privacy.consent) {
+    ws.privacy = {
+      consent: {
+        accepted: true,
+        version: "1.0",
+        acceptedAt: new Date().toISOString(),
+        purpose: "Student authentication and workspace access",
+      },
+      ageConsent: {
+        confirmed: true,
+        confirmedAt: new Date().toISOString(),
+        minimumAge: 16,
+      },
+    };
+  }
+
+  addActivity(ws, `Signed in as ${user.name} (${user.badgeId}) · Target Role: ${ws.profile.targetRole}.`);
   state.userWorkspaces[user.id] = ws;
 
+  try { await triggerAIAnalysis(ws); } catch {}
   await writeState(state);
   sendJson(
     response,
@@ -117,6 +178,7 @@ async function login(request, response, body, state) {
       success: true,
       token,
       user: safeUser,
+      roleMapping: mapped,
       state: sanitizeState({ ...state, ...ws, currentUser: safeUser }),
     },
     {
@@ -132,6 +194,10 @@ async function register(request, response, body, state) {
   }
   if (String(body.password).length < 6) {
     sendJson(response, 400, { error: "Password must be at least 6 characters." });
+    return;
+  }
+  if (body.ageConsent !== true && body.ageConsent !== "true") {
+    sendJson(response, 400, { error: "You must confirm you are at least 16 years of age (or have verified parental/guardian permission) to register on NextStep." });
     return;
   }
   state.users = state.users || [];
@@ -165,6 +231,11 @@ async function register(request, response, body, state) {
     mobile: cleanMobile,
     role: String(body.role || "Software Developer").trim(),
     passwordHash,
+    ageConsent: {
+      confirmed: true,
+      confirmedAt: new Date().toISOString(),
+      minimumAge: 16,
+    },
     createdAt: new Date().toISOString(),
   };
   state.users.push(newUser);
@@ -184,13 +255,7 @@ async function register(request, response, body, state) {
   state.sessions = state.sessions || {};
   state.sessions[token] = { userId: newUser.id, createdAt: new Date().toISOString(), expiresAt };
 
-  const roleMap = {
-    "Software Developer": { careerId: "software-developer", course: "Computer Science & Engineering", discipline: "Technology" },
-    "Embedded Systems Engineer": { careerId: "embedded-systems", course: "Electronics & Electrical Engineering", discipline: "Engineering" },
-    "Financial Analyst": { careerId: "financial-analyst", course: "Finance & Economics", discipline: "Business" },
-    "UX Researcher": { careerId: "ux-researcher", course: "Design & Human-Computer Interaction", discipline: "Arts & Design" },
-  };
-  const mapped = roleMap[newUser.role] || { careerId: "software-developer", course: "Undergraduate Studies", discipline: "Technology" };
+  const mapped = mapRoleToCareer(newUser.role);
 
   state.userWorkspaces = state.userWorkspaces || {};
   const ws = {
@@ -203,11 +268,11 @@ async function register(request, response, body, state) {
       year: "3rd Year",
       semester: "5",
       careerId: mapped.careerId,
-      targetRole: newUser.role,
+      targetRole: mapped.targetRole || newUser.role,
       availableHours: 10,
       learningStyle: "Hands-on projects",
       skills: [],
-      interests: `${newUser.role} career preparation`,
+      interests: `${mapped.targetRole || newUser.role} career preparation`,
       bio: `Student ID: ${newUser.badgeId} · Verified student account`,
       updatedAt: new Date().toISOString(),
     },
@@ -218,9 +283,14 @@ async function register(request, response, body, state) {
         acceptedAt: new Date().toISOString(),
         purpose: "Student registration and workspace access",
       },
+      ageConsent: {
+        confirmed: true,
+        confirmedAt: new Date().toISOString(),
+        minimumAge: 16,
+      },
     },
   };
-  addActivity(ws, `Account registered for ${newUser.name} (${newUser.badgeId}).`);
+  addActivity(ws, `Account registered for ${newUser.name} (${newUser.badgeId}) · Target Role: ${ws.profile.targetRole}.`);
   state.userWorkspaces[newUser.id] = ws;
 
   try { await triggerAIAnalysis(ws); } catch {}
@@ -233,6 +303,7 @@ async function register(request, response, body, state) {
       success: true,
       token,
       user: safeUser,
+      roleMapping: mapped,
       state: sanitizeState({ ...state, ...ws, currentUser: safeUser }),
     },
     {
@@ -256,18 +327,19 @@ async function guest(request, response, state) {
   state.sessions = state.sessions || {};
   state.sessions[token] = { userId: guestUser.id, createdAt: new Date().toISOString() };
 
+  const guestMapped = mapRoleToCareer("Software Developer");
   state.userWorkspaces = state.userWorkspaces || {};
   const ws = {
     ...emptyUserState(),
     currentUser: guestUser,
     profile: {
       name: "Guest Student",
-      course: "Computer Science & Engineering",
-      discipline: "Technology",
+      course: guestMapped.course,
+      discipline: guestMapped.discipline,
       year: "3rd Year",
       semester: "5",
-      careerId: "software-developer",
-      targetRole: "Software Developer",
+      careerId: guestMapped.careerId,
+      targetRole: guestMapped.targetRole,
       availableHours: 10,
       learningStyle: "Hands-on projects",
       skills: [],
@@ -297,6 +369,7 @@ async function guest(request, response, state) {
       success: true,
       token,
       user: guestUser,
+      roleMapping: guestMapped,
       state: sanitizeState({ ...state, ...ws, currentUser: guestUser }),
     },
     {
@@ -338,6 +411,8 @@ function sendOtp(request, response, body, state) {
     success: true,
     message: "One-Time Password (OTP) dispatched to Gmail and Mobile SMS.",
     demoOtp: "849201",
+    emailFooter: "NextStep Career Guidance · To manage communication preferences or opt out, visit /unsubscribe.html · 100% Free, Zero Hidden Fees",
+    unsubscribeUrl: "/unsubscribe.html",
   });
 }
 

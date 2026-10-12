@@ -95,6 +95,7 @@ async function api(path, body) {
       method: body === undefined ? "GET" : "POST",
       headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
       body: body === undefined ? undefined : JSON.stringify(body),
+      credentials: "include",
     });
   } catch {
     throw new Error("Couldn't connect to NextStep backend (http://127.0.0.1:3000). Check that the server is running and try again.");

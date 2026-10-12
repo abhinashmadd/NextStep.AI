@@ -150,8 +150,8 @@ async function main() {
   // Clean shutdown handler
   function shutdown() {
     console.log('\nShutting down NextStep services gracefully...');
-    try { aiProcess.kill(); } catch {}
-    try { nodeProcess.kill(); } catch {}
+    try { aiProcess.kill(); } catch { }
+    try { nodeProcess.kill(); } catch { }
     process.exit(0);
   }
 

@@ -338,7 +338,22 @@ async function runTests() {
 
     // 14. NextStep Student Authentication Suite
     console.log("\n[14] Testing NextStep Student Authentication Suite");
-    // Register
+    // Register without age consent (must fail)
+    const badAgeRes = await request("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: "Young Student",
+        badgeId: "ST-2026-999",
+        email: "young@university.edu",
+        mobile: "+91 98765 00000",
+        role: "Software Developer",
+        password: "SecretPassword123!",
+      }),
+    });
+    assert(badAgeRes.status === 400, "Registration without ageConsent rejected with 400 Bad Request");
+
+    // Register with age consent
     const regRes = await request("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -349,6 +364,7 @@ async function runTests() {
         mobile: "+91 98765 43210",
         role: "Software Developer",
         password: "SecretPassword123!",
+        ageConsent: true,
       }),
     });
     assert(regRes.status === 201, "Auth Register returns 201 Created");
@@ -381,6 +397,58 @@ async function runTests() {
     });
     assert(goodLogin.status === 200, "Valid login returns 200 OK");
     assert(goodLogin.body.user.name === "Arjun Student", "Logged in user matches");
+    assert(goodLogin.body.roleMapping?.careerId === "software-developer", "Login returns mapped careerId for role");
+    assert(goodLogin.body.state.profile?.targetRole === "Software Developer", "Login initializes profile with mapped role");
+
+    // 14b. Testing CORS in Login and Authentication
+    console.log("\n[14b] Testing CORS in Login & Authentication Endpoints");
+    const authCorsPreflight = await request("/api/auth/login", {
+      method: "OPTIONS",
+      headers: {
+        "Origin": "http://127.0.0.1:5500",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "Content-Type, Authorization",
+      },
+    });
+    assert(authCorsPreflight.status === 204, "Auth preflight returns 204 No Content");
+    assert(authCorsPreflight.headers.get("access-control-allow-origin") === "http://127.0.0.1:5500", "Auth preflight reflects requested Origin for credentials");
+    assert(authCorsPreflight.headers.get("access-control-allow-credentials") === "true", "Auth preflight enables Access-Control-Allow-Credentials");
+    assert(authCorsPreflight.headers.get("access-control-allow-headers")?.includes("Authorization"), "Auth preflight allows Authorization header");
+
+    const authCorsPost = await request("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Origin": "http://127.0.0.1:5500",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: "arjun.student@university.edu", password: "SecretPassword123!" }),
+    });
+    assert(authCorsPost.status === 200, "Cross-origin login succeeds");
+    assert(authCorsPost.headers.get("access-control-allow-origin") === "http://127.0.0.1:5500", "Login response reflects cross-origin Origin header");
+    assert(authCorsPost.headers.get("access-control-allow-credentials") === "true", "Login response allows credentials");
+
+    // 14c. Testing Smooth Roll Number Mapping in Login
+    console.log("\n[14c] Testing Smooth Roll Number / Badge ID Mapping in Login");
+    const userBadgeId = goodLogin.body.user.badgeId; // e.g. ST-2026-904
+    const unhyphenatedBadge = userBadgeId.toLowerCase().replace(/[^a-z0-9]/g, ""); // e.g. st2026904
+    const badgeSuffix = userBadgeId.split("-").pop(); // e.g. 904
+
+    const loginByUnhyphenated = await request("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: unhyphenatedBadge, password: "SecretPassword123!" }),
+    });
+    assert(loginByUnhyphenated.status === 200, "Login by unhyphenated roll number succeeds");
+    assert(loginByUnhyphenated.body.user.id === goodLogin.body.user.id, "Unhyphenated roll maps to correct student");
+
+    if (badgeSuffix && badgeSuffix.length >= 3) {
+      const loginBySuffix = await request("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier: badgeSuffix, password: "SecretPassword123!" }),
+      });
+      assert(loginBySuffix.status === 200, "Login by roll number suffix succeeds");
+    }
 
     // Multi-Device / Device B Simulation: A new device/visitor without auth token
     const deviceBRes = await fetch(`${BASE_URL}/api/auth/me`);
@@ -395,17 +463,43 @@ async function runTests() {
     // Guest Auth
     const guestRes = await request("/api/auth/guest", { method: "POST" });
     assert(guestRes.status === 200 && guestRes.body.user.name === "Guest Student", "Guest access granted");
+    assert(guestRes.body.roleMapping?.careerId === "software-developer", "Guest returns smooth role mapping");
 
-    // 15. Account Deletion (Withdraw Consent)
-    console.log("\n[15] Testing Account Deletion (Withdraw Consent)");
+    // 15. Privacy Deletion Request & Email Unsubscribe Endpoints
+    console.log("\n[15] Testing Formal Deletion Request & Email Unsubscribe");
+    const delReqRes = await request("/api/privacy/deletion-request", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "arjun.student@university.edu",
+        fullName: "Arjun Student",
+        scope: "full_purge",
+        jurisdiction: "GDPR"
+      })
+    });
+    assert(delReqRes.status === 200 && delReqRes.body.ok === true, "Formal GDPR deletion request accepted");
+    assert(Boolean(delReqRes.body.ticketId), "Formal deletion request returns confirmation ticketId");
+
+    const unsubRes = await request("/api/privacy/unsubscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: "arjun.student@university.edu",
+        optOutAll: true
+      })
+    });
+    assert(unsubRes.status === 200 && unsubRes.body.ok === true, "Email unsubscribe request accepted");
+
+    // Account Deletion (Withdraw Consent)
+    console.log("\n[16] Testing Account Deletion (Withdraw Consent)");
     const delAccount = await request("/api/privacy/account", { method: "DELETE" });
     assert(delAccount.status === 200 && delAccount.body.deleted === true, "Account deleted");
 
     const finalState = await request("/api/state");
     assert(finalState.status === 200 && finalState.body.profile === null, "State reset to empty after deletion");
 
-    // 16. Health & Database Status
-    console.log("\n[16] Testing Health & Database Status");
+    // 17. Health & Database Status
+    console.log("\n[17] Testing Health & Database Status");
     const health = await request("/api/health");
     assert(health.status === 200 && health.body.status === "ok", "Health endpoint returns 200 OK");
     assert(Boolean(health.body.database), "Database status reported in health check");

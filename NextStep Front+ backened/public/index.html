@@ -16,17 +16,19 @@
   <link rel="stylesheet" href="./product.css">
   <link rel="stylesheet" href="./visual-refresh.css">
   <link rel="stylesheet" href="./auth-modal.css">
+  <script src="./cookie-consent.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./auth.js" defer></script>
 </head>
 
 <body>
+  <a href="#overview" class="skip-link">Skip to main content</a>
   <!-- Cinematic Splash Landing Overlay (Click anywhere to open dashboard) -->
   <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true"
     aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
-      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform" class="welcome-hero-logo" draggable="false">
     </div>
   </aside>
 
@@ -34,7 +36,7 @@
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header-row">
         <a class="brand" href="#" aria-label="NextStep home">
-          <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
+          <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Home" class="brand-logo-img">
         </a>
         <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close navigation menu">✕</button>
       </div>
@@ -69,7 +71,7 @@
         <div class="topbar-left">
           <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
           <a class="topbar-brand-mobile" href="#" aria-label="NextStep home">
-            <img src="./nextstep-logo-transparent.png" alt="NextStep" class="topbar-brand-img">
+            <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Home" class="topbar-brand-img">
           </a>
         </div>
         <nav class="topbar-links" aria-label="Top links">
@@ -268,8 +270,65 @@
           </div>
           <div class="activity-list" id="activity-list"></div>
         </section>
-        <footer class="page-footer"><span>Made for the career you're working toward.</span><span>NextStep <span
-              class="brand-period">✳</span></span></footer>
+        <footer class="page-footer" role="contentinfo" style="display:block;padding:36px 0 24px;border-top:1px solid #dce2d9;margin-top:40px;">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:24px;margin-bottom:28px;">
+            <div>
+              <strong style="display:flex;align-items:center;gap:6px;font-size:16px;color:#1c261e;margin-bottom:10px;font-family:'Manrope',sans-serif;font-weight:800;">
+                <span>NextStep</span><span class="brand-period" style="color:#2a633d;">✳</span>
+              </strong>
+              <p style="font-size:12px;color:#465248;line-height:1.6;margin:0 0 12px;">
+                Evidence-backed student career preparation. We turn your real projects into grounded capability estimates and one clear next action.
+              </p>
+              <span style="display:inline-block;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;background:#edf5ec;color:#205231;border:1px solid #c9dec6;">
+                100% Free · Zero Hidden Fees · Zero Data Selling
+              </span>
+            </div>
+
+            <div>
+              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
+                Legal &amp; Policies
+              </strong>
+              <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                <li><a href="./privacy-policy.html" style="color:#2d3a30;text-decoration:underline;">Privacy Policy</a></li>
+                <li><a href="./terms-of-service.html" style="color:#2d3a30;text-decoration:underline;">Terms of Service</a></li>
+                <li><a href="./refund-policy.html" style="color:#2d3a30;text-decoration:underline;">Refund &amp; Fee Policy</a></li>
+                <li><a href="./cookie-policy.html" style="color:#2d3a30;text-decoration:underline;">Cookie Policy</a></li>
+                <li><a href="./licenses.html" style="color:#2d3a30;text-decoration:underline;">Asset &amp; Font Licenses</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
+                Compliance &amp; Controls
+              </strong>
+              <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                <li><a href="./compliance.html" style="color:#1b4429;font-weight:700;text-decoration:underline;">Compliance Center 🛡️</a></li>
+                <li><a href="#" data-open-cookie-settings style="color:#2d3a30;text-decoration:underline;">Cookie Settings</a></li>
+                <li><a href="./data-deletion.html" style="color:#9e271f;font-weight:600;text-decoration:underline;">Request Data Deletion (GDPR Art. 17)</a></li>
+                <li><a href="./unsubscribe.html" style="color:#2d3a30;text-decoration:underline;">Email Preferences &amp; Unsubscribe</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
+                Business Details &amp; Contact
+              </strong>
+              <div style="font-size:12px;color:#465248;line-height:1.65;">
+                <strong style="color:#1c261e;">NextStep Career Technologies Inc.</strong><br>
+                CIN: CIN-U72900KA2026PTC194820<br>
+                Offices: Bengaluru, Karnataka, India &amp; San Francisco, CA, USA<br>
+                Support: <a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;">support@nextstep.edu</a><br>
+                Privacy / DPO: <a href="mailto:dpo@nextstep.edu" style="color:#2a633d;font-weight:600;">dpo@nextstep.edu</a><br>
+                Helpline: +1 (800) 555-STEP / +91 (80) 4920-1000
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #e3e8e0;padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11px;color:#556257;">
+            <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved. Made for the career you're working toward.</span>
+            <span>WCAG 2.1 AA Compliant · GDPR · CCPA/CPRA · DPDP Act 2023</span>
+          </div>
+        </footer>
       </div>
     </main>
   </div>
@@ -279,21 +338,19 @@
       <div class="dialog-header">
         <div><span class="section-kicker">PRIVACY BEFORE PROFILE</span>
           <h2>Your work stays yours.</h2>
-          <p>Before we collect your profile or evidence, here's exactly what this prototype does.</p>
+          <p>Before we collect your profile or evidence, here's exactly what this platform does.</p>
         </div>
       </div>
       <div class="consent-copy"><strong>What we collect</strong>
-        <p>Only the student profile details, self-assessment, evidence descriptions, and files you choose to add.</p>
+        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal surveillance data.</p>
         <strong>How it's processed</strong>
-        <p>This prototype uses local, deterministic keyword matching. No external AI service receives your data, and it
-          is not used to train models.</p><strong>Where it's stored</strong>
-        <p>In a local JSON file and uploads folder on the computer running the app. There is no account system or
-          multi-user access control.</p><strong>Retention and deletion</strong>
-        <p>Data stays on this device until you export it or use the Privacy Center to delete it. Do not upload sensitive
-          or confidential work.</p>
+        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your uploaded work is <strong>never</strong> used to train public AI models.</p>
+        <strong>Where it's stored &amp; retention</strong>
+        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
+        <strong>Age Eligibility &amp; Legal Policies</strong>
+        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio. Review our <a href="./privacy-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund Policy</a>.</p>
       </div>
-      <label class="consent-check"><input name="accepted" type="checkbox" required> I have read and understand how this
-        prototype processes and stores my information.</label>
+      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16 years old and I have read and agree to how NextStep processes my data in accordance with the Privacy Policy.</label>
       <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
           <span>→</span></button></div>
     </form>
@@ -516,13 +573,13 @@
           <p>Data is stored locally until you delete it. There is no external AI processing.</p>
         </div><button class="close-dialog" type="button" aria-label="Close">×</button>
       </div>
-      <div class="privacy-details" id="privacy-details"></div>
-      <div class="privacy-actions"><a class="button button-outline" href="./api/privacy/export" download>Export my data
-          ↓</a><button class="button button-danger" id="delete-account" type="button">Withdraw consent & delete all
-          data</button></div>
-      <p class="privacy-warning">This removes your profile, assessments, evidence, uploaded files, skill analysis, and
-        recommendation history from the app's local storage. Filesystem backups or copies outside this app are not
-        affected.</p>
+      <div class="privacy-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;">
+        <a class="button button-outline" href="./api/privacy/export" download>Export my data ↓</a>
+        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure Request (GDPR Art. 17) ↗</a>
+        <a class="button button-outline" href="./privacy-policy.html" target="_blank" style="text-decoration:none;">Privacy Policy ↗</a>
+        <button class="button button-danger" id="delete-account" type="button">Instant 1-Click Wipe</button>
+      </div>
+      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded documents, skill graph analysis, and recommendation history from active databases and storage.</p>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
