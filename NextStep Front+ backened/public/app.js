@@ -244,10 +244,10 @@ function renderAction() {
         <p class="outcome-copy">${escapeHtml(action.outcome)}</p>
 
         <div class="action-toolbox">
-          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true">View Project Blueprint</button>
-          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true">Copy Steps</button>
-          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}">Submit Proof</button>
-          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true">Export Plan (.md)</button>
+          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true"><span>⚡</span> View Project Blueprint</button>
+          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true"><span>📋</span> Copy Steps</button>
+          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}"><span>＋</span> Submit Proof</button>
+          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true"><span>📄</span> Export Plan (.md)</button>
         </div>
 
         <div class="action-blueprint-card" id="action-blueprint" style="display: none;">
