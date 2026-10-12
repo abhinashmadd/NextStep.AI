@@ -244,10 +244,10 @@ function renderAction() {
         <p class="outcome-copy">${escapeHtml(action.outcome)}</p>
 
         <div class="action-toolbox">
-          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true"><span>⚡</span> View Project Blueprint</button>
-          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true"><span>📋</span> Copy Steps</button>
-          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}"><span>＋</span> Submit Proof</button>
-          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true"><span>📄</span> Export Plan (.md)</button>
+          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true">View Project Blueprint</button>
+          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true">Copy Steps</button>
+          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}">Submit Proof</button>
+          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true">Export Plan (.md)</button>
         </div>
 
         <div class="action-blueprint-card" id="action-blueprint" style="display: none;">
@@ -1149,23 +1149,8 @@ $("#evidence-list").addEventListener("click", async (event) => {
 // NextStep AI Service Integration (RAG Guidance, Skill Graph & Career Matching)
 async function checkAiHealth() {
   try {
-    const res = await api("/api/ai/health");
-    const el = $("#ai-status-indicator");
-    if (el && res && res.status === "healthy") {
-      el.textContent = `● AI Online (${res.model || "NVIDIA NIM"})`;
-      el.style.background = "#edf7ed";
-      el.style.color = "#2e7d32";
-      el.style.borderColor = "#c8e6c9";
-    }
-  } catch {
-    const el = $("#ai-status-indicator");
-    if (el) {
-      el.textContent = "○ AI Local Mode";
-      el.style.background = "#f4f6f1";
-      el.style.color = "#555b55";
-      el.style.borderColor = "#d9dfd6";
-    }
-  }
+    await api("/api/ai/health");
+  } catch {}
 }
 
 // 1. RAG Career Guidance Q&A Assistant
