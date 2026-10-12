@@ -150,9 +150,12 @@ function renderProfile() {
   }
 
   if (!profile) {
-    content.innerHTML = `<div class="profile-empty"><p>Set a destination, and we'll make your career journey personal to you.</p><button class="empty-link" data-open-profile>Set up your profile →</button></div>`;
-    $("#welcome-title").textContent = user ? `Welcome, ${user.name.split(/\s+/)[0]}.` : "Your next chapter starts here.";
-    $("#welcome-subtitle").textContent = user ? `Signed in with Student ID ${user.badgeId}.` : "A little progress, backed by real work, goes a long way.";
+    const defaultRole = user?.role || "Software Developer";
+    content.innerHTML = `
+      <div class="profile-summary"><div class="profile-avatar">${escapeHtml(initial)}</div><div><div class="profile-name">${escapeHtml(displayName)}</div><div class="profile-meta">Targeting ${escapeHtml(defaultRole)} career pathway.</div></div></div>
+      <div class="profile-details"><span class="tag">${escapeHtml(defaultRole)}</span><span class="tag">Technology</span><button class="text-button" data-open-profile style="margin-left:auto;font-size:12px;">Edit Profile ↗</button></div>`;
+    $("#welcome-title").textContent = user ? `Good to have you here, ${user.name.split(/\s+/)[0]}.` : "Your next chapter starts here.";
+    $("#welcome-subtitle").textContent = `Small, evidence-backed steps toward becoming a ${defaultRole}.`;
     return;
   }
   $("#welcome-title").textContent = `Good to have you here, ${user ? user.name.split(/\s+/)[0] : profile.name.split(/\s+/)[0]}.`;
@@ -177,7 +180,7 @@ function renderReadiness() {
   const report = currentState.skillReport;
   const content = $("#readiness-content");
   if (!report) {
-    content.innerHTML = `<div class="readiness-empty"><p>Add real work to get your first evidence-based readiness snapshot.</p><button class="empty-link" data-open-evidence>Add your first evidence →</button></div>`;
+    content.innerHTML = `<div class="readiness-empty" style="padding:16px 8px;text-align:center;"><button class="button button-outline empty-link" data-open-evidence>Add your first evidence →</button></div>`;
     return;
   }
   const percent = Math.max(0, Math.min(100, report.readiness));
@@ -194,7 +197,7 @@ function renderEvidence() {
   $("#evidence-count").textContent = evidence.length;
   const container = $("#evidence-list");
   if (!evidence.length) {
-    container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece →</button></div>`;
+    container.innerHTML = `<div class="evidence-empty" style="padding:16px 8px;text-align:center;"><button class="button button-outline empty-link" data-open-evidence>Add your first piece →</button></div>`;
     return;
   }
   container.innerHTML = evidence.slice(0, 6).map((item) => {
@@ -786,9 +789,7 @@ async function submitEvidenceForm(keepOpen = false) {
 
   const successMsg = isPortfolio
     ? "Portfolio link saved successfully!"
-    : (keepOpen ? "Document uploaded! You can now add another document." : (currentState?.profile
-        ? "Evidence added. Your skill map and next action are up to date."
-        : "Evidence added. Set up your profile to discover your next action."));
+    : (keepOpen ? "Document uploaded! You can now add another document." : "Evidence added. Your skill map and next action are up to date.");
 
   // Requirement 3: Support repeated uploads without refreshing page
   const success = await submitForm(form, "/api/evidence", payload, successMsg, keepOpen);
@@ -1149,8 +1150,23 @@ $("#evidence-list").addEventListener("click", async (event) => {
 // NextStep AI Service Integration (RAG Guidance, Skill Graph & Career Matching)
 async function checkAiHealth() {
   try {
-    await api("/api/ai/health");
-  } catch {}
+    const res = await api("/api/ai/health");
+    const el = $("#ai-status-indicator");
+    if (el && res && res.status === "healthy") {
+      el.textContent = `● AI Online (${res.model || "NVIDIA NIM"})`;
+      el.style.background = "#edf7ed";
+      el.style.color = "#2e7d32";
+      el.style.borderColor = "#c8e6c9";
+    }
+  } catch {
+    const el = $("#ai-status-indicator");
+    if (el) {
+      el.textContent = "○ AI Local Mode";
+      el.style.background = "#f4f6f1";
+      el.style.color = "#555b55";
+      el.style.borderColor = "#d9dfd6";
+    }
+  }
 }
 
 // 1. RAG Career Guidance Q&A Assistant
@@ -1164,7 +1180,7 @@ $("#btn-ask-rag")?.addEventListener("click", async () => {
   const btn = $("#btn-ask-rag");
   const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Consulting Guidance…";
+  btn.textContent = "Consulting AI RAG…";
   const box = $("#rag-response-box");
   const contentEl = $("#rag-answer-content");
   const sourcesEl = $("#rag-sources-list");
