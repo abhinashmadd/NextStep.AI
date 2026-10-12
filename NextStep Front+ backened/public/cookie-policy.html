@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NextStep Cookie Policy — Comprehensive breakdown of essential session cookies and local storage used on NextStep. Zero advertising or tracking cookies.">
+  <title>Cookie Policy — NextStep Career Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./policy-pages.css">
+  <script src="./cookie-consent.js" defer></script>
+</head>
+<body class="policy-body">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="policy-header" role="banner">
+    <div class="policy-header-inner">
+      <a href="./index.html" class="policy-brand" aria-label="NextStep Home">
+        <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform">
+        <span>NextStep</span>
+      </a>
+      <nav class="policy-nav-links" aria-label="Policy Navigation">
+        <a href="./index.html" class="policy-nav-link">← Return to Workspace</a>
+        <a href="./privacy-policy.html" class="policy-nav-link">Privacy</a>
+        <a href="./terms-of-service.html" class="policy-nav-link">Terms</a>
+        <a href="./refund-policy.html" class="policy-nav-link">Refund Policy</a>
+        <a href="./compliance.html" class="policy-nav-btn">Compliance Center 🛡️</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="policy-container" id="main-content" role="main">
+    <div class="policy-hero">
+      <div class="policy-badge">TRANSPARENCY · COOKIE AUDIT</div>
+      <h1>NextStep Cookie Policy</h1>
+      <p class="policy-hero-desc">
+        We believe in honest, minimal web technologies. NextStep uses only strictly necessary cookies to authenticate student sessions and safeguard evidence. <strong>We do not use advertising or surveillance cookies.</strong>
+      </p>
+      <div class="policy-meta-row">
+        <span><strong>Effective Date:</strong> October 11, 2026</span>
+        <span><strong>Third-Party Ad Trackers:</strong> 0 (None)</span>
+        <span><strong>Manage:</strong> <a href="#" data-open-cookie-settings style="color:#235438;font-weight:700;">Open Cookie Settings</a></span>
+      </div>
+    </div>
+
+    <article class="policy-card">
+      <h2>1. What Are Cookies and Local Storage?</h2>
+      <p>
+        Cookies and local storage are small text snippets stored by your browser when you visit a website. They allow the platform to keep you signed in securely, remember your user interface preferences, and protect your workspace against unauthorized tampering.
+      </p>
+
+      <h2>2. Inventory of Cookies Used on NextStep</h2>
+      <div class="policy-table-wrapper">
+        <table class="policy-table">
+          <thead>
+            <tr>
+              <th>Cookie Name</th>
+              <th>Category</th>
+              <th>Lifespan</th>
+              <th>Purpose &amp; Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>nextstep_session</code></td>
+              <td>Strictly Necessary</td>
+              <td>30 Days</td>
+              <td>Stores encrypted cryptographic token to verify your authenticated student session. Set with <code>HttpOnly</code> and <code>SameSite=Lax</code> flags to prevent cross-site scripting (XSS).</td>
+            </tr>
+            <tr>
+              <td><code>nextstep_cookie_pref</code></td>
+              <td>Strictly Necessary</td>
+              <td>180 Days</td>
+              <td>Remembers your consent decisions regarding optional cookies.</td>
+            </tr>
+            <tr>
+              <td><code>nextstep_token</code> (LocalStorage)</td>
+              <td>Strictly Necessary</td>
+              <td>Persistent (Until Sign Out)</td>
+              <td>Used by client JavaScript for Bearer authorization in API requests.</td>
+            </tr>
+            <tr>
+              <td><code>nextstep_user</code> (LocalStorage)</td>
+              <td>Strictly Necessary</td>
+              <td>Persistent (Until Sign Out)</td>
+              <td>Caches safe public student profile attributes (Name, Target Role, Student ID) to prevent unnecessary redundant network calls.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>3. Categories of Cookies</h2>
+      <h3>A. Strictly Necessary &amp; Security Cookies (Mandatory)</h3>
+      <p>
+        These cookies are essential for the operation of the NextStep service. Without these cookies, you cannot log in, access your private student dashboard, or upload project evidence. Under ePrivacy Directive and GDPR Article 5(3), these cookies do not require prior consent because they are strictly necessary to deliver the requested service.
+      </p>
+
+      <h3>B. Performance and Analytics Cookies (Opt-In Only)</h3>
+      <p>
+        These cookies allow us to collect aggregated, non-identifying telemetry regarding API response times and page load speeds. They help us ensure the platform remains fast and responsive. <strong>They are disabled by default</strong> and require your affirmative consent.
+      </p>
+
+      <h3>C. Personalization &amp; Preference Cookies (Opt-In Only)</h3>
+      <p>
+        These cookies remember your selected career role filters and visual preferences (such as collapsed sidebar or high-contrast settings). <strong>They are disabled by default</strong> and require your affirmative consent.
+      </p>
+
+      <h3>D. Advertising &amp; Tracking Cookies (None)</h3>
+      <div class="policy-callout">
+        <strong>Zero Third-Party Advertising Trackers:</strong>
+        NextStep does <strong>not</strong> partner with advertising networks, behavioral retargeters, or social media tracking pixels (such as Google Ads, Meta Pixel, or TikTok). We will never monetize your browsing habits.
+      </div>
+
+      <h2>4. Managing and Revoking Your Cookie Preferences</h2>
+      <p>
+        You retain full control over cookies at all times:
+      </p>
+      <ul>
+        <li><strong>On-Site Settings Manager:</strong> Click <a href="#" data-open-cookie-settings>Cookie Settings</a> at any time to open the preference manager and modify or revoke your consent.</li>
+        <li><strong>Browser Controls:</strong> You can configure your browser (Chrome, Firefox, Safari, Edge) to block or delete cookies. Note that blocking strictly necessary cookies will prevent you from signing in to your student account.</li>
+      </ul>
+
+      <h2>5. Inquiries &amp; Data Protection Officer Contact</h2>
+      <p>
+        If you have questions regarding our cookie practices, reach out to our privacy office:
+      </p>
+      <div class="business-details-box">
+        <div class="business-item">
+          <strong>Privacy Team</strong>
+          <span><a href="mailto:privacy@nextstep.edu">privacy@nextstep.edu</a></span>
+        </div>
+        <div class="business-item">
+          <strong>Data Protection Officer</strong>
+          <span><a href="mailto:dpo@nextstep.edu">dpo@nextstep.edu</a></span>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="policy-footer" role="contentinfo">
+    <div class="policy-footer-inner">
+      <div class="policy-footer-grid">
+        <div class="policy-footer-col">
+          <h4>NextStep Career Guidance</h4>
+          <p style="font-size: 13.5px; color: #4c5d50; line-height: 1.6;">
+            A student career-readiness platform that turns real work and verified evidence into one clear next action. Free core access, zero hidden fees, zero deceptive patterns.
+          </p>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Legal &amp; Trust</h4>
+          <ul>
+            <li><a href="./privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="./terms-of-service.html">Terms of Service</a></li>
+            <li><a href="./refund-policy.html">Refund Policy</a></li>
+            <li><a href="./cookie-policy.html">Cookie Policy</a></li>
+            <li><a href="./licenses.html">Asset Licenses</a></li>
+          </ul>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Privacy Controls</h4>
+          <ul>
+            <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
+            <li><a href="./data-deletion.html">Delete My Data</a></li>
+            <li><a href="./unsubscribe.html">Email Unsubscribe</a></li>
+            <li><a href="./compliance.html">Compliance Audit</a></li>
+          </ul>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Contact &amp; Support</h4>
+          <ul>
+            <li><a href="mailto:support@nextstep.edu">support@nextstep.edu</a></li>
+            <li><a href="mailto:privacy@nextstep.edu">privacy@nextstep.edu</a></li>
+            <li><a href="./index.html">Student Workspace</a></li>
+            <li><a href="./auth.html">Account Sign In</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="policy-footer-bottom">
+        <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved.</span>
+        <span>100% Free Core Platform · Zero Fees · Zero Data Selling</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

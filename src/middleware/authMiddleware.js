@@ -1,4 +1,5 @@
 const { emptyUserState } = require("../config/database");
+const { mapRoleToCareer } = require("../utils/roleMapper");
 
 function getSessionToken(request) {
   const authHeader = request.headers["authorization"] || "";
@@ -45,32 +46,33 @@ function getActiveWorkspace(request, state) {
         ...emptyUserState(),
         currentUser: user,
       };
-      if (user.role) {
-        const roleMap = {
-          "Software Developer": { careerId: "software-developer", course: "Computer Science & Engineering", discipline: "Technology" },
-          "Embedded Systems Engineer": { careerId: "embedded-systems", course: "Electronics & Electrical Engineering", discipline: "Engineering" },
-          "Financial Analyst": { careerId: "financial-analyst", course: "Finance & Economics", discipline: "Business" },
-          "UX Researcher": { careerId: "ux-researcher", course: "Design & Human-Computer Interaction", discipline: "Arts & Design" },
-        };
-        const mapped = roleMap[user.role] || { careerId: "software-developer", course: "Undergraduate Studies", discipline: "Technology" };
-        state.userWorkspaces[user.id].profile = {
+    }
+    const ws = state.userWorkspaces[user.id];
+    ws.currentUser = user;
+    if (user.role) {
+      const mapped = mapRoleToCareer(user.role);
+      if (!ws.profile) {
+        ws.profile = {
           name: user.name,
           course: mapped.course,
           discipline: mapped.discipline,
           year: "3rd Year",
           semester: "5",
           careerId: mapped.careerId,
-          targetRole: user.role,
+          targetRole: mapped.targetRole || user.role,
           availableHours: 10,
           learningStyle: "Hands-on projects",
           skills: [],
-          interests: `${user.role} career preparation`,
+          interests: `${mapped.targetRole || user.role} career preparation`,
           bio: `Student ID: ${user.badgeId} · Verified student account`,
           updatedAt: new Date().toISOString(),
         };
+      } else {
+        if (!ws.profile.careerId) ws.profile.careerId = mapped.careerId;
+        if (!ws.profile.targetRole) ws.profile.targetRole = mapped.targetRole || user.role;
       }
     }
-    return { user, workspace: state.userWorkspaces[user.id] };
+    return { user, workspace: ws };
   }
   state.guestWorkspace = state.guestWorkspace || emptyUserState();
   return { user: null, workspace: state.guestWorkspace };

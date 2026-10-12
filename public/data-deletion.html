@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="NextStep Data Deletion &amp; Erasure Portal — Exercise your GDPR Article 17 Right to Erasure and CCPA deletion rights. Instant self-service deletion.">
+  <title>Data Deletion Request — NextStep Career Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./policy-pages.css">
+  <script src="./cookie-consent.js" defer></script>
+</head>
+<body class="policy-body">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <header class="policy-header" role="banner">
+    <div class="policy-header-inner">
+      <a href="./index.html" class="policy-brand" aria-label="NextStep Home">
+        <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform">
+        <span>NextStep</span>
+      </a>
+      <nav class="policy-nav-links" aria-label="Policy Navigation">
+        <a href="./index.html" class="policy-nav-link">← Return to Workspace</a>
+        <a href="./privacy-policy.html" class="policy-nav-link">Privacy Policy</a>
+        <a href="./compliance.html" class="policy-nav-btn">Compliance Center 🛡️</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="policy-container" id="main-content" role="main">
+    <div class="policy-hero">
+      <div class="policy-badge">PRIVACY CONTROLS · GDPR ARTICLE 17</div>
+      <h1>Request Data Deletion &amp; Account Erasure</h1>
+      <p class="policy-hero-desc">
+        You have the unconditional right to be forgotten. NextStep allows you to permanently erase your account, uploaded evidence documents, skill ratings, and session history at any time with zero retention.
+      </p>
+      <div class="policy-meta-row">
+        <span><strong>Processing Time:</strong> Immediate / Instant Purge</span>
+        <span><strong>Cost:</strong> Free ($0.00)</span>
+        <span><strong>Scope:</strong> Complete server &amp; database erasure</span>
+      </div>
+    </div>
+
+    <!-- 1. Instant Active Session Erasure -->
+    <div class="action-form-card" id="active-session-card">
+      <h2 style="font-family:'Manrope',sans-serif;margin:0 0 10px 0;font-size:20px;">Option A: Instant 1-Click Workspace Erasure</h2>
+      <p style="color:#3d4a40;font-size:14px;margin-bottom:18px;">
+        If you are currently signed in on this browser or using guest exploration mode, you can immediately wipe all data, evidence files, and session cookies right now.
+      </p>
+      <div class="policy-callout warning" style="margin-top:0;">
+        <strong>Warning:</strong> This permanently deletes all your uploaded documents, self-assessments, and AI career guidance history. This action cannot be reversed.
+      </div>
+      <button type="button" class="action-form-btn danger" id="btn-instant-delete">
+        Purge All My Data &amp; Reset Workspace Now
+      </button>
+    </div>
+
+    <!-- 2. Formal Erasure Request Submission -->
+    <div class="action-form-card">
+      <h2 style="font-family:'Manrope',sans-serif;margin:0 0 10px 0;font-size:20px;">Option B: Submit Formal Deletion Request</h2>
+      <p style="color:#3d4a40;font-size:14px;margin-bottom:18px;">
+        If you are not signed in or wish to submit an official erasure request under GDPR, CCPA, or DPDP Act, enter your registered email address below:
+      </p>
+      <form id="formal-deletion-form">
+        <label>
+          Registered Email Address *
+          <input type="email" name="email" id="del-email" placeholder="e.g. alex.student@gmail.com" required>
+        </label>
+        <label>
+          Reason for Erasure (Optional)
+          <select name="reason" id="del-reason">
+            <option value="Completed career preparation">Completed career preparation</option>
+            <option value="No longer using the platform">No longer using the platform</option>
+            <option value="Exercising GDPR / CCPA privacy rights" selected>Exercising GDPR / CCPA privacy rights</option>
+            <option value="Privacy preference">Privacy preference</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;font-weight:400;color:#202b25;cursor:pointer;">
+          <input type="checkbox" id="del-confirm-box" required style="margin-top:3px;accent-color:#a7281f;">
+          <span>I confirm that I want all personal profile data, uploaded evidence files, and activity logs associated with this email address to be permanently deleted from NextStep databases.</span>
+        </label>
+        <div style="margin-top:20px;">
+          <button type="submit" class="action-form-btn danger" id="btn-submit-deletion">
+            Submit Permanent Erasure Request →
+          </button>
+        </div>
+      </form>
+
+      <!-- Success Notification Box -->
+      <div id="deletion-success-box" style="display:none;margin-top:24px;padding:20px;border-radius:10px;background:#eef6ee;border:1px solid #c2dec2;">
+        <h3 style="color:#1c522b;margin:0 0 6px 0;font-size:16px;">✓ Data Erasure Request Completed</h3>
+        <p style="font-size:14px;color:#27432e;margin:0 0 10px 0;">
+          All records, evidence files, and account credentials have been permanently purged from our active storage.
+        </p>
+        <div style="font-size:12px;color:#3b5c43;">
+          Tracking Reference ID: <strong id="del-tracking-id" style="font-family:monospace;letter-spacing:1px;font-size:13px;"></strong>
+        </div>
+      </div>
+    </div>
+
+    <article class="policy-card">
+      <h2>How NextStep Processes Erasure</h2>
+      <p>
+        Unlike services that simply &ldquo;soft-delete&rdquo; or mark records as hidden, NextStep conducts hard deletions:
+      </p>
+      <ul>
+        <li><strong>Database Collections:</strong> User profiles, hashed passwords, assessment scores, and activity records are removed from MongoDB.</li>
+        <li><strong>Uploaded Evidence Files:</strong> Attached PDF, code, and document files are removed from disk using secure unlinking.</li>
+        <li><strong>Session Cryptography:</strong> Active tokens are invalidated immediately, revoking all open browser cookies.</li>
+      </ul>
+      <p>
+        If you have any questions, you can contact our Data Protection Officer directly at <a href="mailto:dpo@nextstep.edu">dpo@nextstep.edu</a>.
+      </p>
+    </article>
+  </main>
+
+  <footer class="policy-footer" role="contentinfo">
+    <div class="policy-footer-inner">
+      <div class="policy-footer-grid">
+        <div class="policy-footer-col">
+          <h4>NextStep Career Guidance</h4>
+          <p style="font-size: 13.5px; color: #4c5d50; line-height: 1.6;">
+            A student career-readiness platform that turns real work and verified evidence into one clear next action. Free core access, zero hidden fees, zero deceptive patterns.
+          </p>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Legal &amp; Trust</h4>
+          <ul>
+            <li><a href="./privacy-policy.html">Privacy Policy</a></li>
+            <li><a href="./terms-of-service.html">Terms of Service</a></li>
+            <li><a href="./refund-policy.html">Refund Policy</a></li>
+            <li><a href="./cookie-policy.html">Cookie Policy</a></li>
+            <li><a href="./licenses.html">Asset Licenses</a></li>
+          </ul>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Privacy Controls</h4>
+          <ul>
+            <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
+            <li><a href="./data-deletion.html">Delete My Data</a></li>
+            <li><a href="./unsubscribe.html">Email Unsubscribe</a></li>
+            <li><a href="./compliance.html">Compliance Audit</a></li>
+          </ul>
+        </div>
+        <div class="policy-footer-col">
+          <h4>Contact &amp; Support</h4>
+          <ul>
+            <li><a href="mailto:support@nextstep.edu">support@nextstep.edu</a></li>
+            <li><a href="mailto:dpo@nextstep.edu">dpo@nextstep.edu</a></li>
+            <li><a href="./index.html">Student Workspace</a></li>
+            <li><a href="./auth.html">Account Sign In</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="policy-footer-bottom">
+        <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved.</span>
+        <span>100% Free Core Platform · Zero Fees · Zero Data Selling</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="policy-toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const API_BASE = (() => {
+      if (window.location.protocol === "file:") return "http://127.0.0.1:3000";
+      if (window.location.port === "3000" || window.location.port === "10000" || window.location.port === "") return "";
+      return `http://${window.location.hostname || "127.0.0.1"}:3000`;
+    })();
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById("toast");
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.className = "policy-toast visible" + (isError ? " error" : "");
+      setTimeout(() => { toast.className = "policy-toast"; }, 4000);
+    }
+
+    // 1. Instant deletion handler
+    document.getElementById("btn-instant-delete")?.addEventListener("click", async () => {
+      if (!confirm("Are you sure you want to permanently delete all evidence, uploaded files, and workspace records on this device? This cannot be undone.")) return;
+      try {
+        const token = localStorage.getItem("nextstep_token");
+        const headers = token ? { "Authorization": `Bearer ${token}` } : {};
+        const res = await fetch(`${API_BASE}/api/privacy/account`, { method: "DELETE", headers });
+        if (!res.ok) throw new Error("Could not complete erasure.");
+        localStorage.removeItem("nextstep_token");
+        localStorage.removeItem("nextstep_user");
+        showToast("All workspace data and files have been permanently erased.");
+        setTimeout(() => { window.location.href = "./index.html"; }, 1500);
+      } catch (err) {
+        showToast(err.message, true);
+      }
+    });
+
+    // 2. Formal erasure submission
+    document.getElementById("formal-deletion-form")?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("del-email")?.value.trim();
+      const reason = document.getElementById("del-reason")?.value;
+      const btn = document.getElementById("btn-submit-deletion");
+      btn.disabled = true;
+      btn.textContent = "Processing Erasure…";
+
+      try {
+        const res = await fetch(`${API_BASE}/api/privacy/deletion-request`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, reason })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Erasure request failed.");
+
+        localStorage.removeItem("nextstep_token");
+        localStorage.removeItem("nextstep_user");
+
+        document.getElementById("formal-deletion-form").style.display = "none";
+        const successBox = document.getElementById("deletion-success-box");
+        const trackingId = document.getElementById("del-tracking-id");
+        if (trackingId) trackingId.textContent = data.requestId || "DEL-COMPLETED";
+        if (successBox) successBox.style.display = "block";
+        showToast("Data erasure fulfilled successfully.");
+      } catch (err) {
+        showToast(err.message, true);
+        btn.disabled = false;
+        btn.textContent = "Submit Permanent Erasure Request →";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -10,10 +10,10 @@ const addSecurityHeaders = (response) => {
   response.setHeader('Permissions-Policy', 'interest-cohort=()');
   // Prevent caching of sensitive data
   response.setHeader('Cache-Control', 'private, no-store');
-  // Content Security Policy – allow resources from self and Google fonts
+  // Content Security Policy – allow resources from self, Google fonts, and localhost/dev ports
   response.setHeader(
     'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https: 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self' https: data:; object-src 'none'; base-uri 'self';"
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' https: 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:* http://127.0.0.1:* https: ws: wss:; font-src 'self' https: data:; object-src 'none'; base-uri 'self';"
   );
 };
 

@@ -226,6 +226,20 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === "/api/privacy/deletion-request" && request.method === "POST") {
+      const body = await readBody(request);
+      const state = await readState();
+      await privacyController.submitDeletionRequest(request, response, body, state);
+      return;
+    }
+
+    if (pathname === "/api/privacy/unsubscribe" && (request.method === "POST" || request.method === "GET")) {
+      const body = request.method === "POST" ? await readBody(request) : { email: url.searchParams.get("email") };
+      const state = await readState();
+      await privacyController.handleUnsubscribe(request, response, body, state);
+      return;
+    }
+
     if (pathname === "/api/privacy/account" && request.method === "DELETE") {
       const state = await readState();
       await privacyController.deleteAccount(request, response, state);

@@ -41,6 +41,7 @@
         method: body === undefined ? "GET" : "POST",
         headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
         body: body === undefined ? undefined : JSON.stringify(body),
+        credentials: "include",
       });
     } catch {
       throw new Error("Couldn't connect to NextStep backend (http://127.0.0.1:3000). Check that the server is running.");
@@ -253,6 +254,11 @@
         showToast("Passwords do not match.", true);
         return;
       }
+      const ageConsent = values.get("ageConsent");
+      if (!ageConsent) {
+        showToast("You must confirm you are at least 16 years of age and agree to the Terms of Service & Privacy Policy.", true);
+        return;
+      }
       pendingRegistration = {
         name: values.get("name").trim(),
         username: values.get("username")?.trim() || "",
@@ -261,6 +267,7 @@
         mobile: values.get("mobile")?.trim() || "",
         role: values.get("role")?.trim() || "Software Developer",
         password,
+        ageConsent: true,
       };
       const submitBtn = form.querySelector('button[type="submit"]');
       const originalText = submitBtn.textContent;
