@@ -1149,8 +1149,23 @@ $("#evidence-list").addEventListener("click", async (event) => {
 // NextStep AI Service Integration (RAG Guidance, Skill Graph & Career Matching)
 async function checkAiHealth() {
   try {
-    await api("/api/ai/health");
-  } catch {}
+    const res = await api("/api/ai/health");
+    const el = $("#ai-status-indicator");
+    if (el && res && res.status === "healthy") {
+      el.textContent = `● AI Online (${res.model || "NVIDIA NIM"})`;
+      el.style.background = "#edf7ed";
+      el.style.color = "#2e7d32";
+      el.style.borderColor = "#c8e6c9";
+    }
+  } catch {
+    const el = $("#ai-status-indicator");
+    if (el) {
+      el.textContent = "○ AI Local Mode";
+      el.style.background = "#f4f6f1";
+      el.style.color = "#555b55";
+      el.style.borderColor = "#d9dfd6";
+    }
+  }
 }
 
 // 1. RAG Career Guidance Q&A Assistant
@@ -1164,7 +1179,7 @@ $("#btn-ask-rag")?.addEventListener("click", async () => {
   const btn = $("#btn-ask-rag");
   const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Consulting Guidance…";
+  btn.textContent = "Consulting AI RAG…";
   const box = $("#rag-response-box");
   const contentEl = $("#rag-answer-content");
   const sourcesEl = $("#rag-sources-list");
