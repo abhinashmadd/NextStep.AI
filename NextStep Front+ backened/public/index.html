@@ -28,7 +28,8 @@
     aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
-      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform" class="welcome-hero-logo" draggable="false">
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform"
+        class="welcome-hero-logo" draggable="false">
     </div>
   </aside>
 
@@ -134,7 +135,7 @@
           </div>
           <div class="journey-track">
             <div class="journey-step clickable-step" data-step="profile" data-open-profile role="button" tabindex="0"
-              title="Your profile"><span class="step-marker">01</span>
+              title="Set up your profile"><span class="step-marker">01</span>
               <div><strong>Your profile</strong><span>Tell us where you're headed</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="evidence"><span class="step-marker">02</span>
@@ -154,41 +155,57 @@
 
         <!-- AI Career Guidance & NVIDIA NIM Engine Section -->
         <section class="panel preview-panel" id="ai-engine-panel" style="margin-bottom: 24px;">
-          <div class="panel-heading" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div class="panel-heading"
+            style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
             <div>
               <span class="section-kicker" style="display:flex;align-items:center;gap:6px;">
                 <span>NVIDIA NIM GLM-5.3 · SKILL GRAPH &amp; RAG ENGINE</span>
-                <span id="ai-status-indicator" style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;background:#edf7ed;color:#2e7d32;border:1px solid #c8e6c9;">● AI Online</span>
+                <span id="ai-status-indicator"
+                  style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;background:#edf7ed;color:#2e7d32;border:1px solid #c8e6c9;">●
+                  AI Online</span>
               </span>
               <h2>NextStep AI Career Intelligence</h2>
-              <p class="panel-subtitle">Grounded career guidance powered by NVIDIA AI, deterministic skill graph analysis, and semantic knowledge retrieval.</p>
+              <p class="panel-subtitle">Grounded career guidance powered by NVIDIA AI, deterministic skill graph
+                analysis, and semantic knowledge retrieval.</p>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="button button-outline" id="btn-run-ai-analysis"><span>⚡</span> Run Full AI Analysis</button>
-              <button class="button button-dark" id="btn-explore-career-matches"><span>🧭</span> Match Career Roles</button>
+              <button class="button button-outline" id="btn-run-ai-analysis"><span>⚡</span> Run Full AI
+                Analysis</button>
+              <button class="button button-dark" id="btn-explore-career-matches"><span>🧭</span> Match Career
+                Roles</button>
             </div>
           </div>
 
           <!-- RAG Guidance Q&A Assistant -->
-          <div class="ai-rag-container" style="background:#ffffff;border:1px solid #e1e6de;border-radius:10px;padding:18px;margin-top:14px;">
+          <div class="ai-rag-container"
+            style="background:#ffffff;border:1px solid #e1e6de;border-radius:10px;padding:18px;margin-top:14px;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
               <span style="font-size:16px;">💬</span>
               <strong style="font-size:14px;color:#202b25;">Ask NextStep Career Assistant (RAG Pipeline)</strong>
               <span style="font-size:11px;color:#7d827e;margin-left:auto;">Cites Verified Knowledge Base</span>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-              <input type="text" id="rag-query-input" placeholder="e.g. How do I transition to Backend Development, and what portfolio projects matter most?" style="flex:1;min-width:240px;padding:10px 14px;border:1px solid #d3dad0;border-radius:8px;font-size:13px;outline:none;" />
-              <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask AI Guidance ↗</button>
+              <input type="text" id="rag-query-input"
+                placeholder="e.g. How do I transition to Backend Development, and what portfolio projects matter most?"
+                style="flex:1;min-width:240px;padding:10px 14px;border:1px solid #d3dad0;border-radius:8px;font-size:13px;outline:none;" />
+              <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask AI
+                Guidance ↗</button>
             </div>
-            <div id="rag-response-box" style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
-              <div id="rag-answer-content" style="font-size:13px;line-height:1.6;color:#202b25;white-space:pre-wrap;"></div>
-              <div id="rag-sources-list" style="margin-top:10px;font-size:11px;color:#606760;border-top:1px solid #e1e7de;padding-top:8px;"></div>
+            <div id="rag-response-box"
+              style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
+              <div id="rag-answer-content" style="font-size:13px;line-height:1.6;color:#202b25;white-space:pre-wrap;">
+              </div>
+              <div id="rag-sources-list"
+                style="margin-top:10px;font-size:11px;color:#606760;border-top:1px solid #e1e7de;padding-top:8px;">
+              </div>
             </div>
           </div>
 
           <!-- Live AI Career Matches / Scoring Breakdown Container -->
           <div id="ai-matches-container" style="display:none;margin-top:16px;">
-            <h4 style="font-size:13px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#434a43;margin:0 0 10px;">Top Career Compatibility Matches (Multi-Dimensional Scoring)</h4>
+            <h4
+              style="font-size:13px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#434a43;margin:0 0 10px;">
+              Top Career Compatibility Matches (Multi-Dimensional Scoring)</h4>
             <div id="ai-matches-grid" class="preview-cards-grid"></div>
           </div>
         </section>
@@ -270,63 +287,51 @@
           </div>
           <div class="activity-list" id="activity-list"></div>
         </section>
-        <footer class="page-footer" role="contentinfo" style="display:block;padding:36px 0 24px;border-top:1px solid #dce2d9;margin-top:40px;">
-          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));gap:24px;margin-bottom:28px;">
-            <div>
-              <strong style="display:flex;align-items:center;gap:6px;font-size:16px;color:#1c261e;margin-bottom:10px;font-family:'Manrope',sans-serif;font-weight:800;">
+        <footer class="page-footer" role="contentinfo"
+          style="display:block;padding:28px 0 20px;border-top:1px solid #e2e7df;margin-top:40px;font-size:12px;color:#5e6860;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;margin-bottom:20px;">
+            <div style="max-width:440px;">
+              <strong
+                style="display:inline-flex;align-items:center;gap:4px;font-size:15px;color:#1c261e;font-family:'Manrope',sans-serif;font-weight:800;margin-bottom:8px;">
                 <span>NextStep</span><span class="brand-period" style="color:#2a633d;">✳</span>
               </strong>
-              <p style="font-size:12px;color:#465248;line-height:1.6;margin:0 0 12px;">
-                Evidence-backed student career preparation. We turn your real projects into grounded capability estimates and one clear next action.
+              <p style="margin:0 0 10px;line-height:1.6;color:#4c574e;font-size:12.5px;">
+                An evidence-backed student career preparation platform. We convert your real projects, coursework, and verified work into clear capability estimates and one focused next action.
               </p>
-              <span style="display:inline-block;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;background:#edf5ec;color:#205231;border:1px solid #c9dec6;">
-                100% Free · Zero Hidden Fees · Zero Data Selling
-              </span>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7263;flex-wrap:wrap;font-weight:500;">
+                <span>1. Add Evidence</span>
+                <span style="color:#a8b5a7;">→</span>
+                <span>2. Map Capabilities</span>
+                <span style="color:#a8b5a7;">→</span>
+                <span>3. Take Your Next Action</span>
+              </div>
             </div>
 
-            <div>
-              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
-                Legal &amp; Policies
-              </strong>
-              <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
-                <li><a href="./privacy-policy.html" style="color:#2d3a30;text-decoration:underline;">Privacy Policy</a></li>
-                <li><a href="./terms-of-service.html" style="color:#2d3a30;text-decoration:underline;">Terms of Service</a></li>
-                <li><a href="./refund-policy.html" style="color:#2d3a30;text-decoration:underline;">Refund &amp; Fee Policy</a></li>
-                <li><a href="./cookie-policy.html" style="color:#2d3a30;text-decoration:underline;">Cookie Policy</a></li>
-                <li><a href="./licenses.html" style="color:#2d3a30;text-decoration:underline;">Asset &amp; Font Licenses</a></li>
-              </ul>
-            </div>
+            <div style="display:flex;gap:36px;flex-wrap:wrap;">
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:8px;font-weight:700;">Platform</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12px;line-height:1.9;">
+                  <li><a href="#profile" style="color:#4c574e;text-decoration:none;">Career Profile</a></li>
+                  <li><a href="#skills" style="color:#4c574e;text-decoration:none;">Capability Profile</a></li>
+                  <li><a href="#evidence" style="color:#4c574e;text-decoration:none;">Evidence Vault</a></li>
+                  <li><a href="#action" style="color:#4c574e;text-decoration:none;">Next Action</a></li>
+                </ul>
+              </div>
 
-            <div>
-              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
-                Compliance &amp; Controls
-              </strong>
-              <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
-                <li><a href="./compliance.html" style="color:#1b4429;font-weight:700;text-decoration:underline;">Compliance Center 🛡️</a></li>
-                <li><a href="#" data-open-cookie-settings style="color:#2d3a30;text-decoration:underline;">Cookie Settings</a></li>
-                <li><a href="./data-deletion.html" style="color:#9e271f;font-weight:600;text-decoration:underline;">Request Data Deletion (GDPR Art. 17)</a></li>
-                <li><a href="./unsubscribe.html" style="color:#2d3a30;text-decoration:underline;">Email Preferences &amp; Unsubscribe</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <strong style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">
-                Business Details &amp; Contact
-              </strong>
-              <div style="font-size:12px;color:#465248;line-height:1.65;">
-                <strong style="color:#1c261e;">NextStep Career Technologies Inc.</strong><br>
-                CIN: CIN-U72900KA2026PTC194820<br>
-                Offices: Bengaluru, Karnataka, India &amp; San Francisco, CA, USA<br>
-                Support: <a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;">support@nextstep.edu</a><br>
-                Privacy / DPO: <a href="mailto:dpo@nextstep.edu" style="color:#2a633d;font-weight:600;">dpo@nextstep.edu</a><br>
-                Helpline: +1 (800) 555-STEP / +91 (80) 4920-1000
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:8px;font-weight:700;">Trust &amp; Help</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12px;line-height:1.9;">
+                  <li><a href="./privacy-policy.html" style="color:#4c574e;text-decoration:none;">Privacy Policy</a></li>
+                  <li><a href="./terms-of-service.html" style="color:#4c574e;text-decoration:none;">Terms of Service</a></li>
+                  <li><a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;text-decoration:none;">Contact Support</a></li>
+                </ul>
               </div>
             </div>
           </div>
 
-          <div style="border-top:1px solid #e3e8e0;padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11px;color:#556257;">
-            <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved. Made for the career you're working toward.</span>
-            <span>WCAG 2.1 AA Compliant · GDPR · CCPA/CPRA · DPDP Act 2023</span>
+          <div style="border-top:1px solid #eef2eb;padding-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11px;color:#7e8a80;">
+            <span>&copy; 2026 NextStep. Made for the career you're working toward.</span>
+            <span>Deterministic Analysis · Privacy-First · Student-Centered</span>
           </div>
         </footer>
       </div>
@@ -342,15 +347,27 @@
         </div>
       </div>
       <div class="consent-copy"><strong>What we collect</strong>
-        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal surveillance data.</p>
+        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to
+          add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal
+          surveillance data.</p>
         <strong>How it's processed</strong>
-        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your uploaded work is <strong>never</strong> used to train public AI models.</p>
+        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your
+          uploaded work is <strong>never</strong> used to train public AI models.</p>
         <strong>Where it's stored &amp; retention</strong>
-        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
+        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and
+          can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
         <strong>Age Eligibility &amp; Legal Policies</strong>
-        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio. Review our <a href="./privacy-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund Policy</a>.</p>
+        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio.
+          Review our <a href="./privacy-policy.html" target="_blank"
+            style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a
+            href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund
+            Policy</a>.</p>
       </div>
-      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16 years old and I have read and agree to how NextStep processes my data in accordance with the Privacy Policy.</label>
+      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16
+        years old and I have read and agree to how NextStep processes my data in accordance with the Privacy
+        Policy.</label>
       <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
           <span>→</span></button></div>
     </form>
@@ -575,11 +592,14 @@
       </div>
       <div class="privacy-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;">
         <a class="button button-outline" href="./api/privacy/export" download>Export my data ↓</a>
-        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure Request (GDPR Art. 17) ↗</a>
-        <a class="button button-outline" href="./privacy-policy.html" target="_blank" style="text-decoration:none;">Privacy Policy ↗</a>
+        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure
+          Request (GDPR Art. 17) ↗</a>
+        <a class="button button-outline" href="./privacy-policy.html" target="_blank"
+          style="text-decoration:none;">Privacy Policy ↗</a>
         <button class="button button-danger" id="delete-account" type="button">Instant 1-Click Wipe</button>
       </div>
-      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded documents, skill graph analysis, and recommendation history from active databases and storage.</p>
+      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded
+        documents, skill graph analysis, and recommendation history from active databases and storage.</p>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
