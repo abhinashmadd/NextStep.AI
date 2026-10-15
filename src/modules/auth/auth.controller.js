@@ -54,10 +54,15 @@ function findUserByIdentifier(users, identifier) {
   const lowerId = cleanId.toLowerCase();
   const normalizedPhone = normalizeMobile(cleanId);
   const normalizedBadge = normalizeRollOrBadge(cleanId);
+  const inputDigits = cleanId.replace(/\D/g, "");
 
   return users.find((u) => {
-    // 1. Match Gmail / Email (case-insensitive)
-    if (u.email && u.email.toLowerCase() === lowerId) return true;
+    // 1. Match Gmail / Email (case-insensitive) or email handle (e.g. "arjun.student" from "arjun.student@university.edu")
+    if (u.email) {
+      const emailLower = u.email.toLowerCase();
+      if (emailLower === lowerId) return true;
+      if (emailLower.split("@")[0] === lowerId) return true;
+    }
 
     // 2. Match Username (case-insensitive)
     if (u.username && u.username.toLowerCase() === lowerId) return true;
@@ -68,15 +73,22 @@ function findUserByIdentifier(users, identifier) {
       if (normalizedPhone.length >= 7 && normalizeMobile(u.mobile) === normalizedPhone) return true;
     }
 
-    // 4. Match Badge / Roll No. (case-insensitive, hyphen-agnostic, suffix-matched)
-    if (u.badgeId) {
-      if (u.badgeId.toLowerCase() === lowerId) return true;
-      const uNormBadge = normalizeRollOrBadge(u.badgeId);
+    // 4. Match Badge / Roll No. / Student ID (case-insensitive, hyphen-agnostic, suffix-matched, numeric-matched)
+    const badgeCandidates = [u.badgeId, u.studentId, u.rollNo, u.rollNumber].filter(Boolean);
+    for (const badge of badgeCandidates) {
+      if (badge.toLowerCase() === lowerId) return true;
+      const uNormBadge = normalizeRollOrBadge(badge);
       if (normalizedBadge && uNormBadge === normalizedBadge) return true;
       if (normalizedBadge && normalizedBadge.length >= 3 && uNormBadge.endsWith(normalizedBadge)) return true;
+
+      // Numeric suffix / roll number matching (e.g. student enters 904 or 0904, badge is ST-2026-904)
+      const uBadgeDigits = badge.replace(/\D/g, "");
+      if (inputDigits && inputDigits.length >= 3 && uBadgeDigits) {
+        if (uBadgeDigits.endsWith(inputDigits)) return true;
+        const noLeadingZeros = inputDigits.replace(/^0+/, "");
+        if (noLeadingZeros && uBadgeDigits.endsWith(noLeadingZeros)) return true;
+      }
     }
-    if (u.rollNo && (u.rollNo.toLowerCase() === lowerId || normalizeRollOrBadge(u.rollNo) === normalizedBadge)) return true;
-    if (u.rollNumber && (u.rollNumber.toLowerCase() === lowerId || normalizeRollOrBadge(u.rollNumber) === normalizedBadge)) return true;
 
     // 5. Match Full Name (case-insensitive)
     if (u.name && u.name.toLowerCase() === lowerId) return true;

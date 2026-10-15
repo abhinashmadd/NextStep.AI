@@ -28,18 +28,20 @@
     toastTimeout = setTimeout(() => toast.classList.remove("visible"), 3500);
   }
 
-  async function api(path, body) {
+  async function api(path, body, options = {}) {
     const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${API_BASE}${path}`;
     const token = localStorage.getItem("nextstep_token");
-    const headers = { "Content-Type": "application/json" };
+    const headers = { "Content-Type": "application/json", ...options.headers };
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
+      headers["X-Session-Token"] = token;
     }
+    const method = options.method || (body === undefined ? "GET" : "POST");
     let response;
     try {
       response = await fetch(url, {
-        method: body === undefined ? "GET" : "POST",
-        headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
+        method,
+        headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}`, "X-Session-Token": token, ...options.headers } : (options.headers || {})) : headers,
         body: body === undefined ? undefined : JSON.stringify(body),
         credentials: "include",
       });
@@ -145,10 +147,20 @@
     }
   }
 
-  function handleAuthSuccess(user, state, successMsg, token) {
+  function handleAuthSuccess(user, state, successMsg, token, roleMapping) {
     if (token) {
       try {
         localStorage.setItem("nextstep_token", token);
+      } catch {}
+    }
+    if (user) {
+      try {
+        localStorage.setItem("nextstep_user", JSON.stringify(user));
+      } catch {}
+    }
+    if (roleMapping) {
+      try {
+        localStorage.setItem("nextstep_role_mapping", JSON.stringify(roleMapping));
       } catch {}
     }
     updateAccountView(user);
@@ -160,7 +172,7 @@
     }
 
     if (window.onNextStepAuthSuccess) {
-      window.onNextStepAuthSuccess(user, state);
+      window.onNextStepAuthSuccess(user, state, roleMapping);
     }
 
     if (isStandalonePage()) {
@@ -234,7 +246,7 @@
           password: values.get("password"),
         });
         form.reset();
-        handleAuthSuccess(result.user, result.state, `Welcome back, ${result.user.name}!`, result.token);
+        handleAuthSuccess(result.user, result.state, `Welcome back, ${result.user.name}!`, result.token, result.roleMapping);
       } catch (err) {
         showToast(err.message, true);
       } finally {
@@ -328,7 +340,7 @@
         const form = $("#auth-register-form");
         if (form) form.reset();
         pendingRegistration = null;
-        handleAuthSuccess(result.user, result.state, `Welcome to NextStep, ${result.user.name}!`, result.token);
+        handleAuthSuccess(result.user, result.state, `Welcome to NextStep, ${result.user.name}!`, result.token, result.roleMapping);
       } catch (err) {
         showToast(err.message, true);
       } finally {

@@ -6,13 +6,19 @@ function handleCors(request, response) {
   // Detect whether this is an auth path or credentialed request
   const urlPath = request.url ? request.url.split('?')[0] : '';
   const isAuthPath = urlPath.startsWith('/api/auth') || urlPath.startsWith('/api/login') || urlPath.startsWith('/api/register');
-  const reqHeaders = request.headers['access-control-request-headers'] || '';
-  const hasAuthHeader = Boolean(request.headers.authorization || request.headers.cookie || reqHeaders.toLowerCase().includes('authorization'));
+  const reqHeaders = (request.headers['access-control-request-headers'] || '').toLowerCase();
+  const hasAuthHeader = Boolean(
+    request.headers.authorization ||
+    request.headers['x-session-token'] ||
+    request.headers.cookie ||
+    reqHeaders.includes('authorization') ||
+    reqHeaders.includes('x-session-token')
+  );
 
   // Header origin calculation:
   // When allowed list is explicitly configured, honor allowed origins.
   // When origin is present and request is for auth or credentialed operations, reflect origin to allow credentials.
-  // For standard static/profile preflight without origin list, fallback to '*' to keep static tests green.
+  // For standard non-auth preflights without origin list, fallback to '*' to keep static tests green.
   let headerOrigin = '*';
   if (allowed.length > 0) {
     headerOrigin = isAllowed ? origin : 'null';
