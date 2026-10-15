@@ -450,6 +450,29 @@ async function runTests() {
       assert(loginBySuffix.status === 200, "Login by roll number suffix succeeds");
     }
 
+    // Login by email handle prefix (e.g. "arjun.student" without "@university.edu")
+    const loginByEmailHandle = await request("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifier: "arjun.student", password: "SecretPassword123!" }),
+    });
+    assert(loginByEmailHandle.status === 200, "Login by email handle prefix succeeds");
+    assert(loginByEmailHandle.body.roleMapping?.careerId === "software-developer", "Email handle login returns correct smooth role mapping");
+
+    // Cross-origin /api/auth/me verification with CORS credentials
+    const corsMeRes = await request("/api/auth/me", {
+      method: "GET",
+      headers: {
+        "Origin": "http://127.0.0.1:5500",
+        "Authorization": `Bearer ${goodLogin.body.token}`,
+      },
+    });
+    assert(corsMeRes.status === 200, "Cross-origin /api/auth/me succeeds");
+    assert(corsMeRes.headers.get("access-control-allow-origin") === "http://127.0.0.1:5500", "/api/auth/me reflects origin");
+    assert(corsMeRes.headers.get("access-control-allow-credentials") === "true", "/api/auth/me enables credentials");
+    assert(corsMeRes.body.user?.email === "arjun.student@university.edu", "Authenticated user retrieved cross-origin");
+    assert(corsMeRes.body.roleMapping?.careerId === "software-developer", "Cross-origin /api/auth/me returns smooth role mapping");
+
     // Multi-Device / Device B Simulation: A new device/visitor without auth token
     const deviceBRes = await fetch(`${BASE_URL}/api/auth/me`);
     const deviceBMe = await deviceBRes.json();

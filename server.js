@@ -96,6 +96,21 @@ async function serveStatic(request, response, pathname) {
     response.end(content);
   } catch (error) {
     if (error.code === "ENOENT" || error.code === "EISDIR") {
+      const acceptHeader = request.headers.accept || "";
+      if (acceptHeader.includes("text/html")) {
+        try {
+          const notFoundPage = await fs.readFile(path.join(PUBLIC_DIR, "404.html"));
+          addSecurityHeaders(response);
+          response.writeHead(404, {
+            "Content-Type": "text/html; charset=utf-8",
+            "Cache-Control": "no-cache",
+          });
+          response.end(notFoundPage);
+          return;
+        } catch {
+          // fallback to JSON
+        }
+      }
       sendJson(response, 404, { error: "Page not found." });
       return;
     }

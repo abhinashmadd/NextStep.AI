@@ -1555,3 +1555,22 @@ body.sidebar-is-open {
 .brand:hover .brand-logo-img {
   transform: scale(1.02);
 }
+
+
+/* Safeguard against horizontal overflow */
+.app-shell,
+.main-content,
+.page-content,
+.welcome-row,
+.dashboard-grid,
+.journey-card,
+.panel {
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  width: 100% !important;
+}

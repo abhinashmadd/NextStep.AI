@@ -19,7 +19,21 @@ const ROLE_DEFINITIONS = {
       "programmer",
       "coding",
       "computer science",
-      "technology"
+      "technology",
+      "data scientist",
+      "data analyst",
+      "machine learning",
+      "machine learning engineer",
+      "ai researcher",
+      "ai engineer",
+      "cloud architect",
+      "cloud engineer",
+      "cybersecurity analyst",
+      "cybersecurity",
+      "mobile app developer",
+      "mobile developer",
+      "devops",
+      "devops engineer"
     ],
   },
   "embedded-systems": {
@@ -37,7 +51,10 @@ const ROLE_DEFINITIONS = {
       "electrical engineering",
       "electronics & electrical engineering",
       "robotics engineer",
-      "engineering"
+      "engineering",
+      "electronics",
+      "vlsi engineer",
+      "mechatronics engineer"
     ],
   },
   "financial-analyst": {
@@ -55,7 +72,15 @@ const ROLE_DEFINITIONS = {
       "finance",
       "business",
       "economics",
-      "accounting"
+      "accounting",
+      "accountant",
+      "finance manager",
+      "product manager",
+      "business analyst",
+      "marketing manager",
+      "sales representative",
+      "human resources specialist",
+      "management"
     ],
   },
   "ux-researcher": {
@@ -72,7 +97,11 @@ const ROLE_DEFINITIONS = {
       "user researcher",
       "design & human-computer interaction",
       "arts & design",
-      "interaction designer"
+      "interaction designer",
+      "graphic designer",
+      "visual designer",
+      "content writer",
+      "copywriter"
     ],
   },
 };

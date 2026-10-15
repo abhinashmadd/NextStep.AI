@@ -82,19 +82,24 @@ function showToast(message, isError = false) {
   toastTimeout = setTimeout(() => toast.classList.remove("visible"), 3400);
 }
 
-async function api(path, body) {
+async function api(path, body, options = {}) {
   const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${API_BASE}${path}`;
   const token = localStorage.getItem("nextstep_token");
-  const headers = { "Content-Type": "application/json" };
+  const headers = { ...options.headers };
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+    headers["X-Session-Token"] = token;
+  }
+  const method = options.method || (body === undefined ? "GET" : "POST");
+  if (body !== undefined && !(body instanceof FormData) && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
   }
   let response;
   try {
     response = await fetch(url, {
-      method: body === undefined ? "GET" : "POST",
-      headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      method,
+      headers,
+      body: body === undefined ? undefined : (body instanceof FormData ? body : JSON.stringify(body)),
       credentials: "include",
     });
   } catch {
@@ -508,13 +513,18 @@ function openDialog(id) {
         form.elements["name"].value = user.name || "";
       }
       if (form.elements["careerId"] && !form.elements["careerId"].value && user.role) {
-        const roleMap = {
-          "Software Developer": "software-developer",
-          "Embedded Systems Engineer": "embedded-systems",
-          "Financial Analyst": "financial-analyst",
-          "UX Researcher": "ux-researcher",
-        };
-        if (roleMap[user.role]) form.elements["careerId"].value = roleMap[user.role];
+        const mappedRole = (() => {
+          try {
+            const cached = JSON.parse(localStorage.getItem("nextstep_role_mapping"));
+            if (cached && cached.careerId) return cached.careerId;
+          } catch {}
+          const roleLower = String(user.role).toLowerCase();
+          if (roleLower.includes("embed") || roleLower.includes("hardware") || roleLower.includes("iot") || roleLower.includes("robot")) return "embedded-systems";
+          if (roleLower.includes("financ") || roleLower.includes("account") || roleLower.includes("business") || roleLower.includes("econom")) return "financial-analyst";
+          if (roleLower.includes("ux") || roleLower.includes("ui") || roleLower.includes("design") || roleLower.includes("research")) return "ux-researcher";
+          return "software-developer";
+        })();
+        if (mappedRole) form.elements["careerId"].value = mappedRole;
       }
     }
   }
@@ -1134,11 +1144,7 @@ $("#evidence-list").addEventListener("click", async (event) => {
   const button = event.target.closest("[data-delete-evidence]");
   if (!button || !window.confirm("Delete this evidence and its attached file? The skill analysis will be cleared until you analyze the remaining evidence.")) return;
   try {
-    currentState = await fetch(`${API_BASE}/api/evidence/${encodeURIComponent(button.dataset.deleteEvidence)}`, { method: "DELETE" }).then(async (response) => {
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Evidence could not be deleted.");
-      return result;
-    });
+    currentState = await api(`/api/evidence/${encodeURIComponent(button.dataset.deleteEvidence)}`, null, { method: "DELETE" });
     render();
     showToast("Evidence and its derived analysis were deleted.");
   } catch (error) {
@@ -1354,8 +1360,14 @@ refresh().catch((error) => {
 });
 
 // Integration with NextStep Student Auth Controller (auth.js)
-window.onNextStepAuthSuccess = (user, newState) => {
-  if (newState) currentState = newState;
+window.onNextStepAuthSuccess = (user, newState, roleMapping) => {
+  if (newState) {
+    currentState = newState;
+  }
+  if (roleMapping && currentState?.profile && !currentState.profile.careerId) {
+    currentState.profile.careerId = roleMapping.careerId;
+    currentState.profile.targetRole = roleMapping.targetRole;
+  }
   render();
 };
 
