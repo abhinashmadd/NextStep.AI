@@ -1185,7 +1185,7 @@ $("#btn-ask-rag")?.addEventListener("click", async () => {
   const btn = $("#btn-ask-rag");
   const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Consulting AI RAG…";
+  btn.textContent = "Consulting Career Assistant…";
   const box = $("#rag-response-box");
   const contentEl = $("#rag-answer-content");
   const sourcesEl = $("#rag-sources-list");
@@ -1288,7 +1288,7 @@ $("#btn-run-ai-analysis")?.addEventListener("click", async () => {
   const btn = $("#btn-run-ai-analysis");
   const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = "Analyzing with AI…";
+  btn.textContent = "Analyzing…";
   try {
     const profile = currentState?.profile;
     if (!profile) {
@@ -1341,7 +1341,7 @@ $("#btn-run-ai-analysis")?.addEventListener("click", async () => {
         };
       }
       render();
-      showToast(`AI Analysis Complete! Readiness: ${res.readiness_score}%. Action: ${res.next_best_action?.title}`);
+      showToast(`Analysis Complete! Readiness: ${res.readiness_score}%. Action: ${res.next_best_action?.title}`);
     }
   } catch (err) {
     showToast(err.message, true);
