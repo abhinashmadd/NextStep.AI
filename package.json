@@ -10,7 +10,9 @@
     "start:py": "python run_all.py",
     "dev": "node --watch server.js",
     "test": "node test-backend.js",
-    "test:ai": "node test_ai_full_integration.js"
+    "test:shard": "node test-sharding.js",
+    "test:ai": "node test_ai_full_integration.js",
+    "db:shard": "node scripts/init-mongo-sharding.js"
   },
   "engines": {
     "node": ">=20"

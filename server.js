@@ -3,7 +3,7 @@ const fs = require("node:fs/promises");
 const path = require("node:path");
 
 const { PORT, HOST, PUBLIC_DIR, MONGODB_DB_NAME } = require("./src/config/environment");
-const { getMongoDb, readState, writeState, sanitizeState, emptyState } = require("./src/config/database");
+const { getMongoDb, readState, writeState, sanitizeState, emptyState, getShardingStats } = require("./src/config/database");
 const { handleCors } = require("./src/middleware/corsMiddleware");
 const { getUserFromRequest } = require("./src/middleware/authMiddleware");
 const { addSecurityHeaders } = require("./src/middleware/securityHeaders");
@@ -145,18 +145,44 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
-    // 3. Health & Database check
+    // 3. Health & Database check (with Sharding info)
     if (pathname === "/api/health" && request.method === "GET") {
       const db = await getMongoDb();
+      const shardingStats = await getShardingStats();
       sendJson(response, 200, {
         status: "ok",
         database: {
-          type: db ? "mongodb" : "local-file",
+          type: db ? "mongodb-sharded" : "local-file-sharded",
           connected: Boolean(db),
           databaseName: db ? MONGODB_DB_NAME : null,
+          sharding: {
+            enabled: true,
+            strategy: shardingStats.strategy,
+            shardCount: shardingStats.shardCount,
+            balanceScore: shardingStats.balanceScore,
+            totalWorkspaces: shardingStats.totalWorkspaces,
+          },
         },
         maxUploadBytes: 10 * 1024 * 1024,
         uptime: process.uptime(),
+      });
+      return;
+    }
+
+    // 3.5 Database Sharding Administration & Diagnostics
+    if (pathname === "/api/sharding/stats" && request.method === "GET") {
+      const stats = await getShardingStats();
+      sendJson(response, 200, stats);
+      return;
+    }
+
+    if (pathname === "/api/sharding/rebalance" && request.method === "POST") {
+      const state = await readState();
+      await writeState(state);
+      const stats = await getShardingStats();
+      sendJson(response, 200, {
+        message: "Shards successfully synchronized and rebalanced across database partitions.",
+        stats,
       });
       return;
     }
