@@ -11,6 +11,7 @@
     "dev": "node --watch server.js",
     "test": "node test-backend.js",
     "test:shard": "node test-sharding.js",
+    "test:security": "node test-security.js",
     "test:ai": "node test_ai_full_integration.js",
     "db:shard": "node scripts/init-mongo-sharding.js"
   },
