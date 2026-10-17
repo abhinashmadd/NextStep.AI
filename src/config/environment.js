@@ -13,7 +13,12 @@ const ROOT = path.resolve(__dirname, "../..");
 const PUBLIC_DIR = path.join(ROOT, "public");
 const DATA_DIR = path.join(ROOT, "data");
 const DATA_FILE = path.join(DATA_DIR, "nextstep-data.json");
+const SHARDS_DIR = path.join(DATA_DIR, "shards");
 const UPLOADS_DIR = path.join(DATA_DIR, "uploads");
+
+// Database Sharding Configuration
+const SHARDS_COUNT = Math.max(2, Number(process.env.SHARDS_COUNT) || 4);
+const SHARDING_ENABLED = process.env.SHARDING_ENABLED !== "false";
 
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || "0.0.0.0";
@@ -104,6 +109,9 @@ module.exports = {
   PUBLIC_DIR,
   DATA_DIR,
   DATA_FILE,
+  SHARDS_DIR,
+  SHARDS_COUNT,
+  SHARDING_ENABLED,
   UPLOADS_DIR,
   PORT,
   HOST,

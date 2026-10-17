@@ -91,35 +91,103 @@
       </header>
 
       <div class="page-content">
-        <section class="welcome-row hero-banner" id="overview">
+                <section class="welcome-row hero-banner" id="overview">
           <div class="hero-copy">
-            <div class="eyebrow" id="today-label">YOUR CAREER JOURNEY</div>
-            <h1 id="welcome-title">Your Career. Your Skills. Your NextStep.</h1>
-            <p class="welcome-subtitle" id="welcome-subtitle">NextStep analyzes your skills, interests and career goals
-              to provide personalized career guidance.</p>
+            <div class="hero-pill-badge">
+              <span class="hero-badge-pulse"></span>
+              <span class="hero-badge-text">✦ Evidence-to-Action Career Platform</span>
+              <span class="hero-badge-pill">2026 Ready</span>
+            </div>
+            <div class="eyebrow" id="today-label" style="display:none;">YOUR CAREER JOURNEY</div>
+            <h1 id="welcome-title">Your Career. Your Skills. <span class="hero-title-gradient">Your NextStep.</span></h1>
+            <p class="welcome-subtitle" id="welcome-subtitle">Transform your coursework, projects, and verified achievements into deterministic skill maps and one clear next move toward your career.</p>
             <div class="hero-actions">
-              <button class="button button-dark" id="quick-start" data-open="profile" data-open-profile><span>＋</span>
-                Get Started</button>
+              <button class="button button-hero-primary" id="quick-start" data-open="profile" data-open-profile><span>⚡</span> Start Your Career Profile</button>
+              <a class="button button-hero-secondary" href="#career-intelligence"><span>🧭</span> Explore Career Intelligence ↗</a>
+            </div>
+            <div class="hero-trust-strip">
+              <div class="hero-trust-item">
+                <span class="trust-icon">🎯</span>
+                <div><strong>4 Target Tracks</strong><small>Software, Embedded, UX, Finance</small></div>
+              </div>
+              <div class="hero-trust-divider"></div>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🛡️</span>
+                <div><strong>100% Grounded</strong><small>Evidence-based verification</small></div>
+              </div>
+              <div class="hero-trust-divider"></div>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🔒</span>
+                <div><strong>Privacy-First Vault</strong><small>Your work stays yours</small></div>
+              </div>
             </div>
           </div>
+
           <div class="hero-visual" aria-hidden="true">
             <div class="hero-orbit hero-orbit-one"></div>
             <div class="hero-orbit hero-orbit-two"></div>
 
-            <div class="hero-path-card">
-              <div class="hero-card-top"><span class="hero-card-mark">✳</span><span>YOUR NEXT MOVE</span><span
-                  class="hero-card-dots">···</span></div>
-              <div class="hero-path-row">
-                <span class="hero-path-number">01</span>
-                <span class="hero-path-copy"><strong>Your work</strong><small>Show what you can do</small></span>
-                <span class="hero-path-check">✓</span>
+                        <!-- NextStep Evidence-to-Action Interactive Pipeline Card -->
+            <div class="hero-pipeline-card">
+              <div class="pipeline-card-top">
+                <div class="pipeline-card-brand">
+                  <span class="pipeline-card-spark">✳</span>
+                  <strong>NextStep Pipeline</strong>
+                </div>
+                <span class="pipeline-card-badge">EVIDENCE ➔ ACTION</span>
               </div>
-              <div class="hero-path-connector"></div>
-              <div class="hero-path-row hero-path-current">
-                <span class="hero-path-number">02</span>
-                <span class="hero-path-copy"><strong>Your next step</strong><small>Make progress that
-                    counts</small></span>
-                <span class="hero-path-arrow">↗</span>
+
+              <div class="pipeline-steps-flow">
+                <!-- Step 01: Evidence Vault -->
+                <div class="pipeline-step-item">
+                  <div class="pipeline-step-badge">01</div>
+                  <div class="pipeline-step-info">
+                    <strong>Your Evidence Vault</strong>
+                    <small>Projects, coursework &amp; verified work</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-verified">✓ Proof Added</span>
+                </div>
+
+                <div class="pipeline-flow-connector">
+                  <span class="connector-line"></span>
+                  <span class="connector-pulse"></span>
+                </div>
+
+                <!-- Step 02: Capability Profile -->
+                <div class="pipeline-step-item">
+                  <div class="pipeline-step-badge">02</div>
+                  <div class="pipeline-step-info">
+                    <strong>Capability Profile</strong>
+                    <small>Transparent skill graph &amp; gap analysis</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-mapped">◎ Mapped</span>
+                </div>
+
+                <div class="pipeline-flow-connector">
+                  <span class="connector-line"></span>
+                  <span class="connector-pulse"></span>
+                </div>
+
+                <!-- Step 03: One Focused Next Action -->
+                <div class="pipeline-step-item step-highlighted">
+                  <div class="pipeline-step-badge badge-active">03</div>
+                  <div class="pipeline-step-info">
+                    <strong>One Focused Next Action</strong>
+                    <small>Fill priority gaps with real practice</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-action">⚡ Next Move ↗</span>
+                </div>
+              </div>
+
+              <!-- Supported Career Pathways in NextStep -->
+              <div class="pipeline-card-bottom">
+                <span class="pipeline-tracks-label">SUPPORTED CAREER PATHWAYS:</span>
+                <div class="pipeline-tracks-list">
+                  <span class="pipeline-track-pill">💻 Software</span>
+                  <span class="pipeline-track-pill">⚙️ Embedded</span>
+                  <span class="pipeline-track-pill">📊 Finance</span>
+                  <span class="pipeline-track-pill">🎨 UX Design</span>
+                </div>
               </div>
             </div>
 
@@ -137,25 +205,26 @@
           <div class="journey-track">
             <div class="journey-step clickable-step" data-step="profile" data-open-profile role="button" tabindex="0"
               title="Set up your profile"><span class="step-marker">01</span>
-              <div><strong>Your profile</strong><span>Tell us where you're headed</span></div>
+              <div><strong>👤 Your profile</strong><span>Tell us where you're headed</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="evidence"><span class="step-marker">02</span>
-              <div><strong>Your work</strong><span>Show what you've done</span></div>
+              <div><strong>📁 Your work</strong><span>Show what you've done</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="analysis"><span class="step-marker">03</span>
-              <div><strong>Skill map</strong><span>See what you can prove</span></div>
+              <div><strong>🗺️ Skill map</strong><span>See what you can prove</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="action"><span class="step-marker">04</span>
-              <div><strong>Next action</strong><span>Focus on one useful step</span></div>
+              <div><strong>⚡ Next action</strong><span>Focus on one useful step</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="loop"><span class="step-marker">05</span>
-              <div><strong>Keep growing</strong><span>Build, add proof, repeat</span></div>
+              <div><strong>🚀 Keep growing</strong><span>Build, add proof, repeat</span></div>
             </div>
           </div>
         </section>
 
         <!-- Career Guidance & Skill Intelligence Section -->
-        <section class="panel preview-panel" id="ai-engine-panel" style="margin-bottom: 24px;">
+        <span id="career-intelligence" style="display:block;position:relative;top:-70px;visibility:hidden;"></span>
+        <section class="panel preview-panel" id="ai-engine-panel" data-anchor="career-intelligence" style="margin-bottom: 24px;">
           <div class="panel-heading"
             style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
             <div>
@@ -184,6 +253,12 @@
                 placeholder="e.g. How do I transition to Backend Development, and what portfolio projects matter most?"
                 style="flex:1;min-width:240px;padding:10px 14px;border:1px solid #d3dad0;border-radius:8px;font-size:13px;outline:none;" />
               <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask Guidance ↗</button>
+            </div>
+            <div class="rag-prompt-suggestions">
+              <span class="rag-suggestions-label">Try asking:</span>
+              <button type="button" class="rag-prompt-chip" data-query="How do I transition to Backend Development, and what portfolio projects matter most?">🚀 Backend Transition</button>
+              <button type="button" class="rag-prompt-chip" data-query="Which portfolio projects prove high-impact engineering and system design skills?">🛠️ Portfolio Projects</button>
+              <button type="button" class="rag-prompt-chip" data-query="What core competencies do technical recruiters prioritize for software developers?">🎯 Hiring Requirements</button>
             </div>
             <div id="rag-response-box"
               style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">

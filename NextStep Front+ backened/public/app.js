@@ -1376,3 +1376,16 @@ window.onNextStepAuthLogout = async () => {
   render();
 };
 
+
+// RAG Quick-Prompt Chips Event Handler
+document.querySelectorAll(".rag-prompt-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const query = chip.getAttribute("data-query");
+    const input = $("#rag-query-input");
+    if (input && query) {
+      input.value = query;
+      input.focus();
+      $("#btn-ask-rag")?.click();
+    }
+  });
+});

@@ -1,7 +1,8 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 const crypto = require("node:crypto");
-const { DATA_DIR, DATA_FILE, UPLOADS_DIR, MONGODB_URI, MONGODB_DB_NAME } = require("./environment");
+const { DATA_DIR, DATA_FILE, SHARDS_DIR, UPLOADS_DIR, MONGODB_URI, MONGODB_DB_NAME, SHARDING_ENABLED } = require("./environment");
+const sharding = require("./sharding");
 
 let MongoClient = null;
 try {
@@ -39,9 +40,15 @@ async function getMongoDb() {
     if (process.env.DEBUG === "true") {
       console.log(`[Database] Successfully connected to MongoDB: ${MONGODB_DB_NAME}`);
     }
+
+    // Initialize MongoDB Sharding indexes and cluster commands
+    if (SHARDING_ENABLED) {
+      await sharding.setupMongoSharding(mongoDb, mongoClient);
+    }
+
     return mongoDb;
   } catch (err) {
-    console.warn(`[Database] MongoDB connection error: ${err.message}. Using local file storage fallback.`);
+    console.warn(`[Database] MongoDB connection error: ${err.message}. Using local sharded file storage fallback.`);
     mongoClient = null;
     mongoDb = null;
     return null;
@@ -107,6 +114,8 @@ async function readState() {
       if (doc) {
         const { _id, ...safeState } = doc;
         const resState = { ...emptyState(), ...safeState };
+
+        // Read users across sharded collections
         try {
           const mongoUsers = await db.collection("users").find({}).toArray();
           if (Array.isArray(mongoUsers) && mongoUsers.length > 0) {
@@ -116,13 +125,26 @@ async function readState() {
             resState.users = Array.from(userMap.values());
           }
         } catch {}
+
+        // Read sharded user workspaces
+        try {
+          const shardedWsDocs = await db.collection("user_workspaces").find({}).toArray();
+          if (Array.isArray(shardedWsDocs) && shardedWsDocs.length > 0) {
+            resState.userWorkspaces = resState.userWorkspaces || {};
+            for (const doc of shardedWsDocs) {
+              if (doc.userId && doc.workspace) {
+                resState.userWorkspaces[doc.userId] = doc.workspace;
+              }
+            }
+          }
+        } catch {}
+
         return resState;
       }
-      // If MongoDB is connected but not yet initialized, seed from local data file if it exists
+
+      // If MongoDB is connected but not yet initialized, seed from local sharded storage
       try {
-        const raw = await fs.readFile(DATA_FILE, "utf8");
-        const parsed = JSON.parse(raw);
-        const seeded = { ...emptyState(), ...parsed };
+        const seeded = await sharding.readShardedState();
         await db.collection("app_state").updateOne(
           { id: "current_state" },
           { $set: { ...seeded, updatedAt: new Date() } },
@@ -133,14 +155,13 @@ async function readState() {
         return emptyState();
       }
     } catch (err) {
-      console.warn(`[Database] Error reading from MongoDB: ${err.message}. Falling back to file.`);
+      console.warn(`[Database] Error reading from MongoDB: ${err.message}. Falling back to sharded files.`);
     }
   }
 
+  // File Storage Sharded Reader
   try {
-    const raw = await fs.readFile(DATA_FILE, "utf8");
-    const parsed = JSON.parse(raw);
-    return { ...emptyState(), ...parsed };
+    return await sharding.readShardedState();
   } catch (error) {
     if (error.code === "ENOENT") return emptyState();
     if (error instanceof SyntaxError) {
@@ -152,41 +173,19 @@ async function readState() {
 }
 
 async function writeState(state) {
-  // Always write local file as fast fallback & local cache
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  const tempFile = path.join(DATA_DIR, `nextstep-data.${Date.now()}.${crypto.randomBytes(4).toString("hex")}.tmp`);
-  await fs.writeFile(tempFile, JSON.stringify(state, null, 2), "utf8");
-  try {
-    await fs.rename(tempFile, DATA_FILE);
-  } catch (error) {
-    // Windows file lock / rename fallback
-    await fs.copyFile(tempFile, DATA_FILE);
-    await fs.unlink(tempFile).catch(() => {});
-  }
+  // 1. Write partitioned state across shards (and unified backup)
+  await sharding.writeShardedState(state);
 
-  // Persist to MongoDB if attached
+  // 2. Persist to MongoDB with sharded keys & partitions if connected
   const db = await getMongoDb();
   if (db) {
     try {
-      await db.collection("app_state").updateOne(
-        { id: "current_state" },
-        { $set: { ...state, updatedAt: new Date() } },
-        { upsert: true }
-      );
-      // Synchronize users and profiles into structured collections for query capability
-      if (Array.isArray(state.users) && state.users.length > 0) {
-        for (const user of state.users) {
-          await db.collection("users").updateOne(
-            { id: user.id },
-            { $set: { ...user, updatedAt: new Date() } },
-            { upsert: true }
-          );
-        }
-      }
+      await sharding.writeShardedStateToMongo(db, state);
+      // Synchronize structured profiles
       if (state.profile) {
         await db.collection("profiles").updateOne(
           { userId: state.currentUser?.id || "default" },
-          { $set: { ...state.profile, updatedAt: new Date() } },
+          { $set: { ...state.profile, shardId: sharding.getShardId(state.currentUser?.id || "default"), updatedAt: new Date() } },
           { upsert: true }
         );
       }
@@ -217,6 +216,8 @@ async function deleteAllStoredData() {
       if (evidence.fileStored) await deleteEvidenceFile(evidence.id);
     }
   }
+
+  // Clear MongoDB collections including sharded collections
   const db = await getMongoDb();
   if (db) {
     try {
@@ -224,10 +225,22 @@ async function deleteAllStoredData() {
       await db.collection("users").deleteMany({});
       await db.collection("profiles").deleteMany({});
       await db.collection("evidence").deleteMany({});
+      await db.collection("user_workspaces").deleteMany({});
     } catch (err) {
       console.warn(`[Database] Error clearing MongoDB collections: ${err.message}`);
     }
   }
+
+  // Clear sharded files
+  try {
+    const shardEntries = await fs.readdir(SHARDS_DIR);
+    for (const entry of shardEntries) {
+      if (entry.startsWith("shard_") && entry.endsWith(".json")) {
+        await fs.unlink(path.join(SHARDS_DIR, entry)).catch(() => {});
+      }
+    }
+  } catch {}
+
   try {
     await fs.unlink(DATA_FILE);
   } catch (error) {
@@ -245,4 +258,10 @@ module.exports = {
   addActivity,
   deleteEvidenceFile,
   deleteAllStoredData,
+  sharding,
+  getShardId: sharding.getShardId,
+  getShardIndex: sharding.getShardIndex,
+  readUserWorkspace: sharding.readUserWorkspace,
+  writeUserWorkspace: sharding.writeUserWorkspace,
+  getShardingStats: sharding.getShardingStats,
 };
