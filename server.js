@@ -214,6 +214,18 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    if (pathname === "/api/auth/firebase" && request.method === "POST") {
+      const body = await readBody(request);
+      const state = await readState();
+      await authController.handleFirebase(request, response, body, state);
+      return;
+    }
+
+    if (pathname === "/api/auth/firebase-config" && request.method === "GET") {
+      authController.getFirebaseConfig(request, response);
+      return;
+    }
+
     if (pathname === "/api/auth/guest" && request.method === "POST") {
       const state = await readState();
       await authController.guest(request, response, state);

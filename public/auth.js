@@ -183,7 +183,73 @@
   }
 
   // Setup Event Listeners
+  
+  let firebaseInitialized = false;
+
+  async function initFirebase() {
+    if (typeof firebase === "undefined") return;
+    try {
+      const config = await api("/api/auth/firebase-config");
+      if (!firebase.apps || !firebase.apps.length) {
+        firebase.initializeApp(config);
+      }
+      firebaseInitialized = true;
+    } catch (e) {
+      console.warn("Firebase client initialization deferred:", e.message);
+    }
+  }
+
   function initAuthEvents() {
+
+    // Firebase Google Sign In Handler
+    const firebaseGoogleBtn = $("#btn-firebase-google");
+    if (firebaseGoogleBtn) {
+      firebaseGoogleBtn.addEventListener("click", async () => {
+        const origHtml = firebaseGoogleBtn.innerHTML;
+        firebaseGoogleBtn.disabled = true;
+        firebaseGoogleBtn.innerHTML = "<span>Connecting with Google…</span>";
+        try {
+          if (!firebaseInitialized && typeof firebase !== "undefined") {
+            await initFirebase();
+          }
+          if (typeof firebase === "undefined" || !firebase.apps || !firebase.apps.length) {
+            throw new Error("Firebase Authentication SDK could not be loaded. Please sign in with student credentials.");
+          }
+          const provider = new firebase.auth.GoogleAuthProvider();
+          provider.addScope("profile");
+          provider.addScope("email");
+          const userCredential = await firebase.auth().signInWithPopup(provider);
+          const idToken = await userCredential.user.getIdToken();
+          firebaseGoogleBtn.innerHTML = "<span>Securing NextStep Workspace…</span>";
+
+          const roleSelect = document.querySelector("#auth-register-form select[name='role']");
+          const chosenRole = roleSelect?.value || "Software Developer";
+
+          const result = await api("/api/auth/firebase", {
+            idToken,
+            role: chosenRole,
+          });
+
+          handleAuthSuccess(
+            result.user,
+            result.state,
+            `Welcome to NextStep, ${result.user.name}!`,
+            result.token,
+            result.roleMapping
+          );
+        } catch (err) {
+          if (err.code === "auth/popup-closed-by-user") {
+            showToast("Google sign-in popup was closed.");
+          } else {
+            showToast(err.message || "Firebase Google Authentication failed.", true);
+          }
+        } finally {
+          firebaseGoogleBtn.disabled = false;
+          firebaseGoogleBtn.innerHTML = origHtml;
+        }
+      });
+    }
+
     // Tab Clicks
     $("#tab-signin")?.addEventListener("click", () => switchAuthTab("signin"));
     $("#tab-register")?.addEventListener("click", () => switchAuthTab("register"));
@@ -513,5 +579,6 @@
   document.addEventListener("DOMContentLoaded", () => {
     initAuthEvents();
     checkSession();
+    initFirebase();
   });
 })();

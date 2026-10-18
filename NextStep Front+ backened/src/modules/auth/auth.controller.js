@@ -1,10 +1,16 @@
 const crypto = require("node:crypto");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const { emptyState, emptyUserState, sanitizeState, writeState, addActivity } = require("../../config/database");
 const { getUserFromRequest, getSessionToken } = require("../../middleware/authMiddleware");
 const { sendJson } = require("../../utils/apiResponse");
 const { triggerAIAnalysis } = require("../analysis/analysis.service");
 const { mapRoleToCareer, normalizeRollOrBadge } = require("../../utils/roleMapper");
+const { validateRegistration, validateLogin, validatePasswordReset, normalizeMobile } = require("./auth.validation");
+const { getClientIp, checkLoginRateLimit, recordFailedLogin, resetLoginAttempts } = require("../../middleware/rateLimiter");
+const { getFirebaseClientConfig, verifyFirebaseIdToken } = require("../../config/firebase");
+
+// Pre-computed 12-round bcrypt hash for constant-time dummy comparisons against nonexistent accounts (prevents timing side-channel attacks)
+const DUMMY_HASH = "$2b$12$e8xL4sV9JjDqC1e3w6l2hO5k9Ym3Zb1Xv8t7u4g6p0A2d4f6h8j0K";
 
 async function getMe(request, response, state) {
   const user = getUserFromRequest(request, state);
@@ -14,12 +20,6 @@ async function getMe(request, response, state) {
   }
   const mapped = mapRoleToCareer(user.role);
   sendJson(response, 200, { user, roleMapping: mapped });
-}
-
-function normalizeMobile(phone) {
-  if (!phone) return "";
-  const digits = String(phone).replace(/\D/g, "");
-  return digits.length > 10 ? digits.slice(-10) : digits;
 }
 
 function checkExistingUser(users, { email, mobile, username }) {
@@ -81,7 +81,7 @@ function findUserByIdentifier(users, identifier) {
       if (normalizedBadge && uNormBadge === normalizedBadge) return true;
       if (normalizedBadge && normalizedBadge.length >= 3 && uNormBadge.endsWith(normalizedBadge)) return true;
 
-      // Numeric suffix / roll number matching (e.g. student enters 904 or 0904, badge is ST-2026-904)
+      // Numeric suffix / roll number matching
       const uBadgeDigits = badge.replace(/\D/g, "");
       if (inputDigits && inputDigits.length >= 3 && uBadgeDigits) {
         if (uBadgeDigits.endsWith(inputDigits)) return true;
@@ -97,22 +97,64 @@ function findUserByIdentifier(users, identifier) {
   });
 }
 
+/**
+ * Robust Login Handler:
+ * - Strict server-side validation
+ * - In-memory rate limiting (max 5 failed attempts per 15 mins)
+ * - Encrypted password verification with bcrypt
+ * - Generic error messages defeating account enumeration & timing attacks
+ */
 async function login(request, response, body, state) {
-  const identifier = String(body.identifier || body.email || body.username || body.mobile || "").trim();
-  if (!identifier || !body.password) {
-    sendJson(response, 400, { error: "Enter your username, gmail or mobile number and password." });
+  const ip = getClientIp(request);
+
+  // 1. Server-Side Validation
+  const validation = validateLogin(body);
+  if (!validation.isValid) {
+    sendJson(response, 400, { error: validation.error });
     return;
   }
+  const { identifier, password } = validation.sanitized;
+
+  // 2. Login Rate Limiting Check
+  const rateLimit = checkLoginRateLimit(ip, identifier);
+  if (rateLimit.isLimited) {
+    sendJson(
+      response,
+      429,
+      { error: `Too many failed login attempts. For security reasons, please try again in ${rateLimit.retryAfterSeconds} seconds.` },
+      {
+        "Retry-After": String(rateLimit.retryAfterSeconds),
+        "X-RateLimit-Limit": "5",
+        "X-RateLimit-Remaining": "0",
+      }
+    );
+    return;
+  }
+
+  // 3. User Lookup
   const user = findUserByIdentifier(state.users || [], identifier);
-  if (!user) {
-    sendJson(response, 401, { error: "No account found matching this username, gmail or mobile number." });
+
+  // 4. Secure Constant-Time Verification & Generic Errors
+  if (!user || !user.passwordHash) {
+    // Perform constant-time dummy compare to eliminate timing side channels
+    await bcrypt.compare(password, DUMMY_HASH);
+    recordFailedLogin(ip, identifier);
+    // Generic error to prevent user enumeration
+    sendJson(response, 401, { error: "Invalid credentials. Please verify your email, username, or mobile and password." });
     return;
   }
-  const passwordMatch = await bcrypt.compare(String(body.password), user.passwordHash);
+
+  const passwordMatch = await bcrypt.compare(password, user.passwordHash);
   if (!passwordMatch) {
-    sendJson(response, 401, { error: "Incorrect password. Please verify your credentials." });
+    recordFailedLogin(ip, identifier);
+    // Identical generic error message
+    sendJson(response, 401, { error: "Invalid credentials. Please verify your email, username, or mobile and password." });
     return;
   }
+
+  // Login successful: reset rate limit attempt tracking
+  resetLoginAttempts(ip, identifier);
+
   const safeUser = {
     id: user.id,
     name: user.name,
@@ -183,6 +225,7 @@ async function login(request, response, body, state) {
 
   try { await triggerAIAnalysis(ws); } catch {}
   await writeState(state);
+
   sendJson(
     response,
     200,
@@ -199,49 +242,54 @@ async function login(request, response, body, state) {
   );
 }
 
+/**
+ * Registration Handler:
+ * - Comprehensive server-side validation
+ * - Salting & 12-round bcrypt password encryption
+ * - GDPR/COPPA age consent verification
+ * - Seamless sharded student workspace setup
+ */
 async function register(request, response, body, state) {
-  if (!body.name || !body.email || !body.password) {
-    sendJson(response, 400, { error: "Name, email, and password are required." });
+  // 1. Strict Server-Side Validation
+  const validation = validateRegistration(body);
+  if (!validation.isValid) {
+    sendJson(response, 400, { error: validation.error });
     return;
   }
-  if (String(body.password).length < 6) {
-    sendJson(response, 400, { error: "Password must be at least 6 characters." });
-    return;
-  }
-  if (body.ageConsent !== true && body.ageConsent !== "true") {
-    sendJson(response, 400, { error: "You must confirm you are at least 16 years of age (or have verified parental/guardian permission) to register on NextStep." });
-    return;
-  }
+  const { name, email, password, mobile, username, role, badgeId } = validation.sanitized;
+
   state.users = state.users || [];
 
+  // 2. Uniqueness verification
   const existingError = checkExistingUser(state.users, {
-    email: body.email,
-    mobile: body.mobile,
-    username: body.username,
+    email,
+    mobile,
+    username,
   });
   if (existingError) {
     sendJson(response, 409, { error: existingError });
     return;
   }
 
-  const cleanEmail = String(body.email).trim().toLowerCase();
-  const cleanMobile = String(body.mobile || "").trim();
-  const cleanName = String(body.name).trim();
-  const cleanUsername = String(body.username || cleanEmail.split("@")[0] || cleanName.toLowerCase().replace(/\s+/g, "")).trim();
+  const cleanName = name;
+  const cleanEmail = email;
+  const cleanMobile = mobile;
+  const cleanUsername = username || cleanEmail.split("@")[0] || cleanName.toLowerCase().replace(/\s+/g, "");
   const year = new Date().getFullYear();
-  const badgeId = (body.badgeId && String(body.badgeId).trim()) || `ST-${year}-${Math.floor(100 + Math.random() * 900)}`;
+  const assignedBadgeId = badgeId || `ST-${year}-${Math.floor(100 + Math.random() * 900)}`;
 
+  // 3. Encrypt the password using salted bcrypt with 12 rounds
   const saltRounds = 12;
-  const passwordHash = await bcrypt.hash(body.password, saltRounds);
+  const passwordHash = await bcrypt.hash(password, saltRounds);
 
   const newUser = {
     id: crypto.randomUUID(),
     name: cleanName,
     username: cleanUsername,
-    badgeId,
+    badgeId: assignedBadgeId,
     email: cleanEmail,
     mobile: cleanMobile,
-    role: String(body.role || "Software Developer").trim(),
+    role: role || "Software Developer",
     passwordHash,
     ageConsent: {
       confirmed: true,
@@ -263,7 +311,7 @@ async function register(request, response, body, state) {
   };
 
   const token = crypto.randomBytes(32).toString("hex");
-  const expiresAt = new Date(Date.now() + 30*24*60*60*1000).toISOString(); // 30 days
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days
   state.sessions = state.sessions || {};
   state.sessions[token] = { userId: newUser.id, createdAt: new Date().toISOString(), expiresAt };
 
@@ -322,6 +370,150 @@ async function register(request, response, body, state) {
       "Set-Cookie": `nextstep_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`,
     }
   );
+}
+
+/**
+ * Firebase Authentication Handler:
+ * - Verifies Firebase ID Token from Google Sign-In or Firebase Auth
+ * - Provisions/syncs user into sharded NextStep database
+ * - Generates session token with HttpOnly cookie
+ */
+async function handleFirebase(request, response, body, state) {
+  try {
+    const { idToken, role } = body || {};
+    if (!idToken || typeof idToken !== "string") {
+      sendJson(response, 400, { error: "Missing or invalid Firebase ID token." });
+      return;
+    }
+
+    const verified = await verifyFirebaseIdToken(idToken);
+    state.users = state.users || [];
+
+    // Search for existing user
+    let user = state.users.find(
+      (u) =>
+        (u.email && u.email.toLowerCase() === (verified.email || "").toLowerCase()) ||
+        u.firebaseUid === verified.uid
+    );
+
+    if (!user) {
+      const year = new Date().getFullYear();
+      const badgeId = `ST-${year}-${Math.floor(100 + Math.random() * 900)}`;
+      const cleanEmail = (verified.email || `student_${verified.uid.slice(0, 6)}@firebase.nextstep.edu`).toLowerCase();
+      const cleanName = verified.name || cleanEmail.split("@")[0];
+      const cleanUsername = cleanEmail.split("@")[0].replace(/[^a-zA-Z0-9._-]/g, "");
+
+      // Generate secure random hashed password for internal user record
+      const randomPassword = crypto.randomBytes(32).toString("hex");
+      const passwordHash = await bcrypt.hash(randomPassword, 12);
+
+      user = {
+        id: crypto.randomUUID(),
+        firebaseUid: verified.uid,
+        name: cleanName,
+        username: cleanUsername,
+        badgeId,
+        email: cleanEmail,
+        mobile: "",
+        role: role || "Software Developer",
+        picture: verified.picture || "",
+        passwordHash,
+        provider: "firebase",
+        ageConsent: {
+          confirmed: true,
+          confirmedAt: new Date().toISOString(),
+          minimumAge: 16,
+        },
+        createdAt: new Date().toISOString(),
+      };
+      state.users.push(user);
+    } else {
+      if (!user.firebaseUid) user.firebaseUid = verified.uid;
+      if (verified.picture && !user.picture) user.picture = verified.picture;
+    }
+
+    const safeUser = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      badgeId: user.badgeId,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role,
+      picture: user.picture || "",
+      provider: "firebase",
+    };
+
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+    state.sessions = state.sessions || {};
+    state.sessions[token] = { userId: user.id, createdAt: new Date().toISOString(), expiresAt };
+
+    const mapped = mapRoleToCareer(user.role);
+    state.userWorkspaces = state.userWorkspaces || {};
+    let ws = state.userWorkspaces[user.id];
+    if (!ws) {
+      ws = {
+        ...emptyUserState(),
+        currentUser: safeUser,
+        profile: {
+          name: user.name,
+          course: mapped.course,
+          discipline: mapped.discipline,
+          year: "3rd Year",
+          semester: "5",
+          careerId: mapped.careerId,
+          targetRole: mapped.targetRole || user.role,
+          availableHours: 10,
+          learningStyle: "Hands-on projects",
+          skills: [],
+          interests: `${mapped.targetRole || user.role} career preparation`,
+          bio: `Student ID: ${user.badgeId} · Verified via Google / Firebase Authentication`,
+          updatedAt: new Date().toISOString(),
+        },
+        privacy: {
+          consent: {
+            accepted: true,
+            version: "1.0",
+            acceptedAt: new Date().toISOString(),
+            purpose: "Firebase authentication and workspace access",
+          },
+          ageConsent: {
+            confirmed: true,
+            confirmedAt: new Date().toISOString(),
+            minimumAge: 16,
+          },
+        },
+      };
+      state.userWorkspaces[user.id] = ws;
+    } else {
+      ws.currentUser = safeUser;
+    }
+
+    addActivity(ws, `Authenticated via Firebase (${user.email}) · Target Role: ${ws.profile?.targetRole || user.role}.`);
+    await writeState(state);
+
+    sendJson(
+      response,
+      200,
+      {
+        success: true,
+        token,
+        user: safeUser,
+        roleMapping: mapped,
+        state: sanitizeState({ ...state, ...ws, currentUser: safeUser }),
+      },
+      {
+        "Set-Cookie": `nextstep_session=${token}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`,
+      }
+    );
+  } catch (err) {
+    sendJson(response, 401, { error: err.message || "Firebase authentication failed." });
+  }
+}
+
+function getFirebaseConfig(request, response) {
+  sendJson(response, 200, getFirebaseClientConfig());
 }
 
 async function guest(request, response, state) {
@@ -436,8 +628,14 @@ async function forgotPassword(request, response, body, state) {
   }
   const users = state?.users || [];
   const user = findUserByIdentifier(users, identifier);
+
+  // Generic message on unmapped user to prevent user enumeration
   if (!user) {
-    sendJson(response, 404, { error: "No registered account found with this Username, Gmail, or Mobile number." });
+    sendJson(response, 200, {
+      success: true,
+      message: "If an account matches your details, a verification code has been dispatched.",
+      generic: true,
+    });
     return;
   }
 
@@ -455,19 +653,17 @@ async function forgotPassword(request, response, body, state) {
 }
 
 async function resetPassword(request, response, body, state) {
-  const { identifier, otp, newPassword } = body || {};
-  if (!identifier || !newPassword) {
-    sendJson(response, 400, { error: "Identifier and new password are required." });
+  const validation = validatePasswordReset(body);
+  if (!validation.isValid) {
+    sendJson(response, 400, { error: validation.error });
     return;
   }
-  if (String(newPassword).length < 6) {
-    sendJson(response, 400, { error: "Password must be at least 6 characters long." });
-    return;
-  }
+  const { identifier, newPassword, otp } = validation.sanitized;
+
   const users = state?.users || [];
   const user = findUserByIdentifier(users, identifier);
   if (!user) {
-    sendJson(response, 404, { error: "No registered account found with this Username, Gmail, or Mobile number." });
+    sendJson(response, 404, { error: "No account found matching those details." });
     return;
   }
 
@@ -477,7 +673,8 @@ async function resetPassword(request, response, body, state) {
     return;
   }
 
-  const newHash = await bcrypt.hash(newPassword, 10);
+  // Encrypt the new password with 12 salt rounds
+  const newHash = await bcrypt.hash(newPassword, 12);
   user.passwordHash = newHash;
   user.updatedAt = new Date().toISOString();
 
@@ -497,10 +694,11 @@ module.exports = {
   getMe,
   login,
   register,
+  handleFirebase,
+  getFirebaseConfig,
   guest,
   logout,
   sendOtp,
   forgotPassword,
   resetPassword,
 };
-
