@@ -29,7 +29,8 @@
     aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
-      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform" class="welcome-hero-logo" draggable="false">
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform"
+        class="welcome-hero-logo" draggable="false">
     </div>
   </aside>
 
@@ -90,8 +91,8 @@
       </header>
 
       <div class="page-content">
-                <section class="welcome-row hero-banner" id="overview">
-          <div class="hero-copy">
+                <section class="welcome-row hero-banner hero-banner-centered" id="overview">
+          <div class="hero-center-content">
             <div class="hero-pill-badge">
               <span class="hero-badge-pulse"></span>
               <span class="hero-badge-text">✦ Evidence-to-Action Career Platform</span>
@@ -100,34 +101,14 @@
             <div class="eyebrow" id="today-label" style="display:none;">YOUR CAREER JOURNEY</div>
             <h1 id="welcome-title">Your Career. Your Skills. <span class="hero-title-gradient">Your NextStep.</span></h1>
             <p class="welcome-subtitle" id="welcome-subtitle">Transform your coursework, projects, and verified achievements into deterministic skill maps and one clear next move toward your career.</p>
+
             <div class="hero-actions">
               <button class="button button-hero-primary" id="quick-start" data-open="profile" data-open-profile><span>⚡</span> Start Your Career Profile</button>
               <a class="button button-hero-secondary" href="#career-intelligence"><span>🧭</span> Explore Career Intelligence ↗</a>
             </div>
-            <div class="hero-trust-strip">
-              <div class="hero-trust-item">
-                <span class="trust-icon">🎯</span>
-                <div><strong>4 Target Tracks</strong><small>Software, Embedded, UX, Finance</small></div>
-              </div>
-              <div class="hero-trust-divider"></div>
-              <div class="hero-trust-item">
-                <span class="trust-icon">🛡️</span>
-                <div><strong>100% Grounded</strong><small>Evidence-based verification</small></div>
-              </div>
-              <div class="hero-trust-divider"></div>
-              <div class="hero-trust-item">
-                <span class="trust-icon">🔒</span>
-                <div><strong>Privacy-First Vault</strong><small>Your work stays yours</small></div>
-              </div>
-            </div>
-          </div>
 
-          <div class="hero-visual" aria-hidden="true">
-            <div class="hero-orbit hero-orbit-one"></div>
-            <div class="hero-orbit hero-orbit-two"></div>
-
-                        <!-- NextStep Evidence-to-Action Interactive Pipeline Card -->
-            <div class="hero-pipeline-card">
+            <!-- Compact, Streamlined Pipeline Card -->
+            <div class="hero-pipeline-card hero-pipeline-compact" aria-label="NextStep 3-step career pipeline">
               <div class="pipeline-card-top">
                 <div class="pipeline-card-brand">
                   <span class="pipeline-card-spark">✳</span>
@@ -141,38 +122,32 @@
                 <div class="pipeline-step-item">
                   <div class="pipeline-step-badge">01</div>
                   <div class="pipeline-step-info">
-                    <strong>Your Evidence Vault</strong>
-                    <small>Projects, coursework &amp; verified work</small>
+                    <strong>Evidence Vault</strong>
+                    <small>Coursework &amp; projects</small>
                   </div>
                   <span class="pipeline-status-chip chip-verified">✓ Proof Added</span>
                 </div>
 
-                <div class="pipeline-flow-connector">
-                  <span class="connector-line"></span>
-                  <span class="connector-pulse"></span>
-                </div>
+                <div class="pipeline-step-arrow" aria-hidden="true">→</div>
 
                 <!-- Step 02: Capability Profile -->
                 <div class="pipeline-step-item">
                   <div class="pipeline-step-badge">02</div>
                   <div class="pipeline-step-info">
                     <strong>Capability Profile</strong>
-                    <small>Transparent skill graph &amp; gap analysis</small>
+                    <small>Deterministic gap analysis</small>
                   </div>
                   <span class="pipeline-status-chip chip-mapped">◎ Mapped</span>
                 </div>
 
-                <div class="pipeline-flow-connector">
-                  <span class="connector-line"></span>
-                  <span class="connector-pulse"></span>
-                </div>
+                <div class="pipeline-step-arrow" aria-hidden="true">→</div>
 
                 <!-- Step 03: One Focused Next Action -->
                 <div class="pipeline-step-item step-highlighted">
                   <div class="pipeline-step-badge badge-active">03</div>
                   <div class="pipeline-step-info">
-                    <strong>One Focused Next Action</strong>
-                    <small>Fill priority gaps with real practice</small>
+                    <strong>One Focused Action</strong>
+                    <small>Fill priority gaps with practice</small>
                   </div>
                   <span class="pipeline-status-chip chip-action">⚡ Next Move ↗</span>
                 </div>
@@ -180,7 +155,7 @@
 
               <!-- Supported Career Pathways in NextStep -->
               <div class="pipeline-card-bottom">
-                <span class="pipeline-tracks-label">SUPPORTED CAREER PATHWAYS:</span>
+                <span class="pipeline-tracks-label">CAREER PATHWAYS:</span>
                 <div class="pipeline-tracks-list">
                   <span class="pipeline-track-pill">💻 Software</span>
                   <span class="pipeline-track-pill">⚙️ Embedded</span>
@@ -190,8 +165,23 @@
               </div>
             </div>
 
-            <span class="hero-float-spark">✳</span>
-            <span class="hero-float-dot"></span>
+            <!-- Minimalist Trust Row -->
+            <div class="hero-trust-strip hero-trust-compact">
+              <div class="hero-trust-item">
+                <span class="trust-icon">🎯</span>
+                <span><strong>4 Target Tracks</strong></span>
+              </div>
+              <span class="hero-trust-dot">•</span>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🛡️</span>
+                <span><strong>100% Grounded Verification</strong></span>
+              </div>
+              <span class="hero-trust-dot">•</span>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🔒</span>
+                <span><strong>Privacy-First Vault</strong></span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -224,7 +214,8 @@
         <!-- Career Guidance & Skill Intelligence Section -->
         <span id="career-intelligence" style="display:block;position:relative;top:-70px;visibility:hidden;"></span>
         <section class="panel preview-panel" id="ai-engine-panel" data-anchor="career-intelligence" style="margin-bottom: 24px;">
-          <div class="panel-heading" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+          <div class="panel-heading"
+            style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
             <div>
               <span class="section-kicker">SKILL GRAPH &amp; RAG ENGINE</span>
               <h2>NextStep Career Intelligence</h2>
@@ -233,12 +224,14 @@
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <button class="button button-outline" id="btn-run-ai-analysis"><span>⚡</span> Run Full Analysis</button>
-              <button class="button button-dark" id="btn-explore-career-matches"><span>🧭</span> Match Career Roles</button>
+              <button class="button button-dark" id="btn-explore-career-matches"><span>🧭</span> Match Career
+                Roles</button>
             </div>
           </div>
 
           <!-- RAG Guidance Q&A Assistant -->
-          <div class="ai-rag-container" style="background:#ffffff;border:1px solid #e1e6de;border-radius:10px;padding:18px;margin-top:14px;">
+          <div class="ai-rag-container"
+            style="background:#ffffff;border:1px solid #e1e6de;border-radius:10px;padding:18px;margin-top:14px;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
               <span style="font-size:16px;">💬</span>
               <strong style="font-size:14px;color:#202b25;">Ask NextStep Career Assistant (RAG Pipeline)</strong>
@@ -256,15 +249,21 @@
               <button type="button" class="rag-prompt-chip" data-query="Which portfolio projects prove high-impact engineering and system design skills?">🛠️ Portfolio Projects</button>
               <button type="button" class="rag-prompt-chip" data-query="What core competencies do technical recruiters prioritize for software developers?">🎯 Hiring Requirements</button>
             </div>
-            <div id="rag-response-box" style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
-              <div id="rag-answer-content" style="font-size:13px;line-height:1.6;color:#202b25;white-space:pre-wrap;"></div>
-              <div id="rag-sources-list" style="margin-top:10px;font-size:11px;color:#606760;border-top:1px solid #e1e7de;padding-top:8px;"></div>
+            <div id="rag-response-box"
+              style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
+              <div id="rag-answer-content" style="font-size:13px;line-height:1.6;color:#202b25;white-space:pre-wrap;">
+              </div>
+              <div id="rag-sources-list"
+                style="margin-top:10px;font-size:11px;color:#606760;border-top:1px solid #e1e7de;padding-top:8px;">
+              </div>
             </div>
           </div>
 
           <!-- Live Career Matches / Scoring Breakdown Container -->
           <div id="ai-matches-container" style="display:none;margin-top:16px;">
-            <h4 style="font-size:13px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#434a43;margin:0 0 10px;">Top Career Compatibility Matches (Multi-Dimensional Scoring)</h4>
+            <h4
+              style="font-size:13px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#434a43;margin:0 0 10px;">
+              Top Career Compatibility Matches (Multi-Dimensional Scoring)</h4>
             <div id="ai-matches-grid" class="preview-cards-grid"></div>
           </div>
         </section>
@@ -406,15 +405,27 @@
         </div>
       </div>
       <div class="consent-copy"><strong>What we collect</strong>
-        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal surveillance data.</p>
+        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to
+          add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal
+          surveillance data.</p>
         <strong>How it's processed</strong>
-        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your uploaded work is <strong>never</strong> used to train public AI models.</p>
+        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your
+          uploaded work is <strong>never</strong> used to train public AI models.</p>
         <strong>Where it's stored &amp; retention</strong>
-        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
+        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and
+          can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
         <strong>Age Eligibility &amp; Legal Policies</strong>
-        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio. Review our <a href="./privacy-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund Policy</a>.</p>
+        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio.
+          Review our <a href="./privacy-policy.html" target="_blank"
+            style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a
+            href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund
+            Policy</a>.</p>
       </div>
-      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16 years old and I have read and agree to how NextStep processes my data in accordance with the Privacy Policy.</label>
+      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16
+        years old and I have read and agree to how NextStep processes my data in accordance with the Privacy
+        Policy.</label>
       <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
           <span>→</span></button></div>
     </form>
@@ -639,11 +650,14 @@
       </div>
       <div class="privacy-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;">
         <a class="button button-outline" href="./api/privacy/export" download>Export my data ↓</a>
-        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure Request (GDPR Art. 17) ↗</a>
-        <a class="button button-outline" href="./privacy-policy.html" target="_blank" style="text-decoration:none;">Privacy Policy ↗</a>
+        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure
+          Request (GDPR Art. 17) ↗</a>
+        <a class="button button-outline" href="./privacy-policy.html" target="_blank"
+          style="text-decoration:none;">Privacy Policy ↗</a>
         <button class="button button-danger" id="delete-account" type="button">Instant 1-Click Wipe</button>
       </div>
-      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded documents, skill graph analysis, and recommendation history from active databases and storage.</p>
+      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded
+        documents, skill graph analysis, and recommendation history from active databases and storage.</p>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
