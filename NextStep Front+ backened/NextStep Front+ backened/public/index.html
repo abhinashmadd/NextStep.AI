@@ -5,8 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8f8f5">
-  <meta name="description" content="Turn your real work into your next step toward the career you want.">
-  <title>NextStep — Make your next move count</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <meta name="description" content="NextStep transforms your real coursework, projects, and verified work into actionable skill maps and one clear next step toward your career.">
+  <title>NextStep — Student Career Readiness & Evidence-Based Preparation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -16,31 +17,35 @@
   <link rel="stylesheet" href="./product.css">
   <link rel="stylesheet" href="./visual-refresh.css">
   <link rel="stylesheet" href="./auth-modal.css">
+  <script src="./cookie-consent.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./auth.js" defer></script>
 </head>
 
 <body>
+  <a href="#overview" class="skip-link">Skip to main content</a>
   <!-- Cinematic Splash Landing Overlay (Click anywhere to open dashboard) -->
   <aside class="welcome-overlay" id="welcome-overlay" role="dialog" aria-modal="true"
     aria-label="Welcome to NextStep - Click anywhere to enter dashboard" tabindex="0">
     <div class="welcome-modal-content">
       <div class="welcome-glow-backdrop"></div>
-      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo" class="welcome-hero-logo" draggable="false">
+      <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform"
+        class="welcome-hero-logo" draggable="false">
     </div>
   </aside>
 
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header-row">
-        <a class="brand" href="#" aria-label="NextStep home">
-          <img src="./nextstep-logo-transparent.png" alt="NextStep" class="brand-logo-img">
+        <a class="brand" href="./index.html" aria-label="NextStep home">
+          <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Home" class="brand-logo-img">
         </a>
         <button class="sidebar-close-btn" id="sidebar-close" aria-label="Close navigation menu">✕</button>
       </div>
       <div class="workspace-label">YOUR WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link active" href="#overview" data-section="overview"><span class="nav-icon">◫</span>Overview</a>
+        <a class="nav-link" href="#career-intelligence" data-section="intelligence"><span class="nav-icon">🧭</span>Career intelligence</a>
         <a class="nav-link" href="#profile" data-section="profile"><span class="nav-icon">◉</span>My profile</a>
         <a class="nav-link" href="#evidence" data-section="evidence"><span class="nav-icon">▧</span>My evidence<span
             class="nav-counter" id="evidence-count">0</span></a>
@@ -67,16 +72,18 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
-          <a class="topbar-brand-mobile" href="#" aria-label="NextStep home">
-            <img src="./nextstep-logo-transparent.png" alt="NextStep" class="topbar-brand-img">
+          <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">☰</button>
+          <a class="topbar-brand-mobile" href="./index.html" aria-label="NextStep home">
+            <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Home" class="topbar-brand-img">
           </a>
         </div>
         <nav class="topbar-links" aria-label="Top links">
-          <a href="#overview">Home</a>
-          <a href="#assessment">Career Assessment</a>
-          <a href="#skills">Career Paths</a>
-          <a href="#evidence">About</a>
+          <a href="#overview">Overview</a>
+          <a href="#career-intelligence">Career Intelligence</a>
+          <a href="#profile">Career Profile</a>
+          <a href="#skills">Skill Map</a>
+          <a href="#evidence">Evidence Vault</a>
+          <a href="#action">Next Action</a>
         </nav>
         <div class="topbar-right">
           <a class="button button-dark auth-nav-btn" href="auth.html">
@@ -87,40 +94,97 @@
       </header>
 
       <div class="page-content">
-        <section class="welcome-row hero-banner" id="overview">
-          <div class="hero-copy">
-            <div class="eyebrow" id="today-label">YOUR CAREER JOURNEY</div>
-            <h1 id="welcome-title">Your Career. Your Skills. Your NextStep.</h1>
-            <p class="welcome-subtitle" id="welcome-subtitle">NextStep analyzes your skills, interests and career goals
-              to provide personalized career guidance.</p>
+                <section class="welcome-row hero-banner hero-banner-centered" id="overview">
+          <div class="hero-center-content">
+            <div class="hero-pill-badge">
+              <span class="hero-badge-pulse"></span>
+              <span class="hero-badge-text">✦ Evidence-to-Action Career Platform</span>
+              <span class="hero-badge-pill">2026 Ready</span>
+            </div>
+            <div class="eyebrow" id="today-label" style="display:none;">YOUR CAREER JOURNEY</div>
+            <h1 id="welcome-title">Your Career. Your Skills. <span class="hero-title-gradient">Your NextStep.</span></h1>
+            <p class="welcome-subtitle" id="welcome-subtitle">Transform your coursework, projects, and verified achievements into deterministic skill maps and one clear next move toward your career.</p>
+
             <div class="hero-actions">
-              <button class="button button-dark" id="quick-start" data-open="profile" data-open-profile><span>＋</span>
-                Get Started</button>
-            </div>
-          </div>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="hero-orbit hero-orbit-one"></div>
-            <div class="hero-orbit hero-orbit-two"></div>
-
-            <div class="hero-path-card">
-              <div class="hero-card-top"><span class="hero-card-mark">✳</span><span>YOUR NEXT MOVE</span><span
-                  class="hero-card-dots">···</span></div>
-              <div class="hero-path-row">
-                <span class="hero-path-number">01</span>
-                <span class="hero-path-copy"><strong>Your work</strong><small>Show what you can do</small></span>
-                <span class="hero-path-check">✓</span>
-              </div>
-              <div class="hero-path-connector"></div>
-              <div class="hero-path-row hero-path-current">
-                <span class="hero-path-number">02</span>
-                <span class="hero-path-copy"><strong>Your next step</strong><small>Make progress that
-                    counts</small></span>
-                <span class="hero-path-arrow">↗</span>
-              </div>
+              <button class="button button-hero-primary" id="quick-start" data-open="profile" data-open-profile>Start Your Career Profile</button>
+              <a class="button button-hero-secondary" href="#career-intelligence">Explore Career Intelligence</a>
             </div>
 
-            <span class="hero-float-spark">✳</span>
-            <span class="hero-float-dot"></span>
+            <!-- Compact, Streamlined Pipeline Card -->
+            <div class="hero-pipeline-card hero-pipeline-compact" aria-label="NextStep 3-step career pipeline">
+              <div class="pipeline-card-top">
+                <div class="pipeline-card-brand">
+                  <span class="pipeline-card-spark">✳</span>
+                  <strong>NextStep Pipeline</strong>
+                </div>
+                <span class="pipeline-card-badge">EVIDENCE ➔ ACTION</span>
+              </div>
+
+              <div class="pipeline-steps-flow">
+                <!-- Step 01: Evidence Vault -->
+                <div class="pipeline-step-item">
+                  <div class="pipeline-step-badge">01</div>
+                  <div class="pipeline-step-info">
+                    <strong>Evidence Vault</strong>
+                    <small>Coursework &amp; projects</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-verified">✓ Proof Added</span>
+                </div>
+
+                <div class="pipeline-step-arrow" aria-hidden="true">→</div>
+
+                <!-- Step 02: Capability Profile -->
+                <div class="pipeline-step-item">
+                  <div class="pipeline-step-badge">02</div>
+                  <div class="pipeline-step-info">
+                    <strong>Capability Profile</strong>
+                    <small>Deterministic gap analysis</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-mapped">◎ Mapped</span>
+                </div>
+
+                <div class="pipeline-step-arrow" aria-hidden="true">→</div>
+
+                <!-- Step 03: One Focused Next Action -->
+                <div class="pipeline-step-item step-highlighted">
+                  <div class="pipeline-step-badge badge-active">03</div>
+                  <div class="pipeline-step-info">
+                    <strong>One Focused Action</strong>
+                    <small>Fill priority gaps with practice</small>
+                  </div>
+                  <span class="pipeline-status-chip chip-action">⚡ Next Move ↗</span>
+                </div>
+              </div>
+
+              <!-- Supported Career Pathways in NextStep -->
+              <div class="pipeline-card-bottom">
+                <span class="pipeline-tracks-label">CAREER PATHWAYS:</span>
+                <div class="pipeline-tracks-list">
+                  <span class="pipeline-track-pill">💻 Software</span>
+                  <span class="pipeline-track-pill">⚙️ Embedded</span>
+                  <span class="pipeline-track-pill">📊 Finance</span>
+                  <span class="pipeline-track-pill">🎨 UX Design</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Minimalist Trust Row -->
+            <div class="hero-trust-strip hero-trust-compact">
+              <div class="hero-trust-item">
+                <span class="trust-icon">🎯</span>
+                <span><strong>4 Target Tracks</strong></span>
+              </div>
+              <span class="hero-trust-dot">•</span>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🛡️</span>
+                <span><strong>100% Grounded Verification</strong></span>
+              </div>
+              <span class="hero-trust-dot">•</span>
+              <div class="hero-trust-item">
+                <span class="trust-icon">🔒</span>
+                <span><strong>Privacy-First Vault</strong></span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -133,62 +197,76 @@
           <div class="journey-track">
             <div class="journey-step clickable-step" data-step="profile" data-open-profile role="button" tabindex="0"
               title="Set up your profile"><span class="step-marker">01</span>
-              <div><strong>Your profile</strong><span>Tell us where you're headed</span></div>
+              <div><strong>👤 Your profile</strong><span>Tell us where you're headed</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="evidence"><span class="step-marker">02</span>
-              <div><strong>Your work</strong><span>Show what you've done</span></div>
+              <div><strong>📁 Your work</strong><span>Show what you've done</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="analysis"><span class="step-marker">03</span>
-              <div><strong>Skill map</strong><span>See what you can prove</span></div>
+              <div><strong>🗺️ Skill map</strong><span>See what you can prove</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="action"><span class="step-marker">04</span>
-              <div><strong>Next action</strong><span>Focus on one useful step</span></div>
+              <div><strong>⚡ Next action</strong><span>Focus on one useful step</span></div>
             </div><span class="journey-line"></span>
             <div class="journey-step" data-step="loop"><span class="step-marker">05</span>
-              <div><strong>Keep growing</strong><span>Build, add proof, repeat</span></div>
+              <div><strong>🚀 Keep growing</strong><span>Build, add proof, repeat</span></div>
             </div>
           </div>
         </section>
 
-        <!-- AI Preview Demo Section -->
-        <section class="panel preview-panel" id="ai-preview" style="margin-bottom: 20px;">
-          <div class="panel-heading">
-            <div><span class="section-kicker">DEMO / CAPABILITIES</span>
-              <h2>AI Career Analysis Preview</h2>
-              <p class="panel-subtitle">Here is a sample of what NextStep generates after analyzing your profile.</p>
+        <!-- Career Guidance & Skill Intelligence Section -->
+        <span id="career-intelligence" style="display:block;position:relative;top:-70px;visibility:hidden;"></span>
+        <section class="panel preview-panel" id="ai-engine-panel" data-anchor="career-intelligence" style="margin-bottom: 24px;">
+          <div class="panel-heading"
+            style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+            <div>
+              <span class="section-kicker">SKILL GRAPH &amp; RAG ENGINE</span>
+              <h2>NextStep Career Intelligence</h2>
+              <p class="panel-subtitle">Grounded career guidance powered by deterministic skill graph
+                analysis, and semantic knowledge retrieval.</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="button button-outline" id="btn-run-ai-analysis">Run Full Analysis</button>
+              <button class="button button-dark" id="btn-explore-career-matches">Match Career Roles</button>
             </div>
           </div>
 
-          <div class="preview-cards-grid">
-            <div class="preview-card">
-              <h4 class="preview-card-title">Career Match Score</h4>
-              <div class="preview-score-row">
-                <div class="preview-score-ring">
-                  <div class="preview-score-inner"></div>
-                  <span class="preview-score-text">85%</span>
-                </div>
-                <div class="preview-score-meta">Strong alignment for<br><strong>Software Developer</strong></div>
+          <!-- RAG Guidance Q&A Assistant -->
+          <div class="ai-rag-container"
+            style="background:#ffffff;border:1px solid #e1e6de;border-radius:10px;padding:18px;margin-top:14px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+              <span style="font-size:16px;">💬</span>
+              <strong style="font-size:14px;color:#202b25;">Ask NextStep Career Assistant (RAG Pipeline)</strong>
+              <span style="font-size:11px;color:#7d827e;margin-left:auto;">Cites Verified Knowledge Base</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <input type="text" id="rag-query-input"
+                placeholder="e.g. How do I transition to Backend Development, and what portfolio projects matter most?"
+                style="flex:1;min-width:240px;padding:10px 14px;border:1px solid #d3dad0;border-radius:8px;font-size:13px;outline:none;" />
+              <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask Guidance</button>
+            </div>
+            <div class="rag-prompt-suggestions">
+              <span class="rag-suggestions-label">Try asking:</span>
+              <button type="button" class="rag-prompt-chip" data-query="How do I transition to Backend Development, and what portfolio projects matter most?">Backend Transition</button>
+              <button type="button" class="rag-prompt-chip" data-query="Which portfolio projects prove high-impact engineering and system design skills?">Portfolio Projects</button>
+              <button type="button" class="rag-prompt-chip" data-query="What core competencies do technical recruiters prioritize for software developers?">Hiring Requirements</button>
+            </div>
+            <div id="rag-response-box"
+              style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
+              <div id="rag-answer-content" style="font-size:13px;line-height:1.6;color:#202b25;white-space:pre-wrap;">
+              </div>
+              <div id="rag-sources-list"
+                style="margin-top:10px;font-size:11px;color:#606760;border-top:1px solid #e1e7de;padding-top:8px;">
               </div>
             </div>
+          </div>
 
-            <div class="preview-card">
-              <h4 class="preview-card-title">Skill Graph Path</h4>
-              <div class="preview-path-row">
-                <span class="preview-path-badge badge-green">Your Skills</span>
-                <span class="preview-path-arrow">→</span>
-                <span class="preview-path-badge badge-amber">Skill Gap</span>
-                <span class="preview-path-arrow">→</span>
-                <span class="preview-path-badge badge-blue">Target Role</span>
-              </div>
-            </div>
-
-            <div class="preview-card">
-              <h4 class="preview-card-title">Recommended Action</h4>
-              <div class="preview-action-content">
-                <strong>Learn System Design Basics</strong>
-                <p>Focus on understanding microservices vs monolith architecture to bridge your backend gap.</p>
-              </div>
-            </div>
+          <!-- Live Career Matches / Scoring Breakdown Container -->
+          <div id="ai-matches-container" style="display:none;margin-top:16px;">
+            <h4
+              style="font-size:13px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;color:#434a43;margin:0 0 10px;">
+              Top Career Compatibility Matches (Multi-Dimensional Scoring)</h4>
+            <div id="ai-matches-grid" class="preview-cards-grid"></div>
           </div>
         </section>
 
@@ -197,7 +275,7 @@
             <div class="panel-heading">
               <div><span class="section-kicker">START WITH YOU</span>
                 <h2>Your career profile</h2>
-              </div><button class="text-button" id="edit-profile">Edit profile <span>↗</span></button>
+              </div><button class="text-button" id="edit-profile">Edit profile</button>
             </div>
             <div id="profile-content" class="profile-content"></div>
           </section>
@@ -217,7 +295,7 @@
             <div><span class="section-kicker">SHOW, DON'T JUST TELL</span>
               <h2>Your evidence</h2>
               <p class="panel-subtitle">Projects, coursework, internships, and anything else you've worked on.</p>
-            </div><button class="button button-outline" id="add-evidence"><span>＋</span> Add evidence</button>
+            </div><button class="button button-outline" id="add-evidence">Add evidence</button>
           </div>
           <div class="evidence-list" id="evidence-list"></div>
         </section>
@@ -269,8 +347,74 @@
           </div>
           <div class="activity-list" id="activity-list"></div>
         </section>
-        <footer class="page-footer"><span>Made for the career you're working toward.</span><span>NextStep <span
-              class="brand-period">✳</span></span></footer>
+
+        <!-- Anchor for Privacy Center Navigation -->
+        <span id="privacy" style="display:block;position:relative;top:-70px;visibility:hidden;"></span>
+
+        <footer class="page-footer" role="contentinfo"
+          style="display:block;padding:32px 0 24px;border-top:1px solid #e2e7df;margin-top:40px;font-size:12.5px;color:#5e6860;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px;margin-bottom:24px;">
+            <div style="max-width:380px;">
+              <a href="./index.html" class="brand-footer" aria-label="NextStep Home" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:10px;">
+                <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Platform" style="height:32px;width:auto;object-fit:contain;">
+              </a>
+              <p style="margin:0 0 12px;line-height:1.6;color:#4c574e;font-size:13px;">
+                An evidence-backed student career preparation platform. We convert your real projects, coursework, and verified work into deterministic capability maps and one focused next action.
+              </p>
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7263;flex-wrap:wrap;font-weight:600;">
+                <span>1. Add Evidence</span>
+                <span style="color:#a8b5a7;">→</span>
+                <span>2. Map Capabilities</span>
+                <span style="color:#a8b5a7;">→</span>
+                <span>3. Take Your Next Action</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:32px;flex-wrap:wrap;">
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Platform</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                  <li><a href="#overview" style="color:#4c574e;text-decoration:none;">Overview</a></li>
+                  <li><a href="#career-intelligence" style="color:#4c574e;text-decoration:none;">Career Intelligence</a></li>
+                  <li><a href="#profile" style="color:#4c574e;text-decoration:none;">Career Profile</a></li>
+                  <li><a href="#skills" style="color:#4c574e;text-decoration:none;">Capability Profile</a></li>
+                  <li><a href="#evidence" style="color:#4c574e;text-decoration:none;">Evidence Vault</a></li>
+                  <li><a href="#action" style="color:#4c574e;text-decoration:none;">Next Action</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Trust &amp; Legal</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                  <li><a href="./privacy-policy.html" style="color:#4c574e;text-decoration:none;">Privacy Policy</a></li>
+                  <li><a href="./terms-of-service.html" style="color:#4c574e;text-decoration:none;">Terms of Service</a></li>
+                  <li><a href="./refund-policy.html" style="color:#4c574e;text-decoration:none;">Refund Policy</a></li>
+                  <li><a href="./cookie-policy.html" style="color:#4c574e;text-decoration:none;">Cookie Policy</a></li>
+                  <li><a href="./compliance.html" style="color:#4c574e;text-decoration:none;">Compliance Center 🛡️</a></li>
+                  <li><a href="./data-deletion.html" style="color:#4c574e;text-decoration:none;">Data Erasure Portal</a></li>
+                  <li><a href="./licenses.html" style="color:#4c574e;text-decoration:none;">Asset Licenses</a></li>
+                  <li><a href="./unsubscribe.html" style="color:#4c574e;text-decoration:none;">Email Preferences</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Support &amp; Contact</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                  <li><a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;text-decoration:underline;">support@nextstep.edu</a></li>
+                  <li><a href="tel:+18005557837" style="color:#2a633d;font-weight:600;text-decoration:underline;">+1 (800) 555-STEP</a></li>
+                  <li><a href="tel:+918049201000" style="color:#2a633d;font-weight:600;text-decoration:underline;">+91 (80) 4920-1000</a></li>
+                  <li><a href="./auth.html" style="color:#4c574e;text-decoration:none;">Student Sign In</a></li>
+                  <li><a href="./profile.html" style="color:#4c574e;text-decoration:none;">Student Account</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #eef2eb;padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11.5px;color:#7e8a80;">
+            <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved. Made for the career you're working toward.</span>
+            <span>Deterministic Analysis · Privacy-First · Student-Centered</span>
+          </div>
+        </footer>
       </div>
     </main>
   </div>
@@ -280,23 +424,32 @@
       <div class="dialog-header">
         <div><span class="section-kicker">PRIVACY BEFORE PROFILE</span>
           <h2>Your work stays yours.</h2>
-          <p>Before we collect your profile or evidence, here's exactly what this prototype does.</p>
+          <p>Before we collect your profile or evidence, here's exactly what this platform does.</p>
         </div>
       </div>
       <div class="consent-copy"><strong>What we collect</strong>
-        <p>Only the student profile details, self-assessment, evidence descriptions, and files you choose to add.</p>
+        <p>Only student profile details, self-assessments, evidence descriptions, and files you explicitly choose to
+          add. We do <strong>not</strong> collect payment cards, tracking identifiers, or unnecessary personal
+          surveillance data.</p>
         <strong>How it's processed</strong>
-        <p>This prototype uses local, deterministic keyword matching. No external AI service receives your data, and it
-          is not used to train models.</p><strong>Where it's stored</strong>
-        <p>In a local JSON file and uploads folder on the computer running the app. There is no account system or
-          multi-user access control.</p><strong>Retention and deletion</strong>
-        <p>Data stays on this device until you export it or use the Privacy Center to delete it. Do not upload sensitive
-          or confidential work.</p>
+        <p>This system uses local, deterministic keyword and skill graph analysis with NVIDIA NIM RAG retrieval. Your
+          uploaded work is <strong>never</strong> used to train public AI models.</p>
+        <strong>Where it's stored &amp; retention</strong>
+        <p>In secure database collections and storage with AES-256 and TLS 1.3 encryption. You retain 100% ownership and
+          can permanently erase your data anytime via the Privacy Center or <a href="./data-deletion.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Deletion Portal</a>.</p>
+        <strong>Age Eligibility &amp; Legal Policies</strong>
+        <p>You must be at least 16 years of age (or have verified parental/guardian consent) to create a portfolio.
+          Review our <a href="./privacy-policy.html" target="_blank"
+            style="color:#2a633d;text-decoration:underline;">Privacy Policy</a>, <a href="./terms-of-service.html"
+            target="_blank" style="color:#2a633d;text-decoration:underline;">Terms of Service</a>, and <a
+            href="./refund-policy.html" target="_blank" style="color:#2a633d;text-decoration:underline;">Refund
+            Policy</a>.</p>
       </div>
-      <label class="consent-check"><input name="accepted" type="checkbox" required> I have read and understand how this
-        prototype processes and stores my information.</label>
-      <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
-          <span>→</span></button></div>
+      <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16
+        years old and I have read and agree to how NextStep processes my data in accordance with the Privacy
+        Policy.</label>
+      <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep</button></div>
     </form>
   </dialog>
 
@@ -311,14 +464,14 @@
 
       <div class="form-section-card">
         <h3 class="form-section-title">1. Personal Info</h3>
-        <label>Full name<input name="name" placeholder="e.g. Alex Morgan" required maxlength="100"></label>
+        <label>Full name<input name="name" placeholder="Enter your full name" required maxlength="100"></label>
       </div>
 
       <div class="form-section-card">
         <h3 class="form-section-title">2. Education</h3>
-        <div class="form-row"><label>Course or degree<input name="course" placeholder="e.g. B.Tech" required
+        <div class="form-row"><label>Course or degree<input name="course" placeholder="Degree (e.g. B.Tech, B.S., M.S.)" required
               maxlength="120"></label><label>Discipline or field<input name="discipline"
-              placeholder="e.g. Electronics & Communication" required maxlength="120"></label></div>
+              placeholder="Major / Field (e.g. Computer Science, Data Science)" required maxlength="120"></label></div>
         <div class="form-row"><label>Academic year<select name="year" required>
               <option value="">Choose your year</option>
               <option>1st year</option>
@@ -328,7 +481,7 @@
               <option>Postgraduate</option>
               <option>Other</option>
             </select></label><label>Semester <span class="optional">(optional)</span><input name="semester"
-              placeholder="e.g. 4th" maxlength="40"></label></div>
+              placeholder="Semester / Term" maxlength="40"></label></div>
       </div>
 
       <div class="form-section-card">
@@ -342,7 +495,7 @@
           </select><span class="optional" id="career-source">Prototype frameworks support four roles and include
             source/version notes; unsupported careers aren't inferred.</span></label>
         <div class="form-row"><label>Available preparation hours/week <span class="optional">(optional)</span><input
-              name="availableHours" type="number" min="1" max="80" placeholder="e.g. 6"></label><label>Preferred
+              name="availableHours" type="number" min="1" max="80" placeholder="Hours per week"></label><label>Preferred
             learning
             style <span class="optional">(optional)</span><select name="learningStyle">
               <option value="">Choose if helpful</option>
@@ -356,13 +509,13 @@
       <div class="form-section-card">
         <h3 class="form-section-title">4. Interests & Experience</h3>
         <label>Interests <span class="optional">(optional)</span><input name="interests"
-            placeholder="e.g. building useful tools, climate tech"></label>
+            placeholder="Key interests (e.g. Distributed systems, AI engineering, Cloud)"></label>
         <label>A little about you <span class="optional">(optional)</span><textarea name="bio" rows="3" maxlength="500"
-            placeholder="What are you curious about or working toward?"></textarea></label>
+            placeholder="Describe your career focus and what you are learning toward..."></textarea></label>
       </div>
 
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Analyze My Profile <span>→</span></button></div>
+          class="button button-dark" type="submit">Analyze My Profile</button></div>
     </form>
   </dialog>
 
@@ -380,7 +533,7 @@
           placeholder="🔍 Search evidence types (e.g. project, certificate, internship)..." autocomplete="off">
       </div>
 
-      <label>Evidence title<input name="title" id="evidence-title-input" placeholder="e.g. Personal finance dashboard"
+      <label>Evidence title<input name="title" id="evidence-title-input" placeholder="Enter project or coursework title (e.g. Distributed Task Queue)"
           required maxlength="120"></label>
 
       <div class="form-row">
@@ -457,14 +610,14 @@
           <span id="evidence-link-title">GitHub or project link</span>
           <span id="evidence-link-optional" class="optional">(optional; never fetched by the server)</span>
           <input name="link" id="evidence-link-input" type="url" maxlength="500"
-            placeholder="https://github.com/you/project">
+            placeholder="https://github.com/username/project">
         </label>
       </div>
 
       <label id="evidence-description-label">What did you do? <span class="optional">Share the tools, choices, and
           outcomes you can
           demonstrate.</span><textarea name="description" id="evidence-description-input" rows="4" maxlength="5000"
-          placeholder="I built... using... I was responsible for..."></textarea></label>
+          placeholder="Detail the technologies utilized, architectural choices, and measurable outcomes..."></textarea></label>
 
       <div class="upload-note" id="evidence-upload-note">Allowed formats up to 10 MB: PDF, TXT, Markdown, CSV, JSON,
         HTML/CSS, JavaScript, Python, Java, TypeScript, Word (.docx), or images (.png, .jpg). Files are never executed;
@@ -473,10 +626,8 @@
 
       <div class="dialog-actions">
         <button type="button" class="button button-quiet cancel-dialog">Cancel</button>
-        <button type="button" class="button button-outline" id="evidence-add-another"><span>＋</span> Add
-          Another</button>
-        <button class="button button-dark" id="evidence-submit-btn" type="submit">Add to my evidence
-          <span>→</span></button>
+        <button type="button" class="button button-outline" id="evidence-add-another">Add Another</button>
+        <button class="button button-dark" id="evidence-submit-btn" type="submit">Add to my evidence</button>
       </div>
     </form>
   </dialog>
@@ -491,7 +642,7 @@
       </div>
       <div class="assessment-fields" id="assessment-fields"></div>
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Save self-assessment <span>→</span></button></div>
+          class="button button-dark" type="submit">Save self-assessment</button></div>
     </form>
   </dialog>
 
@@ -504,9 +655,9 @@
         </div><button class="close-dialog" type="button" aria-label="Close">×</button>
       </div>
       <label>Your reflection<textarea name="reflection" rows="4" minlength="3" maxlength="1000" required
-          placeholder="I learned..., I made..., Next time I would..."></textarea></label>
+          placeholder="Summarize key capabilities exercised, code implemented, and future extensions..."></textarea></label>
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Mark as complete <span>✓</span></button></div>
+          class="button button-dark" type="submit">Mark as complete</button></div>
     </form>
   </dialog>
   <dialog class="app-dialog privacy-dialog" id="privacy-dialog">
@@ -517,13 +668,16 @@
           <p>Data is stored locally until you delete it. There is no external AI processing.</p>
         </div><button class="close-dialog" type="button" aria-label="Close">×</button>
       </div>
-      <div class="privacy-details" id="privacy-details"></div>
-      <div class="privacy-actions"><a class="button button-outline" href="./api/privacy/export" download>Export my data
-          ↓</a><button class="button button-danger" id="delete-account" type="button">Withdraw consent & delete all
-          data</button></div>
-      <p class="privacy-warning">This removes your profile, assessments, evidence, uploaded files, skill analysis, and
-        recommendation history from the app's local storage. Filesystem backups or copies outside this app are not
-        affected.</p>
+      <div class="privacy-actions" style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;">
+        <a class="button button-outline" href="./api/privacy/export" download>Export my data ↓</a>
+        <a class="button button-outline" href="./data-deletion.html" style="text-decoration:none;">Official Erasure
+          Request (GDPR Art. 17) ↗</a>
+        <a class="button button-outline" href="./privacy-policy.html" target="_blank"
+          style="text-decoration:none;">Privacy Policy ↗</a>
+        <button class="button button-danger" id="delete-account" type="button">Instant 1-Click Wipe</button>
+      </div>
+      <p class="privacy-warning">This immediately purges your student profile, self-assessments, evidence, uploaded
+        documents, skill graph analysis, and recommendation history from active databases and storage.</p>
     </div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

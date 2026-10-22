@@ -82,19 +82,25 @@ function showToast(message, isError = false) {
   toastTimeout = setTimeout(() => toast.classList.remove("visible"), 3400);
 }
 
-async function api(path, body) {
+async function api(path, body, options = {}) {
   const url = path.startsWith("http://") || path.startsWith("https://") ? path : `${API_BASE}${path}`;
   const token = localStorage.getItem("nextstep_token");
-  const headers = { "Content-Type": "application/json" };
+  const headers = { ...options.headers };
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
+    headers["X-Session-Token"] = token;
+  }
+  const method = options.method || (body === undefined ? "GET" : "POST");
+  if (body !== undefined && !(body instanceof FormData) && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
   }
   let response;
   try {
     response = await fetch(url, {
-      method: body === undefined ? "GET" : "POST",
-      headers: body === undefined ? (token ? { "Authorization": `Bearer ${token}` } : {}) : headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      method,
+      headers,
+      body: body === undefined ? undefined : (body instanceof FormData ? body : JSON.stringify(body)),
+      credentials: "include",
     });
   } catch {
     throw new Error("Couldn't connect to NextStep backend (http://127.0.0.1:3000). Check that the server is running and try again.");
@@ -149,7 +155,7 @@ function renderProfile() {
   }
 
   if (!profile) {
-    content.innerHTML = `<div class="profile-empty"><p>Set a destination, and we'll make your career journey personal to you.</p><button class="empty-link" data-open-profile>Set up your profile →</button></div>`;
+    content.innerHTML = `<div class="profile-empty"><p>Set a destination, and we'll make your career journey personal to you.</p><button class="empty-link" data-open-profile>Set up your profile</button></div>`;
     $("#welcome-title").textContent = user ? `Welcome, ${user.name.split(/\s+/)[0]}.` : "Your next chapter starts here.";
     $("#welcome-subtitle").textContent = user ? `Signed in with Student ID ${user.badgeId}.` : "A little progress, backed by real work, goes a long way.";
     return;
@@ -176,7 +182,7 @@ function renderReadiness() {
   const report = currentState.skillReport;
   const content = $("#readiness-content");
   if (!report) {
-    content.innerHTML = `<div class="readiness-empty"><p>Add real work to get your first evidence-based readiness snapshot.</p><button class="empty-link" data-open-evidence>Add your first evidence →</button></div>`;
+    content.innerHTML = `<div class="readiness-empty"><p>Add real work to get your first evidence-based readiness snapshot.</p><button class="empty-link" data-open-evidence>Add your first evidence</button></div>`;
     return;
   }
   const percent = Math.max(0, Math.min(100, report.readiness));
@@ -193,7 +199,7 @@ function renderEvidence() {
   $("#evidence-count").textContent = evidence.length;
   const container = $("#evidence-list");
   if (!evidence.length) {
-    container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece →</button></div>`;
+    container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece</button></div>`;
     return;
   }
   container.innerHTML = evidence.slice(0, 6).map((item) => {
@@ -227,10 +233,10 @@ function renderAction() {
   const container = $("#action-content");
   if (!action) {
     if (currentState.skillReport?.readiness === 100) {
-      container.innerHTML = `<div class="action-empty"><div><strong>All skills in this role framework have evidence.</strong><p>This is not a hiring score or guarantee of readiness. Keep building relevant work, or choose another target career.</p></div><button class="button button-outline" data-open-profile>Review my career →</button></div>`;
+      container.innerHTML = `<div class="action-empty"><div><strong>All skills in this role framework have evidence.</strong><p>This is not a hiring score or guarantee of readiness. Keep building relevant work, or choose another target career.</p></div><button class="button button-outline" data-open-profile>Review my career</button></div>`;
       return;
     }
-    container.innerHTML = `<div class="action-empty"><div><strong>${currentState.evidence.length ? "Your next step is one click away." : "No giant roadmap. Just your next right move."}</strong><p>${currentState.evidence.length ? "Connect your evidence to your target role to find the most useful skill to work on next." : "Start with your profile and a piece of real work. We'll help you choose one practical step from there."}</p></div><button class="button button-dark" ${currentState.evidence.length ? 'data-analyze' : 'data-open-profile'}>${currentState.evidence.length ? "Find my next action →" : "Get started →"}</button></div>`;
+    container.innerHTML = `<div class="action-empty"><div><strong>${currentState.evidence.length ? "Your next step is one click away." : "No giant roadmap. Just your next right move."}</strong><p>${currentState.evidence.length ? "Connect your evidence to your target role to find the most useful skill to work on next." : "Start with your profile and a piece of real work. We'll help you choose one practical step from there."}</p></div><button class="button button-dark" ${currentState.evidence.length ? 'data-analyze' : 'data-open-profile'}>${currentState.evidence.length ? "Find my next action" : "Get started"}</button></div>`;
     return;
   }
   container.innerHTML = `
@@ -243,10 +249,10 @@ function renderAction() {
         <p class="outcome-copy">${escapeHtml(action.outcome)}</p>
 
         <div class="action-toolbox">
-          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true"><span>⚡</span> View Project Blueprint</button>
-          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true"><span>📋</span> Copy Steps</button>
-          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}"><span>＋</span> Submit Proof</button>
-          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true"><span>📄</span> Export Plan (.md)</button>
+          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true">View Project Blueprint</button>
+          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true">Copy Steps</button>
+          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}">Submit Proof</button>
+          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true">Export Plan (.md)</button>
         </div>
 
         <div class="action-blueprint-card" id="action-blueprint" style="display: none;">
@@ -276,7 +282,7 @@ function renderAction() {
           </div>
         </div>
 
-        ${action.completed ? `<div class="completed-banner">✓ Completed ${relativeDate(action.completedAt)}. ${action.reflection ? escapeHtml(action.reflection) : "Add your new work as evidence, then refresh your skills for a personalized next step."}</div>` : `<div class="action-footer"><button class="button button-dark" data-complete>I've done this <span>✓</span></button><button class="button button-quiet" data-analyze>Refresh my action</button></div>`}
+        ${action.completed ? `<div class="completed-banner">✓ Completed ${relativeDate(action.completedAt)}. ${action.reflection ? escapeHtml(action.reflection) : "Add your new work as evidence, then refresh your skills for a personalized next step."}</div>` : `<div class="action-footer"><button class="button button-dark" data-complete>I've done this</button><button class="button button-quiet" data-analyze>Refresh my action</button></div>`}
       </div>
       <div class="action-side">
         <div class="outcome-label">A FEW WAYS TO GET STARTED</div>
@@ -325,7 +331,7 @@ function renderSkills() {
         ${escapeHtml(skill.name)}
         <span class="skill-status">${escapeHtml(statusLabel)} · Level ${skill.level}/${skill.requiredLevel} required</span>
         <span class="skill-evidence" title="${escapeHtml(evidence)}">${escapeHtml(evidence)}</span>
-        <button class="skill-action-link" type="button" data-proof-for-skill="${escapeHtml(skill.name)}">+ Add proof</button>
+        <button class="skill-action-link" type="button" data-proof-for-skill="${escapeHtml(skill.name)}">Add proof</button>
       </span>
       <div class="skill-track"><div class="skill-fill" style="width:${skill.score}%"></div></div>
       <span class="skill-score">${Math.round(skill.confidence * 100)}%<span class="confidence-caption">confidence</span></span>
@@ -395,9 +401,9 @@ function render() {
   renderJourney();
   const firstActionDone = Boolean(currentState.recommendedAction?.completed);
   $("#quick-start").innerHTML = currentState.profile
-    ? `<span>＋</span> Add evidence` : `<span>＋</span> Set up my profile`;
+    ? `Add evidence` : `Set up my profile`;
   $("#quick-start").dataset.open = currentState.profile ? "evidence" : "profile";
-  $("#edit-profile").textContent = currentState.profile ? "Edit profile ↗" : "Set up ↗";
+  $("#edit-profile").textContent = currentState.profile ? "Edit profile" : "Set up";
   document.querySelectorAll('[data-section="action"]').forEach((link) => link.classList.toggle("active", Boolean(currentState.recommendedAction && !firstActionDone)));
   const selectedSection = location.hash.slice(1) || "overview";
   document.querySelectorAll(".nav-link").forEach((link) => link.classList.toggle("active", link.dataset.section === selectedSection));
@@ -419,6 +425,7 @@ async function refresh() {
   }
   populateCareerOptions();
   currentState = await api(stateUrl);
+  checkAiHealth();
   if (localStorage.getItem("nextstep_consent") === "true") {
     currentState.privacy = currentState.privacy || {};
     currentState.privacy.consent = currentState.privacy.consent || { accepted: true };
@@ -506,13 +513,18 @@ function openDialog(id) {
         form.elements["name"].value = user.name || "";
       }
       if (form.elements["careerId"] && !form.elements["careerId"].value && user.role) {
-        const roleMap = {
-          "Software Developer": "software-developer",
-          "Embedded Systems Engineer": "embedded-systems",
-          "Financial Analyst": "financial-analyst",
-          "UX Researcher": "ux-researcher",
-        };
-        if (roleMap[user.role]) form.elements["careerId"].value = roleMap[user.role];
+        const mappedRole = (() => {
+          try {
+            const cached = JSON.parse(localStorage.getItem("nextstep_role_mapping"));
+            if (cached && cached.careerId) return cached.careerId;
+          } catch {}
+          const roleLower = String(user.role).toLowerCase();
+          if (roleLower.includes("embed") || roleLower.includes("hardware") || roleLower.includes("iot") || roleLower.includes("robot")) return "embedded-systems";
+          if (roleLower.includes("financ") || roleLower.includes("account") || roleLower.includes("business") || roleLower.includes("econom")) return "financial-analyst";
+          if (roleLower.includes("ux") || roleLower.includes("ui") || roleLower.includes("design") || roleLower.includes("research")) return "ux-researcher";
+          return "software-developer";
+        })();
+        if (mappedRole) form.elements["careerId"].value = mappedRole;
       }
     }
   }
@@ -582,10 +594,10 @@ function updateEvidenceFormMode() {
       linkInput.placeholder = "https://your-portfolio.com";
       linkInput.required = true;
     }
-    if (submitBtn) submitBtn.innerHTML = 'Add Portfolio Link <span>→</span>';
+    if (submitBtn) submitBtn.innerHTML = 'Add Portfolio Link';
     if (dialogTitle) dialogTitle.textContent = "Add a Portfolio Link";
     if (dialogSubtitle) dialogSubtitle.textContent = "Showcase your work with a live web link. No file upload required.";
-    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another Link';
+    if (addAnotherBtn) addAnotherBtn.innerHTML = 'Add Another Link';
   } else {
     if (fileContainer) fileContainer.style.display = "block";
     if (uploadNote) uploadNote.style.display = "block";
@@ -599,10 +611,10 @@ function updateEvidenceFormMode() {
       linkInput.placeholder = "https://github.com/you/project";
       linkInput.required = false;
     }
-    if (submitBtn) submitBtn.innerHTML = 'Add to my evidence <span>→</span>';
+    if (submitBtn) submitBtn.innerHTML = 'Add to my evidence';
     if (dialogTitle) dialogTitle.textContent = "Add a piece of evidence";
     if (dialogSubtitle) dialogSubtitle.textContent = "Describe what you contributed so we can understand the skills behind it.";
-    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another';
+    if (addAnotherBtn) addAnotherBtn.innerHTML = 'Add Another';
   }
 }
 
@@ -1057,6 +1069,8 @@ function closeSidebarDrawer() {
   if (sidebar) sidebar.classList.remove("open");
   if (backdrop) backdrop.classList.remove("active");
   document.body.classList.remove("sidebar-is-open");
+  const menuBtn = $("#menu-toggle");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
 }
 
 function toggleSidebarDrawer() {
@@ -1066,6 +1080,8 @@ function toggleSidebarDrawer() {
   const isOpen = sidebar.classList.toggle("open");
   if (backdrop) backdrop.classList.toggle("active", isOpen);
   document.body.classList.toggle("sidebar-is-open", isOpen);
+  const menuBtn = $("#menu-toggle");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
 const menuBtn = $("#menu-toggle");
@@ -1132,17 +1148,213 @@ $("#evidence-list").addEventListener("click", async (event) => {
   const button = event.target.closest("[data-delete-evidence]");
   if (!button || !window.confirm("Delete this evidence and its attached file? The skill analysis will be cleared until you analyze the remaining evidence.")) return;
   try {
-    currentState = await fetch(`${API_BASE}/api/evidence/${encodeURIComponent(button.dataset.deleteEvidence)}`, { method: "DELETE" }).then(async (response) => {
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error || "Evidence could not be deleted.");
-      return result;
-    });
+    currentState = await api(`/api/evidence/${encodeURIComponent(button.dataset.deleteEvidence)}`, null, { method: "DELETE" });
     render();
     showToast("Evidence and its derived analysis were deleted.");
   } catch (error) {
     showToast(error.message, true);
   }
 });
+
+// NextStep AI Service Integration (RAG Guidance, Skill Graph & Career Matching)
+async function checkAiHealth() {
+  try {
+    const res = await api("/api/ai/health");
+    const el = $("#ai-status-indicator");
+    if (el && res && res.status === "healthy") {
+      el.textContent = `● AI Online (${res.model || "NVIDIA NIM"})`;
+      el.style.background = "#edf7ed";
+      el.style.color = "#2e7d32";
+      el.style.borderColor = "#c8e6c9";
+    }
+  } catch {
+    const el = $("#ai-status-indicator");
+    if (el) {
+      el.textContent = "○ AI Local Mode";
+      el.style.background = "#f4f6f1";
+      el.style.color = "#555b55";
+      el.style.borderColor = "#d9dfd6";
+    }
+  }
+}
+
+// 1. RAG Career Guidance Q&A Assistant
+$("#btn-ask-rag")?.addEventListener("click", async () => {
+  const input = $("#rag-query-input");
+  const query = input?.value?.trim();
+  if (!query) {
+    showToast("Please enter a career or learning question.", true);
+    return;
+  }
+  const btn = $("#btn-ask-rag");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Consulting Career Assistant…";
+  const box = $("#rag-response-box");
+  const contentEl = $("#rag-answer-content");
+  const sourcesEl = $("#rag-sources-list");
+  if (box) box.style.display = "block";
+  if (contentEl) contentEl.textContent = "Searching verified knowledge base and synthesizing guidance…";
+  if (sourcesEl) sourcesEl.textContent = "";
+
+  try {
+    const profile = currentState?.profile || {};
+    const payload = {
+      query,
+      student_profile: {
+        education: profile.course || "Undergraduate Studies",
+        skills: profile.skills || [],
+        interests: profile.interests ? [profile.interests] : [],
+        target_career: profile.targetRole || "Software Developer",
+        experience_level: profile.year || "beginner"
+      }
+    };
+    const res = await api("/api/rag/query", payload);
+    if (contentEl) contentEl.textContent = res.answer || "No response received.";
+    if (sourcesEl) {
+      const sources = res.sources || [];
+      sourcesEl.innerHTML = sources.length
+        ? `<strong>Verified Knowledge Base Sources:</strong> ${sources.map(s => `<code>${escapeHtml(s)}</code>`).join(", ")}`
+        : `<strong>Verified Knowledge Base:</strong> NextStep Career Guidance Corpus`;
+    }
+    showToast("Grounded career guidance retrieved!");
+  } catch (err) {
+    if (contentEl) contentEl.textContent = `Could not retrieve guidance: ${err.message}`;
+    showToast(err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
+// Allow pressing Enter in RAG query input
+$("#rag-query-input")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    $("#btn-ask-rag")?.click();
+  }
+});
+
+// 2. Multi-Dimensional Career Matching via Scoring Engine
+$("#btn-explore-career-matches")?.addEventListener("click", async () => {
+  const btn = $("#btn-explore-career-matches");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Ranking Careers…";
+  const container = $("#ai-matches-container");
+  const grid = $("#ai-matches-grid");
+  if (container) container.style.display = "block";
+  if (grid) grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:20px; color:#606760;">Analyzing skills and evaluating multi-dimensional compatibility…</div>`;
+
+  try {
+    const profile = currentState?.profile || {};
+    const skillsList = (profile.skills || []).map(s => ({ skill: s, level: 2 }));
+    const payload = {
+      skills: skillsList,
+      interests: profile.interests ? [profile.interests] : [],
+      education: profile.course || "Technology Studies",
+      target_career: profile.targetRole || "Software Developer"
+    };
+    const ranked = await api("/api/scoring/rank", payload);
+    if (!Array.isArray(ranked) || !ranked.length) {
+      if (grid) grid.innerHTML = `<p>No career matches calculated yet.</p>`;
+      return;
+    }
+    if (grid) {
+      grid.innerHTML = ranked.map(c => `
+        <div class="preview-card" style="background:#ffffff;border:1px solid #dce2d9;border-radius:10px;padding:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <strong style="font-size:14px;color:#202b25;">${escapeHtml(c.career)}</strong>
+            <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:#eef4ea;color:#2e7d32;">Rank #${c.rank}</span>
+          </div>
+          <div class="preview-score-row" style="margin-bottom:8px;">
+            <div class="preview-score-ring" style="width:48px;height:48px;">
+              <span class="preview-score-text" style="font-size:13px;">${Math.round(c.final_score)}%</span>
+            </div>
+            <div class="preview-score-meta" style="font-size:12px;">Confidence: <strong>${escapeHtml(c.confidence)}</strong></div>
+          </div>
+          ${c.missing_skills?.length ? `<div style="font-size:11px;color:#856404;margin-top:6px;">Missing skills: ${c.missing_skills.slice(0, 3).map(s => `<code>${escapeHtml(s)}</code>`).join(" ")}</div>` : `<div style="font-size:11px;color:#155724;margin-top:6px;">✓ Core prerequisites aligned</div>`}
+        </div>
+      `).join("");
+    }
+    showToast("Career compatibility rankings updated!");
+  } catch (err) {
+    showToast(err.message, true);
+    if (grid) grid.innerHTML = `<p style="color:var(--red);">Error ranking careers: ${escapeHtml(err.message)}</p>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
+// 3. Full AI Analysis Action Button
+$("#btn-run-ai-analysis")?.addEventListener("click", async () => {
+  const btn = $("#btn-run-ai-analysis");
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = "Analyzing…";
+  try {
+    const profile = currentState?.profile;
+    if (!profile) {
+      showToast("Please create your student profile first.", true);
+      openDialog("profile-dialog");
+      return;
+    }
+    const studentEvidence = (currentState.evidence || [])
+      .map(e => `${e.title}: ${e.type}. ${e.description || ""}`)
+      .join("\n")
+      .trim();
+    const payload = {
+      student_profile: `${profile.name}, ${profile.course}, ${profile.year}. Skills: ${(profile.skills || []).join(", ") || "None"}`,
+      target_career: profile.targetRole || "Software Developer",
+      student_evidence: studentEvidence || `Student registered for ${profile.targetRole}. Claimed skills: ${(profile.skills || []).join(", ") || "General background"}.`,
+      career_requirements: ["Software Development", "Data Structures", "System Design", "Git"]
+    };
+    const res = await api("/api/ai/analyze", payload);
+    if (res) {
+      currentState.aiResult = res;
+      if (currentState.skillReport) {
+        currentState.skillReport.readiness = res.readiness_score;
+        currentState.skillReport.aiPowered = true;
+        currentState.skillReport.strengths = res.strengths || [];
+        currentState.skillReport.weaknesses = res.weaknesses || [];
+      }
+      if (res.next_best_action) {
+        currentState.recommendedAction = {
+          id: "ai-" + Date.now(),
+          title: res.next_best_action.title,
+          skill: res.demonstrated_skills?.length ? (res.skill_gaps?.[0] || res.next_best_action.title) : (profile.targetRole || "Software Developer"),
+          type: (res.next_best_action.difficulty || "build").toLowerCase(),
+          reason: res.next_best_action.reason,
+          priorityScore: 0.95,
+          outcome: res.next_best_action.expected_outcome,
+          expectedEvidence: ["Working project, script, or practice artifact", "README or short report explaining your approach"],
+          estimatedEffortHours: 10,
+          feasibility: { weeklyHoursAvailable: profile.availableHours || 10, fitsAvailableTime: true },
+          steps: [
+            `Review the objective: ${res.next_best_action.title}`,
+            `Implement your solution or complete the technical task demonstrating the skills.`,
+            `Upload your project, code, or documentation as evidence on NextStep to verify your capability.`
+          ],
+          resources: [
+            { label: `Search tutorial & docs`, url: `https://www.google.com/search?q=${encodeURIComponent(res.next_best_action.title)}` }
+          ],
+          createdAt: new Date().toISOString(),
+          completed: false,
+          aiPowered: true,
+        };
+      }
+      render();
+      showToast(`Analysis Complete! Readiness: ${res.readiness_score}%. Action: ${res.next_best_action?.title}`);
+    }
+  } catch (err) {
+    showToast(err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+});
+
 
 const today = new Date();
 $("#today-label").textContent = `${today.toLocaleDateString(undefined, { weekday: "long" }).toUpperCase()} · YOUR CAREER JOURNEY`;
@@ -1152,8 +1364,14 @@ refresh().catch((error) => {
 });
 
 // Integration with NextStep Student Auth Controller (auth.js)
-window.onNextStepAuthSuccess = (user, newState) => {
-  if (newState) currentState = newState;
+window.onNextStepAuthSuccess = (user, newState, roleMapping) => {
+  if (newState) {
+    currentState = newState;
+  }
+  if (roleMapping && currentState?.profile && !currentState.profile.careerId) {
+    currentState.profile.careerId = roleMapping.careerId;
+    currentState.profile.targetRole = roleMapping.targetRole;
+  }
   render();
 };
 
@@ -1162,3 +1380,16 @@ window.onNextStepAuthLogout = async () => {
   render();
 };
 
+
+// RAG Quick-Prompt Chips Event Handler
+document.querySelectorAll(".rag-prompt-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    const query = chip.getAttribute("data-query");
+    const input = $("#rag-query-input");
+    if (input && query) {
+      input.value = query;
+      input.focus();
+      $("#btn-ask-rag")?.click();
+    }
+  });
+});
