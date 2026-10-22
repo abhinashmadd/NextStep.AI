@@ -1069,6 +1069,8 @@ function closeSidebarDrawer() {
   if (sidebar) sidebar.classList.remove("open");
   if (backdrop) backdrop.classList.remove("active");
   document.body.classList.remove("sidebar-is-open");
+  const menuBtn = $("#menu-toggle");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
 }
 
 function toggleSidebarDrawer() {
@@ -1078,6 +1080,8 @@ function toggleSidebarDrawer() {
   const isOpen = sidebar.classList.toggle("open");
   if (backdrop) backdrop.classList.toggle("active", isOpen);
   document.body.classList.toggle("sidebar-is-open", isOpen);
+  const menuBtn = $("#menu-toggle");
+  if (menuBtn) menuBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 }
 
 const menuBtn = $("#menu-toggle");
