@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <meta name="description" content="NextStep Open Source & Asset Licensing — Complete attribution and licensing terms for fonts, images, and software libraries used in NextStep.">
-  <title>Asset &amp; Font Licenses — NextStep Career Intelligence</title>
+  <title>Asset & Font Licenses — NextStep Career Intelligence</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,17 +15,19 @@
 <body class="policy-body">
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <header class="policy-header" role="banner">
+    <header class="policy-header" role="banner">
     <div class="policy-header-inner">
       <a href="./index.html" class="policy-brand" aria-label="NextStep Home">
         <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Readiness Platform">
         <span>NextStep</span>
       </a>
-      <nav class="policy-nav-links" aria-label="Policy Navigation">
+      <button class="policy-menu-toggle" id="policy-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+      <nav class="policy-nav-links" id="policy-nav-links" aria-label="Policy Navigation">
         <a href="./index.html" class="policy-nav-link">← Return to Workspace</a>
         <a href="./privacy-policy.html" class="policy-nav-link">Privacy</a>
         <a href="./terms-of-service.html" class="policy-nav-link">Terms</a>
         <a href="./refund-policy.html" class="policy-nav-link">Refund Policy</a>
+        <a href="./cookie-policy.html" class="policy-nav-link">Cookie Policy</a>
         <a href="./compliance.html" class="policy-nav-btn">Compliance Center 🛡️</a>
       </nav>
     </div>
@@ -129,7 +132,7 @@
     </article>
   </main>
 
-  <footer class="policy-footer" role="contentinfo">
+    <footer class="policy-footer" role="contentinfo">
     <div class="policy-footer-inner">
       <div class="policy-footer-grid">
         <div class="policy-footer-col">
@@ -160,8 +163,10 @@
         <div class="policy-footer-col">
           <h4>Contact &amp; Support</h4>
           <ul>
-            <li><a href="mailto:support@nextstep.edu">support@nextstep.edu</a></li>
-            <li><a href="mailto:legal@nextstep.edu">legal@nextstep.edu</a></li>
+            <li><a href="mailto:support@nextstep.edu" class="policy-contact-link">support@nextstep.edu</a></li>
+            <li><a href="mailto:dpo@nextstep.edu" class="policy-contact-link">dpo@nextstep.edu</a></li>
+            <li><a href="tel:+18005557837" class="policy-contact-link">+1 (800) 555-STEP</a></li>
+            <li><a href="tel:+918049201000" class="policy-contact-link">+91 (80) 4920-1000</a></li>
             <li><a href="./index.html">Student Workspace</a></li>
             <li><a href="./auth.html">Account Sign In</a></li>
           </ul>
@@ -173,5 +178,18 @@
       </div>
     </div>
   </footer>
+  <script>
+    (function() {
+      const menuToggle = document.getElementById('policy-menu-toggle');
+      const navLinks = document.getElementById('policy-nav-links');
+      if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', function() {
+          const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+          menuToggle.setAttribute('aria-expanded', !expanded);
+          navLinks.classList.toggle('open');
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

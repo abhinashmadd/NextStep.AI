@@ -45,6 +45,7 @@
       <div class="workspace-label">YOUR WORKSPACE</div>
       <nav class="main-nav" aria-label="Main navigation">
         <a class="nav-link active" href="#overview" data-section="overview"><span class="nav-icon">◫</span>Overview</a>
+        <a class="nav-link" href="#career-intelligence" data-section="intelligence"><span class="nav-icon">🧭</span>Career intelligence</a>
         <a class="nav-link" href="#profile" data-section="profile"><span class="nav-icon">◉</span>My profile</a>
         <a class="nav-link" href="#evidence" data-section="evidence"><span class="nav-icon">▧</span>My evidence<span
             class="nav-counter" id="evidence-count">0</span></a>
@@ -71,16 +72,18 @@
     <main class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+          <button class="mobile-menu" id="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="sidebar">☰</button>
           <a class="topbar-brand-mobile" href="./index.html" aria-label="NextStep home">
             <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Home" class="topbar-brand-img">
           </a>
         </div>
         <nav class="topbar-links" aria-label="Top links">
-          <a href="#overview">Home</a>
-          <a href="#assessment">Career Assessment</a>
-          <a href="#skills">Career Paths</a>
-          <a href="#evidence">About</a>
+          <a href="#overview">Overview</a>
+          <a href="#career-intelligence">Career Intelligence</a>
+          <a href="#profile">Career Profile</a>
+          <a href="#skills">Skill Map</a>
+          <a href="#evidence">Evidence Vault</a>
+          <a href="#action">Next Action</a>
         </nav>
         <div class="topbar-right">
           <a class="button button-dark auth-nav-btn" href="auth.html">
@@ -345,18 +348,21 @@
           </div>
           <div class="activity-list" id="activity-list"></div>
         </section>
+
+        <!-- Anchor for Privacy Center Navigation -->
+        <span id="privacy" style="display:block;position:relative;top:-70px;visibility:hidden;"></span>
+
         <footer class="page-footer" role="contentinfo"
-          style="display:block;padding:28px 0 20px;border-top:1px solid #e2e7df;margin-top:40px;font-size:12px;color:#5e6860;">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:24px;margin-bottom:20px;">
-            <div style="max-width:440px;">
-              <strong
-                style="display:inline-flex;align-items:center;gap:4px;font-size:15px;color:#1c261e;font-family:'Manrope',sans-serif;font-weight:800;margin-bottom:8px;">
-                <span>NextStep</span><span class="brand-period" style="color:#2a633d;">✳</span>
-              </strong>
-              <p style="margin:0 0 10px;line-height:1.6;color:#4c574e;font-size:12.5px;">
-                An evidence-backed student career preparation platform. We convert your real projects, coursework, and verified work into clear capability estimates and one focused next action.
+          style="display:block;padding:32px 0 24px;border-top:1px solid #e2e7df;margin-top:40px;font-size:12.5px;color:#5e6860;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:28px;margin-bottom:24px;">
+            <div style="max-width:380px;">
+              <a href="./index.html" class="brand-footer" aria-label="NextStep Home" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:10px;">
+                <img src="./nextstep-logo-transparent.png" alt="NextStep Logo - Evidence-to-Action Career Platform" style="height:32px;width:auto;object-fit:contain;">
+              </a>
+              <p style="margin:0 0 12px;line-height:1.6;color:#4c574e;font-size:13px;">
+                An evidence-backed student career preparation platform. We convert your real projects, coursework, and verified work into deterministic capability maps and one focused next action.
               </p>
-              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7263;flex-wrap:wrap;font-weight:500;">
+              <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#5e7263;flex-wrap:wrap;font-weight:600;">
                 <span>1. Add Evidence</span>
                 <span style="color:#a8b5a7;">→</span>
                 <span>2. Map Capabilities</span>
@@ -365,10 +371,12 @@
               </div>
             </div>
 
-            <div style="display:flex;gap:36px;flex-wrap:wrap;">
+            <div style="display:flex;gap:32px;flex-wrap:wrap;">
               <div>
-                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:8px;font-weight:700;">Platform</strong>
-                <ul style="list-style:none;padding:0;margin:0;font-size:12px;line-height:1.9;">
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Platform</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                  <li><a href="#overview" style="color:#4c574e;text-decoration:none;">Overview</a></li>
+                  <li><a href="#career-intelligence" style="color:#4c574e;text-decoration:none;">Career Intelligence</a></li>
                   <li><a href="#profile" style="color:#4c574e;text-decoration:none;">Career Profile</a></li>
                   <li><a href="#skills" style="color:#4c574e;text-decoration:none;">Capability Profile</a></li>
                   <li><a href="#evidence" style="color:#4c574e;text-decoration:none;">Evidence Vault</a></li>
@@ -377,18 +385,34 @@
               </div>
 
               <div>
-                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:8px;font-weight:700;">Trust &amp; Help</strong>
-                <ul style="list-style:none;padding:0;margin:0;font-size:12px;line-height:1.9;">
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Trust &amp; Legal</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
                   <li><a href="./privacy-policy.html" style="color:#4c574e;text-decoration:none;">Privacy Policy</a></li>
                   <li><a href="./terms-of-service.html" style="color:#4c574e;text-decoration:none;">Terms of Service</a></li>
-                  <li><a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;text-decoration:none;">Contact Support</a></li>
+                  <li><a href="./refund-policy.html" style="color:#4c574e;text-decoration:none;">Refund Policy</a></li>
+                  <li><a href="./cookie-policy.html" style="color:#4c574e;text-decoration:none;">Cookie Policy</a></li>
+                  <li><a href="./compliance.html" style="color:#4c574e;text-decoration:none;">Compliance Center 🛡️</a></li>
+                  <li><a href="./data-deletion.html" style="color:#4c574e;text-decoration:none;">Data Erasure Portal</a></li>
+                  <li><a href="./licenses.html" style="color:#4c574e;text-decoration:none;">Asset Licenses</a></li>
+                  <li><a href="./unsubscribe.html" style="color:#4c574e;text-decoration:none;">Email Preferences</a></li>
+                </ul>
+              </div>
+
+              <div>
+                <strong style="display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#1c261e;margin-bottom:10px;font-weight:700;">Support &amp; Contact</strong>
+                <ul style="list-style:none;padding:0;margin:0;font-size:12.5px;line-height:2.0;">
+                  <li><a href="mailto:support@nextstep.edu" style="color:#2a633d;font-weight:600;text-decoration:underline;">support@nextstep.edu</a></li>
+                  <li><a href="tel:+18005557837" style="color:#2a633d;font-weight:600;text-decoration:underline;">+1 (800) 555-STEP</a></li>
+                  <li><a href="tel:+918049201000" style="color:#2a633d;font-weight:600;text-decoration:underline;">+91 (80) 4920-1000</a></li>
+                  <li><a href="./auth.html" style="color:#4c574e;text-decoration:none;">Student Sign In</a></li>
+                  <li><a href="./profile.html" style="color:#4c574e;text-decoration:none;">Student Account</a></li>
                 </ul>
               </div>
             </div>
           </div>
 
-          <div style="border-top:1px solid #eef2eb;padding-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11px;color:#7e8a80;">
-            <span>&copy; 2026 NextStep. Made for the career you're working toward.</span>
+          <div style="border-top:1px solid #eef2eb;padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;font-size:11.5px;color:#7e8a80;">
+            <span>&copy; 2026 NextStep Career Technologies Inc. All rights reserved. Made for the career you're working toward.</span>
             <span>Deterministic Analysis · Privacy-First · Student-Centered</span>
           </div>
         </footer>
@@ -442,14 +466,14 @@
 
       <div class="form-section-card">
         <h3 class="form-section-title">1. Personal Info</h3>
-        <label>Full name<input name="name" placeholder="e.g. Alex Morgan" required maxlength="100"></label>
+        <label>Full name<input name="name" placeholder="Enter your full name" required maxlength="100"></label>
       </div>
 
       <div class="form-section-card">
         <h3 class="form-section-title">2. Education</h3>
-        <div class="form-row"><label>Course or degree<input name="course" placeholder="e.g. B.Tech" required
+        <div class="form-row"><label>Course or degree<input name="course" placeholder="Degree (e.g. B.Tech, B.S., M.S.)" required
               maxlength="120"></label><label>Discipline or field<input name="discipline"
-              placeholder="e.g. Electronics & Communication" required maxlength="120"></label></div>
+              placeholder="Major / Field (e.g. Computer Science, Data Science)" required maxlength="120"></label></div>
         <div class="form-row"><label>Academic year<select name="year" required>
               <option value="">Choose your year</option>
               <option>1st year</option>
@@ -459,7 +483,7 @@
               <option>Postgraduate</option>
               <option>Other</option>
             </select></label><label>Semester <span class="optional">(optional)</span><input name="semester"
-              placeholder="e.g. 4th" maxlength="40"></label></div>
+              placeholder="Semester / Term" maxlength="40"></label></div>
       </div>
 
       <div class="form-section-card">
@@ -473,7 +497,7 @@
           </select><span class="optional" id="career-source">Prototype frameworks support four roles and include
             source/version notes; unsupported careers aren't inferred.</span></label>
         <div class="form-row"><label>Available preparation hours/week <span class="optional">(optional)</span><input
-              name="availableHours" type="number" min="1" max="80" placeholder="e.g. 6"></label><label>Preferred
+              name="availableHours" type="number" min="1" max="80" placeholder="Hours per week"></label><label>Preferred
             learning
             style <span class="optional">(optional)</span><select name="learningStyle">
               <option value="">Choose if helpful</option>
@@ -487,9 +511,9 @@
       <div class="form-section-card">
         <h3 class="form-section-title">4. Interests & Experience</h3>
         <label>Interests <span class="optional">(optional)</span><input name="interests"
-            placeholder="e.g. building useful tools, climate tech"></label>
+            placeholder="Key interests (e.g. Distributed systems, AI engineering, Cloud)"></label>
         <label>A little about you <span class="optional">(optional)</span><textarea name="bio" rows="3" maxlength="500"
-            placeholder="What are you curious about or working toward?"></textarea></label>
+            placeholder="Describe your career focus and what you are learning toward..."></textarea></label>
       </div>
 
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
@@ -511,7 +535,7 @@
           placeholder="🔍 Search evidence types (e.g. project, certificate, internship)..." autocomplete="off">
       </div>
 
-      <label>Evidence title<input name="title" id="evidence-title-input" placeholder="e.g. Personal finance dashboard"
+      <label>Evidence title<input name="title" id="evidence-title-input" placeholder="Enter project or coursework title (e.g. Distributed Task Queue)"
           required maxlength="120"></label>
 
       <div class="form-row">
@@ -588,14 +612,14 @@
           <span id="evidence-link-title">GitHub or project link</span>
           <span id="evidence-link-optional" class="optional">(optional; never fetched by the server)</span>
           <input name="link" id="evidence-link-input" type="url" maxlength="500"
-            placeholder="https://github.com/you/project">
+            placeholder="https://github.com/username/project">
         </label>
       </div>
 
       <label id="evidence-description-label">What did you do? <span class="optional">Share the tools, choices, and
           outcomes you can
           demonstrate.</span><textarea name="description" id="evidence-description-input" rows="4" maxlength="5000"
-          placeholder="I built... using... I was responsible for..."></textarea></label>
+          placeholder="Detail the technologies utilized, architectural choices, and measurable outcomes..."></textarea></label>
 
       <div class="upload-note" id="evidence-upload-note">Allowed formats up to 10 MB: PDF, TXT, Markdown, CSV, JSON,
         HTML/CSS, JavaScript, Python, Java, TypeScript, Word (.docx), or images (.png, .jpg). Files are never executed;
@@ -635,7 +659,7 @@
         </div><button class="close-dialog" type="button" aria-label="Close">×</button>
       </div>
       <label>Your reflection<textarea name="reflection" rows="4" minlength="3" maxlength="1000" required
-          placeholder="I learned..., I made..., Next time I would..."></textarea></label>
+          placeholder="Summarize key capabilities exercised, code implemented, and future extensions..."></textarea></label>
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
           class="button button-dark" type="submit">Mark as complete <span>✓</span></button></div>
     </form>
