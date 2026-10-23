@@ -154,7 +154,7 @@
           <form id="auth-signin-form" class="auth-form-view active">
             <label class="auth-label">
               <span>ROLL NO / BADGE ID, USERNAME, EMAIL OR MOBILE</span>
-              <input type="text" name="identifier" class="auth-input" placeholder="e.g. ST-2026-904, 904, alexsharma, or alex@gmail.com" required autocomplete="username" autofocus>
+              <input type="text" name="identifier" class="auth-input" placeholder="Username, email, or student badge ID" required autocomplete="username" autofocus>
             </label>
             <label class="auth-label">
               <span>
@@ -176,22 +176,22 @@
             <div class="auth-form-row">
               <label class="auth-label">
                 <span>FULL NAME *</span>
-                <input type="text" name="name" class="auth-input" placeholder="Alex Sharma" required autocomplete="name">
+                <input type="text" name="name" class="auth-input" placeholder="Enter your full name" required autocomplete="name">
               </label>
               <label class="auth-label">
                 <span>USERNAME *</span>
-                <input type="text" name="username" class="auth-input" placeholder="alexsharma" required autocomplete="username">
+                <input type="text" name="username" class="auth-input" placeholder="Choose a username" required autocomplete="username">
               </label>
             </div>
             <label class="auth-label">
               <span>GMAIL / UNIVERSITY EMAIL * <em class="auth-hint">(Receives Gmail OTP)</em></span>
-              <input type="email" name="email" class="auth-input" placeholder="alex.sharma@gmail.com" required autocomplete="email">
+              <input type="email" name="email" class="auth-input" placeholder="student@example.edu" required autocomplete="email">
             </label>
             <label class="auth-label">
               <span>MOBILE NUMBER * <em class="auth-hint">(Receives Mobile SMS OTP)</em></span>
               <div class="auth-phone-group">
                 <div class="auth-country-code">+91</div>
-                <input type="tel" name="mobile" class="auth-input auth-phone-input" placeholder="98765 43210" required>
+                <input type="tel" name="mobile" class="auth-input auth-phone-input" placeholder="10-digit mobile number" required>
               </div>
             </label>
             <label class="auth-label">
@@ -289,7 +289,7 @@
                 </span>
               </span>
             </label>
-            <button type="submit" class="auth-btn-primary" id="btn-register-submit">Verify Mobile & Gmail OTP →</button>
+            <button type="submit" class="auth-btn-primary" id="btn-register-submit">Verify Mobile & Gmail OTP</button>
           </form>
 
           <!-- 3. Forgot Password Form -->
@@ -322,7 +322,7 @@
             </div>
             <button type="submit" class="auth-btn-primary" id="btn-reset-submit">Send Reset OTP</button>
             <div class="auth-forgot-back-row">
-              <button type="button" class="auth-link-back" id="btn-reset-cancel">← Back to Sign In</button>
+              <button type="button" class="auth-link-back" id="btn-reset-cancel">Back to Sign In</button>
             </div>
           </form>
 
@@ -342,7 +342,7 @@
                 <input type="text" maxlength="1" class="auth-otp-digit" data-idx="4" inputmode="numeric">
                 <input type="text" maxlength="1" class="auth-otp-digit" data-idx="5" inputmode="numeric">
               </div>
-              <button type="button" class="auth-btn-primary" id="btn-verify-otp">Verify & Launch Workspace →</button>
+              <button type="button" class="auth-btn-primary" id="btn-verify-otp">Verify & Launch Workspace</button>
               <div class="auth-otp-resend">
                 Didn't receive code? <button type="button" class="auth-resend-btn" id="btn-resend-otp">Resend OTP</button>
               </div>
@@ -352,19 +352,19 @@
           <!-- 4. Signed-In Account View -->
           <div id="auth-account-view" class="auth-form-view">
             <div class="auth-account-view-inner">
-              <div class="auth-user-avatar" id="auth-acc-avatar">A</div>
-              <h3 class="auth-user-name" id="auth-acc-name">Alex Sharma</h3>
+              <div class="auth-user-avatar" id="auth-acc-avatar">S</div>
+              <h3 class="auth-user-name" id="auth-acc-name">Student Account</h3>
               <div class="auth-user-badge-pill" id="auth-acc-badge">
-                <span>🎓</span> <strong id="auth-acc-badge-text">ST-2026-089</strong>
+                <span>🎓</span> <strong id="auth-acc-badge-text">—</strong>
               </div>
               <div class="auth-user-info-grid">
-                <div class="auth-info-row"><span class="auth-info-label">Target Career:</span><span class="auth-info-val" id="auth-acc-role">Software Developer</span></div>
+                <div class="auth-info-row"><span class="auth-info-label">Target Career:</span><span class="auth-info-val" id="auth-acc-role">—</span></div>
                 <div class="auth-info-row"><span class="auth-info-label">Student Email:</span><span class="auth-info-val" id="auth-acc-email">—</span></div>
                 <div class="auth-info-row"><span class="auth-info-label">Mobile Contact:</span><span class="auth-info-val" id="auth-acc-mobile">—</span></div>
                 <div class="auth-info-row"><span class="auth-info-label">Session Status:</span><span class="auth-info-val" style="color:#345b40;">● Active & Encrypted</span></div>
               </div>
               <div class="auth-account-actions">
-                <a href="./index.html" class="auth-btn-primary" id="auth-acc-continue" style="text-decoration:none;">Launch Student Workspace →</a>
+                <a href="./index.html" class="auth-btn-primary" id="auth-acc-continue" style="text-decoration:none;">Launch Student Workspace</a>
                 <button type="button" class="auth-btn-guest" id="auth-acc-switch">Switch Account / Sign In as Other</button>
                 <button type="button" class="auth-btn-danger" id="auth-acc-logout">Sign Out of NextStep</button>
               </div>
@@ -386,14 +386,18 @@
       </div>
 
       <!-- Clean Footer -->
-      <footer style="margin-top: 24px; text-align: center; font-size: 12px; color: #5e6860;">
-        <nav style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 8px;" aria-label="Footer links">
+      <footer style="margin-top: 28px; text-align: center; font-size: 12.5px; color: #5e6860;">
+        <nav style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 10px;" aria-label="Footer links">
           <a href="./privacy-policy.html" style="color: #465248; text-decoration: none;">Privacy Policy</a>
           <a href="./terms-of-service.html" style="color: #465248; text-decoration: none;">Terms of Service</a>
-          <a href="mailto:support@nextstep.edu" style="color: #2a633d; font-weight: 600; text-decoration: none;">Support</a>
+          <a href="./refund-policy.html" style="color: #465248; text-decoration: none;">Refund Policy</a>
+          <a href="./cookie-policy.html" style="color: #465248; text-decoration: none;">Cookie Policy</a>
+          <a href="./compliance.html" style="color: #465248; text-decoration: none;">Compliance Center 🛡️</a>
+          <a href="mailto:support@nextstep.edu" style="color: #2a633d; font-weight: 600; text-decoration: underline;">support@nextstep.edu</a>
+          <a href="tel:+18005557837" style="color: #2a633d; font-weight: 600; text-decoration: underline;">+1 (800) 555-STEP</a>
         </nav>
-        <p style="margin: 0; color: #8a948c; font-size: 11px;">
-          &copy; 2026 NextStep. Made for the career you're working toward.
+        <p style="margin: 0; color: #7e8a80; font-size: 11.5px;">
+          &copy; 2026 NextStep Career Technologies Inc. All rights reserved. Made for the career you're working toward.
         </p>
       </footer>
     </div>

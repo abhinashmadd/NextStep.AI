@@ -155,7 +155,7 @@ function renderProfile() {
   }
 
   if (!profile) {
-    content.innerHTML = `<div class="profile-empty"><p>Set a destination, and we'll make your career journey personal to you.</p><button class="empty-link" data-open-profile>Set up your profile →</button></div>`;
+    content.innerHTML = `<div class="profile-empty"><p>Set a destination, and we'll make your career journey personal to you.</p><button class="empty-link" data-open-profile>Set up your profile</button></div>`;
     $("#welcome-title").textContent = user ? `Welcome, ${user.name.split(/\s+/)[0]}.` : "Your next chapter starts here.";
     $("#welcome-subtitle").textContent = user ? `Signed in with Student ID ${user.badgeId}.` : "A little progress, backed by real work, goes a long way.";
     return;
@@ -182,7 +182,7 @@ function renderReadiness() {
   const report = currentState.skillReport;
   const content = $("#readiness-content");
   if (!report) {
-    content.innerHTML = `<div class="readiness-empty"><p>Add real work to get your first evidence-based readiness snapshot.</p><button class="empty-link" data-open-evidence>Add your first evidence →</button></div>`;
+    content.innerHTML = `<div class="readiness-empty"><p>Add real work to get your first evidence-based readiness snapshot.</p><button class="empty-link" data-open-evidence>Add your first evidence</button></div>`;
     return;
   }
   const percent = Math.max(0, Math.min(100, report.readiness));
@@ -199,7 +199,7 @@ function renderEvidence() {
   $("#evidence-count").textContent = evidence.length;
   const container = $("#evidence-list");
   if (!evidence.length) {
-    container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece →</button></div>`;
+    container.innerHTML = `<div class="evidence-empty"><div class="evidence-empty-copy"><strong>Your best work belongs here.</strong><p>Projects, assignments, GitHub repos, internships — start with anything you're proud of.</p></div><button class="empty-link" data-open-evidence>Add your first piece</button></div>`;
     return;
   }
   container.innerHTML = evidence.slice(0, 6).map((item) => {
@@ -233,10 +233,10 @@ function renderAction() {
   const container = $("#action-content");
   if (!action) {
     if (currentState.skillReport?.readiness === 100) {
-      container.innerHTML = `<div class="action-empty"><div><strong>All skills in this role framework have evidence.</strong><p>This is not a hiring score or guarantee of readiness. Keep building relevant work, or choose another target career.</p></div><button class="button button-outline" data-open-profile>Review my career →</button></div>`;
+      container.innerHTML = `<div class="action-empty"><div><strong>All skills in this role framework have evidence.</strong><p>This is not a hiring score or guarantee of readiness. Keep building relevant work, or choose another target career.</p></div><button class="button button-outline" data-open-profile>Review my career</button></div>`;
       return;
     }
-    container.innerHTML = `<div class="action-empty"><div><strong>${currentState.evidence.length ? "Your next step is one click away." : "No giant roadmap. Just your next right move."}</strong><p>${currentState.evidence.length ? "Connect your evidence to your target role to find the most useful skill to work on next." : "Start with your profile and a piece of real work. We'll help you choose one practical step from there."}</p></div><button class="button button-dark" ${currentState.evidence.length ? 'data-analyze' : 'data-open-profile'}>${currentState.evidence.length ? "Find my next action →" : "Get started →"}</button></div>`;
+    container.innerHTML = `<div class="action-empty"><div><strong>${currentState.evidence.length ? "Your next step is one click away." : "No giant roadmap. Just your next right move."}</strong><p>${currentState.evidence.length ? "Connect your evidence to your target role to find the most useful skill to work on next." : "Start with your profile and a piece of real work. We'll help you choose one practical step from there."}</p></div><button class="button button-dark" ${currentState.evidence.length ? 'data-analyze' : 'data-open-profile'}>${currentState.evidence.length ? "Find my next action" : "Get started"}</button></div>`;
     return;
   }
   container.innerHTML = `
@@ -249,10 +249,10 @@ function renderAction() {
         <p class="outcome-copy">${escapeHtml(action.outcome)}</p>
 
         <div class="action-toolbox">
-          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true"><span>⚡</span> View Project Blueprint</button>
-          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true"><span>📋</span> Copy Steps</button>
-          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}"><span>＋</span> Submit Proof</button>
-          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true"><span>📄</span> Export Plan (.md)</button>
+          <button class="button button-outline action-tool-btn" type="button" data-open-blueprint="true">View Project Blueprint</button>
+          <button class="button button-outline action-tool-btn" type="button" data-copy-action="true">Copy Steps</button>
+          <button class="button button-outline action-tool-btn" type="button" data-proof-for-skill="${escapeHtml(action.skill)}">Submit Proof</button>
+          <button class="button button-outline action-tool-btn" type="button" data-export-plan="true">Export Plan (.md)</button>
         </div>
 
         <div class="action-blueprint-card" id="action-blueprint" style="display: none;">
@@ -282,7 +282,7 @@ function renderAction() {
           </div>
         </div>
 
-        ${action.completed ? `<div class="completed-banner">✓ Completed ${relativeDate(action.completedAt)}. ${action.reflection ? escapeHtml(action.reflection) : "Add your new work as evidence, then refresh your skills for a personalized next step."}</div>` : `<div class="action-footer"><button class="button button-dark" data-complete>I've done this <span>✓</span></button><button class="button button-quiet" data-analyze>Refresh my action</button></div>`}
+        ${action.completed ? `<div class="completed-banner">✓ Completed ${relativeDate(action.completedAt)}. ${action.reflection ? escapeHtml(action.reflection) : "Add your new work as evidence, then refresh your skills for a personalized next step."}</div>` : `<div class="action-footer"><button class="button button-dark" data-complete>I've done this</button><button class="button button-quiet" data-analyze>Refresh my action</button></div>`}
       </div>
       <div class="action-side">
         <div class="outcome-label">A FEW WAYS TO GET STARTED</div>
@@ -331,7 +331,7 @@ function renderSkills() {
         ${escapeHtml(skill.name)}
         <span class="skill-status">${escapeHtml(statusLabel)} · Level ${skill.level}/${skill.requiredLevel} required</span>
         <span class="skill-evidence" title="${escapeHtml(evidence)}">${escapeHtml(evidence)}</span>
-        <button class="skill-action-link" type="button" data-proof-for-skill="${escapeHtml(skill.name)}">+ Add proof</button>
+        <button class="skill-action-link" type="button" data-proof-for-skill="${escapeHtml(skill.name)}">Add proof</button>
       </span>
       <div class="skill-track"><div class="skill-fill" style="width:${skill.score}%"></div></div>
       <span class="skill-score">${Math.round(skill.confidence * 100)}%<span class="confidence-caption">confidence</span></span>
@@ -401,9 +401,9 @@ function render() {
   renderJourney();
   const firstActionDone = Boolean(currentState.recommendedAction?.completed);
   $("#quick-start").innerHTML = currentState.profile
-    ? `<span>＋</span> Add evidence` : `<span>＋</span> Set up my profile`;
+    ? `Add evidence` : `Set up my profile`;
   $("#quick-start").dataset.open = currentState.profile ? "evidence" : "profile";
-  $("#edit-profile").textContent = currentState.profile ? "Edit profile ↗" : "Set up ↗";
+  $("#edit-profile").textContent = currentState.profile ? "Edit profile" : "Set up";
   document.querySelectorAll('[data-section="action"]').forEach((link) => link.classList.toggle("active", Boolean(currentState.recommendedAction && !firstActionDone)));
   const selectedSection = location.hash.slice(1) || "overview";
   document.querySelectorAll(".nav-link").forEach((link) => link.classList.toggle("active", link.dataset.section === selectedSection));
@@ -594,10 +594,10 @@ function updateEvidenceFormMode() {
       linkInput.placeholder = "https://your-portfolio.com";
       linkInput.required = true;
     }
-    if (submitBtn) submitBtn.innerHTML = 'Add Portfolio Link <span>→</span>';
+    if (submitBtn) submitBtn.innerHTML = 'Add Portfolio Link';
     if (dialogTitle) dialogTitle.textContent = "Add a Portfolio Link";
     if (dialogSubtitle) dialogSubtitle.textContent = "Showcase your work with a live web link. No file upload required.";
-    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another Link';
+    if (addAnotherBtn) addAnotherBtn.innerHTML = 'Add Another Link';
   } else {
     if (fileContainer) fileContainer.style.display = "block";
     if (uploadNote) uploadNote.style.display = "block";
@@ -611,10 +611,10 @@ function updateEvidenceFormMode() {
       linkInput.placeholder = "https://github.com/you/project";
       linkInput.required = false;
     }
-    if (submitBtn) submitBtn.innerHTML = 'Add to my evidence <span>→</span>';
+    if (submitBtn) submitBtn.innerHTML = 'Add to my evidence';
     if (dialogTitle) dialogTitle.textContent = "Add a piece of evidence";
     if (dialogSubtitle) dialogSubtitle.textContent = "Describe what you contributed so we can understand the skills behind it.";
-    if (addAnotherBtn) addAnotherBtn.innerHTML = '<span>＋</span> Add Another';
+    if (addAnotherBtn) addAnotherBtn.innerHTML = 'Add Another';
   }
 }
 

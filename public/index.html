@@ -106,8 +106,8 @@
             <p class="welcome-subtitle" id="welcome-subtitle">Transform your coursework, projects, and verified achievements into deterministic skill maps and one clear next move toward your career.</p>
 
             <div class="hero-actions">
-              <button class="button button-hero-primary" id="quick-start" data-open="profile" data-open-profile><span>⚡</span> Start Your Career Profile</button>
-              <a class="button button-hero-secondary" href="#career-intelligence"><span>🧭</span> Explore Career Intelligence ↗</a>
+              <button class="button button-hero-primary" id="quick-start" data-open="profile" data-open-profile>Start Your Career Profile</button>
+              <a class="button button-hero-secondary" href="#career-intelligence">Explore Career Intelligence</a>
             </div>
 
             <!-- Compact, Streamlined Pipeline Card -->
@@ -226,9 +226,8 @@
                 analysis, and semantic knowledge retrieval.</p>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="button button-outline" id="btn-run-ai-analysis"><span>⚡</span> Run Full Analysis</button>
-              <button class="button button-dark" id="btn-explore-career-matches"><span>🧭</span> Match Career
-                Roles</button>
+              <button class="button button-outline" id="btn-run-ai-analysis">Run Full Analysis</button>
+              <button class="button button-dark" id="btn-explore-career-matches">Match Career Roles</button>
             </div>
           </div>
 
@@ -244,13 +243,13 @@
               <input type="text" id="rag-query-input"
                 placeholder="e.g. How do I transition to Backend Development, and what portfolio projects matter most?"
                 style="flex:1;min-width:240px;padding:10px 14px;border:1px solid #d3dad0;border-radius:8px;font-size:13px;outline:none;" />
-              <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask Guidance ↗</button>
+              <button type="button" class="button button-dark" id="btn-ask-rag" style="padding:10px 18px;">Ask Guidance</button>
             </div>
             <div class="rag-prompt-suggestions">
               <span class="rag-suggestions-label">Try asking:</span>
-              <button type="button" class="rag-prompt-chip" data-query="How do I transition to Backend Development, and what portfolio projects matter most?">🚀 Backend Transition</button>
-              <button type="button" class="rag-prompt-chip" data-query="Which portfolio projects prove high-impact engineering and system design skills?">🛠️ Portfolio Projects</button>
-              <button type="button" class="rag-prompt-chip" data-query="What core competencies do technical recruiters prioritize for software developers?">🎯 Hiring Requirements</button>
+              <button type="button" class="rag-prompt-chip" data-query="How do I transition to Backend Development, and what portfolio projects matter most?">Backend Transition</button>
+              <button type="button" class="rag-prompt-chip" data-query="Which portfolio projects prove high-impact engineering and system design skills?">Portfolio Projects</button>
+              <button type="button" class="rag-prompt-chip" data-query="What core competencies do technical recruiters prioritize for software developers?">Hiring Requirements</button>
             </div>
             <div id="rag-response-box"
               style="display:none;margin-top:14px;background:#f6f8f4;border:1px solid #dbe3d8;border-radius:8px;padding:14px;">
@@ -276,7 +275,7 @@
             <div class="panel-heading">
               <div><span class="section-kicker">START WITH YOU</span>
                 <h2>Your career profile</h2>
-              </div><button class="text-button" id="edit-profile">Edit profile <span>↗</span></button>
+              </div><button class="text-button" id="edit-profile">Edit profile</button>
             </div>
             <div id="profile-content" class="profile-content"></div>
           </section>
@@ -296,7 +295,7 @@
             <div><span class="section-kicker">SHOW, DON'T JUST TELL</span>
               <h2>Your evidence</h2>
               <p class="panel-subtitle">Projects, coursework, internships, and anything else you've worked on.</p>
-            </div><button class="button button-outline" id="add-evidence"><span>＋</span> Add evidence</button>
+            </div><button class="button button-outline" id="add-evidence">Add evidence</button>
           </div>
           <div class="evidence-list" id="evidence-list"></div>
         </section>
@@ -450,8 +449,7 @@
       <label class="consent-check"><input name="accepted" type="checkbox" required> I confirm that I am at least 16
         years old and I have read and agree to how NextStep processes my data in accordance with the Privacy
         Policy.</label>
-      <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep
-          <span>→</span></button></div>
+      <div class="dialog-actions"><button class="button button-dark" type="submit">Continue to NextStep</button></div>
     </form>
   </dialog>
 
@@ -517,7 +515,7 @@
       </div>
 
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Analyze My Profile <span>→</span></button></div>
+          class="button button-dark" type="submit">Analyze My Profile</button></div>
     </form>
   </dialog>
 
@@ -628,10 +626,8 @@
 
       <div class="dialog-actions">
         <button type="button" class="button button-quiet cancel-dialog">Cancel</button>
-        <button type="button" class="button button-outline" id="evidence-add-another"><span>＋</span> Add
-          Another</button>
-        <button class="button button-dark" id="evidence-submit-btn" type="submit">Add to my evidence
-          <span>→</span></button>
+        <button type="button" class="button button-outline" id="evidence-add-another">Add Another</button>
+        <button class="button button-dark" id="evidence-submit-btn" type="submit">Add to my evidence</button>
       </div>
     </form>
   </dialog>
@@ -646,7 +642,7 @@
       </div>
       <div class="assessment-fields" id="assessment-fields"></div>
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Save self-assessment <span>→</span></button></div>
+          class="button button-dark" type="submit">Save self-assessment</button></div>
     </form>
   </dialog>
 
@@ -661,7 +657,7 @@
       <label>Your reflection<textarea name="reflection" rows="4" minlength="3" maxlength="1000" required
           placeholder="Summarize key capabilities exercised, code implemented, and future extensions..."></textarea></label>
       <div class="dialog-actions"><button type="button" class="button button-quiet cancel-dialog">Cancel</button><button
-          class="button button-dark" type="submit">Mark as complete <span>✓</span></button></div>
+          class="button button-dark" type="submit">Mark as complete</button></div>
     </form>
   </dialog>
   <dialog class="app-dialog privacy-dialog" id="privacy-dialog">
